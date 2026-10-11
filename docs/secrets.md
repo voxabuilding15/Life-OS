@@ -32,3 +32,20 @@ always get them. Metro caches inlined values, so CI exports with `--clear`.
 - `.env`, `.env.*` (except `.env.example`), `google-services.json` and keystores are git-ignored. Locally, copy
   `.env.example` to `.env`. For EAS store builds, set the same values as EAS secrets (`eas secret:create`).
 - If a secret leaks, rotate it in Supabase (JWT secret / API keys), then update the GitHub secret.
+
+## Applying the database (production Supabase)
+
+Migrations are not idempotent, so use the Supabase CLI, which records what has been applied:
+
+```bash
+export SUPABASE_ACCESS_TOKEN=...   # dashboard → Account → Access Tokens
+export SUPABASE_PROJECT_REF=...    # the <ref> in https://<ref>.supabase.co
+export SUPABASE_DB_PASSWORD=...    # Project Settings → Database
+export SUPABASE_DB_URL=...         # Project Settings → Database → Connection string (URI)
+./scripts/supabase-apply.sh        # link, db push (0001-0003), then supabase/verify.sql
+```
+
+`supabase/verify.sql` is read-only: it checks all 12 tables, RLS and policies on every public table, the `avatars`
+bucket and its 4 policies, the `on_auth_user_created` trigger, `delete_my_account()`, and signs up a throw-away auth user
+inside a rolled-back transaction. Then set Auth URL / redirect settings in the dashboard (see the release checklist).
+Run these from your own machine: these credentials should never go into the repo or the app.
