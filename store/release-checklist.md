@@ -7,6 +7,7 @@ Run `npm run verify:release -- --build` first. It must report **0 blockers**. Ev
 - [ ] RevenueCat: link Google Play (service account), products `lifeos_pro_monthly` and `lifeos_pro_yearly`, entitlement `pro`, offering marked **current** with packages `$rc_monthly` and `$rc_annual`, webhook -> `revenuecat-webhook` with the shared Authorization secret.
 - [ ] Google Play Console subscriptions: monthly base plan $4.99; yearly base plan $29.99 with an **offer: 7-day free trial** (new customers only). The app reads trial eligibility from the store, so the button only says "Start 7-day free trial" when the user can actually get it.
 - [ ] Firebase: Android app `com.lifeos.app`; EAS file secret `GOOGLE_SERVICES_JSON`.
+- [ ] GitHub Actions secrets `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` set (see `docs/secrets.md`); the Build workflow must be green.
 - [ ] EAS secrets: `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`, `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY`, `EXPO_PUBLIC_PRIVACY_URL`, `EXPO_PUBLIC_TERMS_URL`, `EXPO_PUBLIC_SUPPORT_EMAIL`. Run `eas init` to fill `extra.eas.projectId`.
 - [ ] Publish the privacy policy, terms and account-deletion pages (drafts in this folder).
 

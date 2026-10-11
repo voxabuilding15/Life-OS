@@ -12,7 +12,8 @@
     "test:integration": "jest -c jest.integration.config.js --runInBand",
     "verify:release": "node scripts/verify-release.mjs",
     "brand": "node scripts/generate-brand.mjs",
-    "verify": "npm run typecheck && npm test"
+    "verify": "npm run typecheck && npm test",
+    "check:supabase": "node scripts/check-supabase-env.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/ibm-plex-sans-arabic": "^0.4.2",

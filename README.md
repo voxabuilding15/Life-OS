@@ -103,6 +103,10 @@ npx eas build --profile development --platform android
 npx eas build --profile production  --platform all
 ```
 
+## Production secrets
+
+Supabase config comes from GitHub Actions secrets (`EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`); env files are never committed. See [docs/secrets.md](docs/secrets.md).
+
 ## Quality
 
 - `npm run typecheck`: strict TypeScript.
