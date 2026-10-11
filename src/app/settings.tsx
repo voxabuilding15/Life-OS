@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
-import { Alert, Platform, Switch, View } from 'react-native';
+import { Alert, Linking, Platform, Switch, View } from 'react-native';
 import Constants from 'expo-constants';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -10,7 +10,7 @@ import { PressableScale } from '@/components/ui/PressableScale';
 import { ProBadge } from '@/components/ui/ProBadge';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
-import { isSupabaseConfigured } from '@/lib/config';
+import { config, isSupabaseConfigured } from '@/lib/config';
 import { deleteAccountData, signOut } from '@/services/auth';
 import { ensureNotificationPermission, syncDailyReminder } from '@/services/notifications';
 import { runSync } from '@/services/sync';
@@ -146,6 +146,21 @@ export default function Settings() {
             />
           }
         />
+        <Row
+          icon="stats-chart"
+          title="Weekly report"
+          subtitle="Sunday evening summary"
+          right={
+            <Toggle
+              label="Weekly report"
+              value={s.weeklyReport}
+              onChange={(v) => {
+                s.set({ weeklyReport: v });
+                setTimeout(() => void syncDailyReminder(), 0);
+              }}
+            />
+          }
+        />
         <Row icon="phone-portrait" title="Haptics" subtitle="Tactile feedback" right={<Toggle label="Haptics" value={s.haptics} onChange={(v) => s.set({ haptics: v })} />} />
       </Card>
 
@@ -176,7 +191,7 @@ export default function Settings() {
 
       <SectionHeader title="Subscription" />
       <Card padding={16}>
-        <Row icon="sparkles" title={isPro ? 'Life OS Pro' : 'Free plan'} subtitle={isPro ? 'Thanks for supporting Life OS' : 'Upgrade for $4.99/month'} right={isPro ? <ProBadge /> : undefined} onPress={() => router.push('/paywall')} />
+        <Row icon="sparkles" title={isPro ? 'Life OS Pro' : 'Free plan'} subtitle={isPro ? 'Thanks for supporting Life OS' : 'Upgrade for $4.99/month'} right={isPro ? <ProBadge /> : undefined} onPress={() => router.push(isPro ? '/pro' : '/paywall')} />
         <Row
           icon="refresh"
           title="Restore purchases"
@@ -212,6 +227,13 @@ export default function Settings() {
             }
           />
         ) : null}
+      </Card>
+
+      <SectionHeader title="About" />
+      <Card padding={16}>
+        <Row icon="shield-checkmark" title="Privacy policy" onPress={() => void Linking.openURL(config.privacyUrl)} />
+        <Row icon="document-text" title="Terms of service" onPress={() => void Linking.openURL(config.termsUrl)} />
+        <Row icon="mail" title="Contact support" subtitle={config.supportEmail} onPress={() => void Linking.openURL(`mailto:${config.supportEmail}?subject=Life%20OS%20support`)} />
       </Card>
 
       <Text variant="caption" color="tertiary" align="center" style={{ marginTop: 28, marginBottom: 12 }}>

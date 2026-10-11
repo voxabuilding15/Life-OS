@@ -1,8 +1,10 @@
 import { useMemo } from 'react';
 import { lastNDays, todayKey } from '@/lib/date';
 import { completionRate, currentStreak, longestStreak } from '@/lib/habits';
+import { freezeOffer, parseFreezeKey, type FreezeOffer } from '@/lib/freeze';
 import { levelProgress } from '@/lib/gamification';
 import {
+  useAchievementRecords,
   useFocusSessions,
   useGoals,
   useHabitLogs,
@@ -46,6 +48,9 @@ export function useTasksData() {
 export interface HabitWithStats {
   habit: Habit;
   doneDays: Set<string>;
+  frozenDays: Set<string>;
+  /** Set when yesterday was missed and a Streak Freeze would save the streak. */
+  offer: FreezeOffer | null;
   doneToday: boolean;
   streak: number;
   best: number;
@@ -55,8 +60,16 @@ export interface HabitWithStats {
 export function useHabitsData() {
   const habits = useLive(useHabits);
   const logs = useLive(useHabitLogs);
+  const records = useLive(useAchievementRecords);
   const today = todayKey();
   return useMemo(() => {
+    const frozen = new Map<string, Set<string>>();
+    for (const r of records) {
+      const f = parseFreezeKey(r.key);
+      if (!f) continue;
+      if (!frozen.has(f.habitId)) frozen.set(f.habitId, new Set());
+      frozen.get(f.habitId)!.add(f.day);
+    }
     const byHabit = new Map<string, Set<string>>();
     for (const l of logs) {
       if (!byHabit.has(l.habitId)) byHabit.set(l.habitId, new Set());
@@ -67,18 +80,21 @@ export function useHabitsData() {
       .sort((a, b) => (a.createdAt < b.createdAt ? -1 : 1))
       .map((habit) => {
         const doneDays = byHabit.get(habit.id) ?? new Set<string>();
+        const frozenDays = frozen.get(habit.id) ?? new Set<string>();
         return {
           habit,
           doneDays,
+          frozenDays,
+          offer: freezeOffer(doneDays, frozenDays, today),
           doneToday: doneDays.has(today),
-          streak: currentStreak(doneDays, today),
+          streak: currentStreak(doneDays, today, frozenDays),
           best: longestStreak(doneDays),
           rate30: completionRate(doneDays, 30, today),
         };
       });
     const doneToday = items.filter((i) => i.doneToday).length;
     return { items, doneToday, total: items.length, bestStreak: Math.max(0, ...items.map((i) => i.streak)) };
-  }, [habits, logs, today]);
+  }, [habits, logs, records, today]);
 }
 
 export interface GoalWithProgress {

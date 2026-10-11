@@ -19,6 +19,6 @@ jest.mock('expo-notifications', () => ({
   setNotificationChannelAsync: jest.fn(),
   getDevicePushTokenAsync: jest.fn(),
   AndroidImportance: { DEFAULT: 3 },
-  SchedulableTriggerInputTypes: { DATE: 'date', DAILY: 'daily', TIME_INTERVAL: 'timeInterval' },
+  SchedulableTriggerInputTypes: { DATE: 'date', DAILY: 'daily', WEEKLY: 'weekly', TIME_INTERVAL: 'timeInterval' },
 }));
 jest.mock('expo-device', () => ({ isDevice: false }));

@@ -19,15 +19,14 @@ export function WeeklyInsight() {
 
   if (!isPro) {
     return (
-      <Card onPress={() => router.push('/paywall')} padding={18} accessibilityLabel="Unlock weekly insights with Pro">
+      <Card onPress={() => router.push('/report')} padding={18} accessibilityLabel="Open weekly report">
         <View style={styles.head}>
           <View style={{ flex: 1, gap: 4 }}>
             <View style={styles.titleRow}>
-              <Text variant="heading">Weekly momentum</Text>
-              <ProBadge small />
+              <Text variant="heading">Weekly report</Text>
             </View>
             <Text variant="caption" color="secondary">
-              See your best days, trends and focus time.
+              Your week at a glance. Full insights with Pro.
             </Text>
           </View>
           <Icon name="lock-closed" size={20} color={t.accent} />
@@ -39,11 +38,11 @@ export function WeeklyInsight() {
     );
   }
   return (
-    <Card padding={18}>
+    <Card padding={18} onPress={() => router.push('/report')} accessibilityLabel="Open weekly report">
       <View style={styles.head}>
         <View style={{ flex: 1, gap: 4 }}>
           <View style={styles.titleRow}>
-            <Text variant="heading">Weekly momentum</Text>
+            <Text variant="heading">Weekly report</Text>
             <ProBadge small />
           </View>
           <Text variant="caption" color="secondary">

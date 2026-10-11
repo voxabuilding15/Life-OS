@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { Alert, Platform, View } from 'react-native';
 import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated';
 import { Button } from '@/components/ui/Button';
+import { Confetti } from '@/components/ui/Confetti';
 import { Card } from '@/components/ui/Card';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -24,6 +25,7 @@ export default function GoalDetail() {
   const { all } = useGoalsData();
   const item = useMemo(() => all.find((g) => g.goal.id === id), [all, id]);
   const [next, setNext] = useState('');
+  const [burst, setBurst] = useState(0);
 
   if (!item) {
     return (
@@ -49,6 +51,7 @@ export default function GoalDetail() {
   };
 
   return (
+    <View style={{ flex: 1 }}>
     <Screen keyboard>
       <Header title={goal.title} subtitle={goal.category} back />
 
@@ -107,7 +110,10 @@ export default function GoalDetail() {
                 label={`Complete ${m.title}`}
                 onToggle={() => {
                   const r = toggleMilestone(m.id);
-                  if (r.goalCompleted) haptic.success();
+                  if (r.goalCompleted) {
+                    haptic.success();
+                    setBurst((b) => b + 1);
+                  }
                 }}
               />
               {i < milestones.length - 1 ? <View style={{ flex: 1, width: 2, marginVertical: 4, backgroundColor: m.completed ? t.accent : t.surfaceStrong, minHeight: 22 }} /> : null}
@@ -142,5 +148,7 @@ export default function GoalDetail() {
         <Button title="Delete goal" variant="ghost" onPress={confirmDelete} />
       </View>
     </Screen>
+    <Confetti playKey={burst} />
+    </View>
   );
 }

@@ -8,6 +8,7 @@ interface SettingsState {
   haptics: boolean;
   notifications: boolean;
   dailyReminder: boolean;
+  weeklyReport: boolean;
   focusMinutes: number;
   shortBreakMinutes: number;
   longBreakMinutes: number;
@@ -22,6 +23,7 @@ export const useSettings = create<SettingsState>()(
       haptics: true,
       notifications: true,
       dailyReminder: true,
+      weeklyReport: true,
       focusMinutes: 25,
       shortBreakMinutes: 5,
       longBreakMinutes: 15,

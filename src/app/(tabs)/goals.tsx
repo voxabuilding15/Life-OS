@@ -27,7 +27,7 @@ export default function Goals() {
             </Animated.View>
           ))}
         </View>
-        {active.length === 0 && completed.length === 0 ? <EmptyState icon="flag-outline" title="Set your first big goal" message="Break it into milestones and watch the progress add up." actionLabel="New goal" onAction={() => router.push('/goal/new')} /> : null}
+        {active.length === 0 && completed.length === 0 ? <EmptyState icon="flag-outline" title="Set your first big goal" message="Break it into milestones and watch the progress add up. Finishing a goal earns +500 XP." actionLabel="New goal" onAction={() => router.push('/goal/new')} satellites={['rocket', 'trophy', 'star']} hint="Try: Become a Full Stack Developer, with HTML, CSS, JavaScript, React and Node.js as milestones." /> : null}
         {completed.length > 0 ? (
           <>
             <SectionHeader title="Achieved" />

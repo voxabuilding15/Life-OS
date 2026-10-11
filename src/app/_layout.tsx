@@ -7,7 +7,7 @@ import {
   useFonts,
 } from '@expo-google-fonts/inter';
 import * as Notifications from 'expo-notifications';
-import { router, Stack } from 'expo-router';
+import { router, Stack, type ErrorBoundaryProps } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
@@ -16,11 +16,35 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FeedbackLayer } from '@/components/features/FeedbackLayer';
 import { SplashOverlay } from '@/components/features/SplashOverlay';
+import { Button } from '@/components/ui/Button';
+import { Logo } from '@/components/ui/Logo';
 import { OfflineBanner } from '@/components/ui/OfflineBanner';
+import { Text } from '@/components/ui/Text';
 import { useHydrated, useServices } from '@/hooks/useBootstrap';
 import { useAuth } from '@/store/auth';
 import { useProfile } from '@/store/profile';
 import { BASE } from '@/theme';
+
+/** Last line of defence: a branded fallback instead of a white screen if a render throws. */
+export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+  return (
+    <View style={{ flex: 1, backgroundColor: BASE.dark, alignItems: 'center', justifyContent: 'center', padding: 32, gap: 14 }}>
+      <Logo size={64} />
+      <Text variant="title" align="center">
+        Something went wrong
+      </Text>
+      <Text variant="body" color="secondary" align="center">
+        Your data is safe on this device. Try again, and if it keeps happening, restart the app.
+      </Text>
+      {__DEV__ ? (
+        <Text variant="caption" color="tertiary" align="center">
+          {error.message}
+        </Text>
+      ) : null}
+      <Button title="Try again" onPress={retry} fullWidth={false} />
+    </View>
+  );
+}
 
 void SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
@@ -62,7 +86,7 @@ export default function RootLayout() {
         <StatusBar style="light" />
         {fontsLoaded && hydrated ? (
           <View style={{ flex: 1, backgroundColor: BASE.dark }}>
-            <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: BASE.dark }, animation: 'fade' }}>
+            <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: BASE.dark }, animation: 'slide_from_right' }}>
               <Stack.Protected guard={!authed && !onboarded}>
                 <Stack.Screen name="onboarding" />
               </Stack.Protected>
@@ -75,6 +99,10 @@ export default function RootLayout() {
                 <Stack.Screen name="settings" />
                 <Stack.Screen name="analytics" />
                 <Stack.Screen name="achievements" />
+                <Stack.Screen name="life-score" />
+                <Stack.Screen name="challenges" />
+                <Stack.Screen name="report" />
+                <Stack.Screen name="pro" />
                 <Stack.Screen name="habit/[id]" />
                 <Stack.Screen name="goal/[id]" />
                 <Stack.Screen name="focus" options={{ animation: 'slide_from_bottom' }} />

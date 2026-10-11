@@ -1,4 +1,4 @@
-import { ACHIEVEMENTS, levelFromXp, levelProgress, newlyUnlocked, xpForLevel, xpToNext, XP, type AchievementStats } from '@/lib/gamification';
+import { ACHIEVEMENTS, achievementProgress, levelFromXp, levelProgress, newlyUnlocked, xpForLevel, xpToNext, XP, type AchievementStats } from '@/lib/gamification';
 
 describe('xp curve', () => {
   it('awards the specified XP per action', () => {
@@ -47,7 +47,7 @@ describe('xp curve', () => {
 });
 
 describe('achievements', () => {
-  const zero: AchievementStats = { tasksCompleted: 0, habitCheckins: 0, bestStreak: 0, goalsCompleted: 0, focusSessions: 0, focusMinutes: 0, notes: 0, journalEntries: 0, level: 1 };
+  const zero: AchievementStats = { tasksCompleted: 0, habitCheckins: 0, bestStreak: 0, goalsCompleted: 0, focusSessions: 0, focusMinutes: 0, notes: 0, journalEntries: 0, level: 1, challengesClaimed: 0, freezesUsed: 0, lifeScore: 0 };
 
   it('unlocks only what the stats satisfy and never twice', () => {
     const first = newlyUnlocked({ ...zero, tasksCompleted: 1 }, new Set(), false).map((a) => a.key);
@@ -62,6 +62,24 @@ describe('achievements', () => {
     expect(free).not.toContain('streak_100');
     expect(pro).toContain('streak_100');
     expect(pro).toContain('level_10');
+  });
+
+  it('reports progress toward locked achievements', () => {
+    const tasks25 = ACHIEVEMENTS.find((a) => a.key === 'tasks_25')!;
+    expect(achievementProgress(tasks25, { ...zero, tasksCompleted: 10 })).toBeCloseTo(0.4);
+    expect(achievementProgress(tasks25, { ...zero, tasksCompleted: 99 })).toBe(1);
+  });
+
+  it('pays more XP for higher tiers', () => {
+    const xp = (k: string) => ACHIEVEMENTS.find((a) => a.key === k)!.xp;
+    expect(xp('first_task')).toBeLessThan(xp('tasks_25'));
+    expect(xp('tasks_25')).toBeLessThan(xp('tasks_100'));
+    expect(xp('tasks_100')).toBeLessThan(xp('tasks_500'));
+  });
+
+  it('unlocks score achievements from the life score', () => {
+    expect(newlyUnlocked({ ...zero, lifeScore: 72 }, new Set(), true).map((a) => a.key)).toContain('score_70');
+    expect(newlyUnlocked({ ...zero, lifeScore: 72 }, new Set(), true).map((a) => a.key)).not.toContain('score_90');
   });
 
   it('has unique keys', () => {

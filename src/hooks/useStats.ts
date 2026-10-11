@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { achievementStats } from '@/services/actions';
 import { useAchievementRecords, useFocusSessions, useGoals, useHabitLogs, useJournal, useNotes, useTasks } from '@/store/entities';
 import { useLive } from '@/store/createEntityStore';
+import { useProfile } from '@/store/profile';
 
 /** Lifetime statistics for the profile screen. */
 export function useLifetimeStats() {
@@ -30,4 +31,21 @@ export function useLifetimeStats() {
 export function useUnlockedKeys(): Set<string> {
   const records = useLive(useAchievementRecords);
   return useMemo(() => new Set(records.map((r) => r.key)), [records]);
+}
+
+/** Reactive achievement stats (progress bars on the achievements screen). */
+export function useAchievementStats() {
+  const tasks = useLive(useTasks);
+  const logs = useLive(useHabitLogs);
+  const goals = useLive(useGoals);
+  const sessions = useLive(useFocusSessions);
+  const notes = useLive(useNotes);
+  const journal = useLive(useJournal);
+  const records = useLive(useAchievementRecords);
+  const xp = useProfile((s) => s.xp);
+  return useMemo(
+    () => achievementStats(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [tasks, logs, goals, sessions, notes, journal, records, xp],
+  );
 }

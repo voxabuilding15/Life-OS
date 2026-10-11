@@ -1,11 +1,14 @@
 import { router } from 'expo-router';
-import { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { ChallengesCard } from '@/components/features/ChallengesCard';
+import { LifeScoreCard } from '@/components/features/LifeScoreCard';
 import { TaskRow } from '@/components/features/TaskRow';
 import { WeeklyInsight } from '@/components/features/WeeklyInsight';
 import { Avatar } from '@/components/ui/Avatar';
 import { Card } from '@/components/ui/Card';
+import { CountUp } from '@/components/ui/CountUp';
 import { IconButton, SectionHeader } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
 import { PressableScale } from '@/components/ui/PressableScale';
@@ -17,6 +20,7 @@ import { useFocusData, useGoalsData, useHabitsData, useLevelProgress, useTasksDa
 import { greeting } from '@/lib/date';
 import { levelTitle } from '@/lib/gamification';
 import { toggleHabit } from '@/services/actions';
+import { runSync } from '@/services/sync';
 import { useAuth } from '@/store/auth';
 import { useProfile } from '@/store/profile';
 import { useTheme } from '@/theme';
@@ -34,6 +38,13 @@ export default function Dashboard() {
   const goals = useGoalsData();
   const focus = useFocusData();
 
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await runSync();
+    setRefreshing(false);
+  }, []);
+
   const daily = useMemo(() => {
     const total = tasks.planned + habits.total;
     const done = tasks.done + habits.doneToday;
@@ -41,7 +52,7 @@ export default function Dashboard() {
   }, [tasks.planned, tasks.done, habits.total, habits.doneToday]);
 
   return (
-    <Screen bottomInset={110}>
+    <Screen bottomInset={110} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={t.accent} colors={[t.accent]} progressBackgroundColor={t.surfaceSolid} />}>
       <Animated.View entering={stagger(0)} style={styles.header}>
         <PressableScale onPress={() => router.push('/profile')} feedback="tap" accessibilityLabel="Open profile">
           <Avatar name={name} uri={avatarUrl} size={48} />
@@ -62,7 +73,7 @@ export default function Dashboard() {
         <Card accent padding={20} onPress={() => router.push('/profile')} accessibilityLabel="Level and XP">
           <View style={styles.hero}>
             <ProgressRing value={daily} size={104} stroke={9}>
-              <Text style={{ fontSize: 26, fontFamily: 'Inter_800ExtraBold', letterSpacing: -1 }}>{Math.round(daily * 100)}%</Text>
+              <CountUp value={Math.round(daily * 100)} suffix="%" style={{ fontSize: 26, fontFamily: 'Inter_800ExtraBold', letterSpacing: -1 }} />
               <Text variant="micro" color="secondary">
                 TODAY
               </Text>
@@ -87,8 +98,15 @@ export default function Dashboard() {
         </Card>
       </Animated.View>
 
+      <Animated.View entering={stagger(2)} style={{ marginTop: 12 }}>
+        <LifeScoreCard />
+      </Animated.View>
+      <Animated.View entering={stagger(3)} style={{ marginTop: 12 }}>
+        <ChallengesCard />
+      </Animated.View>
+
       {/* Quick stats */}
-      <Animated.View entering={stagger(2)} style={styles.quick}>
+      <Animated.View entering={stagger(4)} style={styles.quick}>
         {[
           { icon: 'checkmark-done', value: `${tasks.done}/${tasks.planned}`, label: 'Tasks', go: '/(tabs)/tasks' },
           { icon: 'flame', value: `${habits.doneToday}/${habits.total}`, label: 'Habits', go: '/(tabs)/habits' },
@@ -107,7 +125,7 @@ export default function Dashboard() {
       </Animated.View>
 
       {/* Focus shortcut */}
-      <Animated.View entering={stagger(3)} style={{ marginTop: 16 }}>
+      <Animated.View entering={stagger(5)} style={{ marginTop: 16 }}>
         <Card onPress={() => router.push('/focus')} padding={16} accessibilityLabel="Start focus mode">
           <View style={styles.focusRow}>
             <View style={[styles.focusIcon, { backgroundColor: t.accent, shadowColor: t.accent }]}>
@@ -125,7 +143,7 @@ export default function Dashboard() {
       </Animated.View>
 
       {/* Today's tasks */}
-      <Animated.View entering={stagger(4)} style={{ marginTop: 12 }}>
+      <Animated.View entering={stagger(6)} style={{ marginTop: 12 }}>
         <SectionHeader title="Today's tasks" action={tasks.planned ? 'See all' : 'Add'} onAction={() => (tasks.planned ? router.push('/(tabs)/tasks') : router.push('/task/new'))} />
         <Card padding={tasks.today.length ? 12 : 18}>
           <View style={styles.cardTop}>
@@ -148,7 +166,7 @@ export default function Dashboard() {
       </Animated.View>
 
       {/* Habits */}
-      <Animated.View entering={stagger(5)}>
+      <Animated.View entering={stagger(7)}>
         <SectionHeader title="Habit progress" action={habits.total ? 'See all' : 'Add'} onAction={() => (habits.total ? router.push('/(tabs)/habits') : router.push('/habit/new'))} />
         <Card padding={habits.items.length ? 6 : 18}>
           {habits.items.slice(0, 3).map(({ habit, doneToday, streak }) => (
@@ -174,7 +192,7 @@ export default function Dashboard() {
       </Animated.View>
 
       {/* Goals */}
-      <Animated.View entering={stagger(6)}>
+      <Animated.View entering={stagger(8)}>
         <SectionHeader title="Current goals" action={goals.active.length ? 'See all' : 'Add'} onAction={() => (goals.active.length ? router.push('/(tabs)/goals') : router.push('/goal/new'))} />
         <View style={{ gap: 10 }}>
           {goals.active.slice(0, 2).map(({ goal, progress, done, milestones }) => (
@@ -203,7 +221,7 @@ export default function Dashboard() {
         </View>
       </Animated.View>
 
-      <Animated.View entering={stagger(7)} style={{ marginTop: 20 }}>
+      <Animated.View entering={stagger(9)} style={{ marginTop: 20 }}>
         <WeeklyInsight />
       </Animated.View>
     </Screen>

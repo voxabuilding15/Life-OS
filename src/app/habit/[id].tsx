@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo } from 'react';
 import { Alert, Platform, View } from 'react-native';
+import { FreezeBanner } from '@/components/features/FreezeBanner';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -12,7 +13,7 @@ import { Screen } from '@/components/ui/Screen';
 import { StatTile } from '@/components/ui/StatTile';
 import { Text } from '@/components/ui/Text';
 import { useHabitsData } from '@/hooks/useData';
-import { deleteHabit, toggleHabit } from '@/services/actions';
+import { deleteHabit, freezesRemaining, toggleHabit } from '@/services/actions';
 import { useIsPro } from '@/store/subscription';
 import { useTheme } from '@/theme';
 
@@ -31,7 +32,7 @@ export default function HabitDetail() {
       </Screen>
     );
   }
-  const { habit, doneDays, streak, best, doneToday, rate30 } = item;
+  const { habit, doneDays, frozenDays, offer, streak, best, doneToday, rate30 } = item;
 
   const confirmDelete = () => {
     const run = () => {
@@ -62,6 +63,24 @@ export default function HabitDetail() {
         <StatTile icon="calendar" value={doneDays.size} label="Check-ins" />
         <StatTile icon="pulse" value={`${Math.round(rate30 * 100)}%`} label="30 days" />
       </View>
+      <SectionHeader title="Streak Freeze" />
+      <Card padding={16} accent={Boolean(offer)}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <View style={{ width: 40, height: 40, borderRadius: 13, backgroundColor: t.accentSoft, alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name="snow" size={20} color={t.accent} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <Text variant="bodyMedium">Protect your streak</Text>
+              {!isPro ? <ProBadge small /> : null}
+            </View>
+            <Text variant="caption" color="secondary">
+              {isPro ? `${freezesRemaining()} of 2 freezes left this month · ${frozenDays.size} used on this habit` : 'Miss a day without losing your streak. 2 freezes every month.'}
+            </Text>
+          </View>
+        </View>
+        {offer ? <FreezeBanner habitId={habit.id} offer={offer} /> : null}
+      </Card>
       <SectionHeader title="Activity" />
       <Card padding={16}>
         <Heatmap doneDays={doneDays} weeks={isPro ? 20 : 15} />

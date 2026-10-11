@@ -8,6 +8,11 @@ export const config = {
   freeGoalLimit: 3,
   proPriceLabel: '$4.99',
   proProductId: 'lifeos_pro_monthly',
+  freezesPerMonth: 2,
+  androidPackage: 'com.lifeos.app',
+  privacyUrl: process.env.EXPO_PUBLIC_PRIVACY_URL ?? 'https://lifeos.app/privacy',
+  termsUrl: process.env.EXPO_PUBLIC_TERMS_URL ?? 'https://lifeos.app/terms',
+  supportEmail: process.env.EXPO_PUBLIC_SUPPORT_EMAIL ?? 'support@lifeos.app',
 } as const;
 
 export const isSupabaseConfigured = Boolean(config.supabaseUrl && config.supabaseAnonKey);

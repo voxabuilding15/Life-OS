@@ -76,12 +76,26 @@ export async function syncDailyReminder(): Promise<void> {
   if (!supported) return;
   const id = 'daily:review';
   await Notifications.cancelScheduledNotificationAsync(id).catch(() => undefined);
+  await Notifications.cancelScheduledNotificationAsync('weekly:report').catch(() => undefined);
   const { dailyReminder } = useSettings.getState();
-  if (!enabled() || !dailyReminder || !(await ensureNotificationPermission())) return;
+  if (!enabled() || !(await ensureNotificationPermission())) return;
+  await scheduleWeekly();
+  if (!dailyReminder) return;
   await Notifications.scheduleNotificationAsync({
     identifier: id,
     content: { title: 'Close out your day', body: 'Check off your tasks and habits to keep levelling up.' },
     trigger: { type: Notifications.SchedulableTriggerInputTypes.DAILY, hour: 20, minute: 30 },
+  });
+}
+
+async function scheduleWeekly(): Promise<void> {
+  const id = 'weekly:report';
+  await Notifications.cancelScheduledNotificationAsync(id).catch(() => undefined);
+  if (!useSettings.getState().weeklyReport) return;
+  await Notifications.scheduleNotificationAsync({
+    identifier: id,
+    content: { title: 'Your weekly report is ready', body: 'See your Life Score and how your week went.', data: { route: '/report' } },
+    trigger: { type: Notifications.SchedulableTriggerInputTypes.WEEKLY, weekday: 1, hour: 18, minute: 30 },
   });
 }
 

@@ -1,4 +1,4 @@
-import { todayKey } from '@/lib/date';
+import { addDays, todayKey } from '@/lib/date';
 import {
   ACHIEVEMENTS,
   levelFromXp,
@@ -8,6 +8,10 @@ import {
   type XpSource,
 } from '@/lib/gamification';
 import { longestStreak } from '@/lib/habits';
+import { CHALLENGE_PREFIX, challengeKey, challengeProgress, type Challenge } from '@/lib/challenges';
+import { FREEZE_PREFIX, freezeKey, freezesLeft, parseFreezeKey } from '@/lib/freeze';
+import type { LifeData } from '@/lib/lifeData';
+import { computeLifeScore } from '@/lib/lifeScore';
 import { config } from '@/lib/config';
 import { nowIso } from '@/lib/id';
 import {
@@ -32,6 +36,18 @@ import { cancelHabitReminder, cancelTaskReminder, scheduleHabitReminder, schedul
 /* Gamification core                                                   */
 /* ------------------------------------------------------------------ */
 
+export function lifeDataSnapshot(): LifeData {
+  return {
+    tasks: liveItems(useTasks),
+    habitCount: liveItems(useHabits).filter((h) => !h.archived).length,
+    logs: liveItems(useHabitLogs),
+    sessions: liveItems(useFocusSessions),
+    milestones: liveItems(useMilestones),
+    goals: liveItems(useGoals),
+    journal: liveItems(useJournal),
+  };
+}
+
 export function achievementStats(): AchievementStats {
   const logs = liveItems(useHabitLogs);
   const byHabit = new Map<string, Set<string>>();
@@ -40,6 +56,7 @@ export function achievementStats(): AchievementStats {
     byHabit.get(l.habitId)!.add(l.logDate);
   }
   const sessions = liveItems(useFocusSessions).filter((s) => s.completed);
+  const records = liveItems(useAchievementRecords);
   return {
     tasksCompleted: liveItems(useTasks).filter((t) => t.completed).length,
     habitCheckins: logs.length,
@@ -49,27 +66,38 @@ export function achievementStats(): AchievementStats {
     focusMinutes: Math.round(sessions.reduce((a, s) => a + s.durationSeconds, 0) / 60),
     notes: liveItems(useNotes).length,
     journalEntries: liveItems(useJournal).length,
-    level: 0, // filled in by checkAchievements
+    level: levelFromXp(useProfile.getState().xp),
+    challengesClaimed: records.filter((r) => r.key.startsWith(CHALLENGE_PREFIX) && !r.key.endsWith(':all')).length,
+    freezesUsed: records.filter((r) => r.key.startsWith(FREEZE_PREFIX)).length,
+    lifeScore: computeLifeScore(lifeDataSnapshot()).score,
   };
 }
 
+/** Unlocks any achievements the current stats satisfy and pays their XP bonus (which can unlock more). */
 export function checkAchievements(): void {
-  const profile = useProfile.getState();
-  const unlocked = new Set(liveItems(useAchievementRecords).map((a) => a.key));
-  const stats = achievementStats();
-  stats.level = levelFromXp(profile.xp);
-  for (const a of newlyUnlocked(stats, unlocked, useSubscription.getState().isPro)) {
-    useAchievementRecords.getState().add({ key: a.key, unlockedAt: nowIso() });
-    useFeedback.getState().push({ type: 'achievement', achievement: a });
+  const feedback = useFeedback.getState();
+  for (let pass = 0; pass < 4; pass++) {
+    const unlocked = new Set(liveItems(useAchievementRecords).map((a) => a.key));
+    const earned = newlyUnlocked(achievementStats(), unlocked, useSubscription.getState().isPro);
+    if (!earned.length) return;
+    for (const a of earned) {
+      useAchievementRecords.getState().add({ key: a.key, unlockedAt: nowIso() });
+      feedback.push({ type: 'achievement', achievement: a });
+      const { before, after } = useProfile.getState().addXp(a.xp);
+      if (after > before) setTimeout(() => useFeedback.getState().push({ type: 'levelUp', from: before, to: after }), 1200);
+    }
   }
 }
 
 /** Award (or take back, when `sign` is -1) XP for an action. Positive awards show the popup + level-up. */
 export function awardXp(source: XpSource, label: string, sign: 1 | -1 = 1): void {
-  const amount = XP[source] * sign;
+  awardXpAmount(XP[source] * sign, label);
+}
+
+export function awardXpAmount(amount: number, label: string): void {
   const { before, after } = useProfile.getState().addXp(amount);
   const feedback = useFeedback.getState();
-  if (sign > 0) {
+  if (amount > 0) {
     feedback.push({ type: 'xp', amount, label });
     // Let the XP pop land first, then celebrate.
     if (after > before) setTimeout(() => useFeedback.getState().push({ type: 'levelUp', from: before, to: after }), 900);
@@ -261,3 +289,47 @@ export function saveJournal(date: string, mood: number, body: string): JournalEn
 }
 
 export const ALL_ACHIEVEMENTS = ACHIEVEMENTS;
+
+/* ------------------------------------------------------------------ */
+/* Daily challenges                                                    */
+/* ------------------------------------------------------------------ */
+
+/** Claims a completed challenge. Claims are stored as achievement records so they sync like everything else. */
+export function claimChallenge(day: string, challenge: Challenge, claimedKeys: ReadonlySet<string>, allChallenges: Challenge[], dayStats: Parameters<typeof challengeProgress>[1]): boolean {
+  const key = challengeKey(day, challenge.id);
+  if (claimedKeys.has(key) || !challengeProgress(challenge, dayStats).done) return false;
+  if (challenge.bonus && !useSubscription.getState().isPro) return false;
+  useAchievementRecords.getState().add({ key, unlockedAt: nowIso() });
+  awardXpAmount(challenge.xp, 'Challenge complete');
+  // Everything the user can claim today is claimed -> bonus.
+  const claimable = allChallenges.filter((c) => !c.bonus || useSubscription.getState().isPro);
+  const nowClaimed = new Set(liveItems(useAchievementRecords).map((r) => r.key));
+  if (claimable.every((c) => nowClaimed.has(challengeKey(day, c.id))) && !nowClaimed.has(challengeKey(day, 'all'))) {
+    useAchievementRecords.getState().add({ key: challengeKey(day, 'all'), unlockedAt: nowIso() });
+    setTimeout(() => awardXp('challengeAll', 'All challenges done'), 700);
+  }
+  return true;
+}
+
+/* ------------------------------------------------------------------ */
+/* Streak freeze (Pro)                                                 */
+/* ------------------------------------------------------------------ */
+
+export const freezesRemaining = (): number =>
+  freezesLeft(liveItems(useAchievementRecords).filter((r) => r.key.startsWith(FREEZE_PREFIX)).map((r) => r.unlockedAt));
+
+export type FreezeResult = { ok: true } | { ok: false; reason: 'pro' | 'none-left' | 'already' };
+
+/** Protects yesterday for a habit so its streak survives. */
+export function freezeHabit(habitId: string): FreezeResult {
+  if (!useSubscription.getState().isPro) return { ok: false, reason: 'pro' };
+  if (freezesRemaining() <= 0) return { ok: false, reason: 'none-left' };
+  const day = addDays(todayKey(), -1);
+  const key = freezeKey(habitId, day);
+  if (liveItems(useAchievementRecords).some((r) => r.key === key)) return { ok: false, reason: 'already' };
+  useAchievementRecords.getState().add({ key, unlockedAt: nowIso() });
+  checkAchievements();
+  return { ok: true };
+}
+
+export { parseFreezeKey };

@@ -18,7 +18,12 @@ A premium personal operating system for young people: tasks, habits, goals, focu
 | **Notes / Journal** | Notes with categories, search, favorites; daily journal with mood |
 | **Profile** | Avatar upload, level, XP, achievements, lifetime statistics, settings |
 | **Gamification** | Task +10 XP, habit +20, goal +500 (milestone +40, focus +30, journal +15); levels, 16 achievements, level-up celebration |
-| **Pro** ($4.99/month) | Unlimited habits & goals, advanced analytics and reports, themes, cloud sync, premium widget, 4 extra achievements |
+| **Life Score** | A 0-100 score from habits, tasks, focus, goals and reflection, with a 7-day trend and a "next best move" |
+| **Daily challenges** | 3 deterministic challenges a day (+ a Pro double-XP bonus), claimable XP, all-done bonus |
+| **Streak Freeze** (Pro) | Saves a streak after a missed day; 2 a month; offered automatically when a streak is about to break |
+| **Achievements** | 26 tiered badges in 6 categories with progress bars and XP bonuses |
+| **Weekly report** | This week vs last: Life Score, tasks, check-ins, focus, best day, top habit, tips, share (Pro for full insights); Sunday notification |
+| **Pro** ($4.99/month) | Unlimited habits & goals, Streak Freeze, advanced analytics and full report, bonus challenge, themes, cloud sync, premium widget, 8 extra achievements; paywall with benefit slides and a Free vs Pro table |
 
 Free plan limits: 3 habits, 3 active goals, 7-day statistics, local-only data. Everything is offline-first.
 
@@ -99,7 +104,8 @@ npx eas build --profile production  --platform all
 ## Quality
 
 - `npm run typecheck`: strict TypeScript.
-- `npm test`: 31 tests covering the XP/level curve (cross-checked against the SQL `level_from_xp`), streak and heatmap logic, the camel/snake sync mapping, and store + XP-engine integration (free-plan limits, goal completion, reopen refunds).
+- `npm test`: 50 tests (adds Life Score, challenges, streak freeze, weekly report and tiered achievements)
+- covering the XP/level curve (cross-checked against the SQL `level_from_xp`), streak and heatmap logic, the camel/snake sync mapping, and store + XP-engine integration (free-plan limits, goal completion, reopen refunds).
 - Accessibility: roles, labels and states on interactive elements; progress bars expose values.
 
 ## Known limitations
@@ -107,3 +113,7 @@ npx eas build --profile production  --platform all
 - Cloud sync, RevenueCat purchases and FCM need real project credentials and have not been exercised against live services from this repo; the SQL schema and RLS were verified against a local PostgreSQL with stubbed Supabase `auth`/`storage` schemas.
 - Server-side push sending is not included.
 - Custom themes are limited to the three-color palette on purpose (Ocean, Aurora, Ghost).
+
+## Google Play
+
+See `store/` for the listing copy, icon, feature graphic, 8 screenshots, draft privacy policy, data-safety answers and the release checklist.

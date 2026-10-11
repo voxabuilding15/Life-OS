@@ -3,12 +3,14 @@ import { addDays, lastNDays, todayKey } from './date';
 /**
  * Current streak: consecutive days with a check-in ending today.
  * If today isn't checked yet the streak is still alive when yesterday was.
+ * A frozen day (Streak Freeze) bridges a missed day: it keeps the streak alive without adding to it.
  */
-export function currentStreak(doneDays: ReadonlySet<string>, today: string = todayKey()): number {
-  let cursor = doneDays.has(today) ? today : addDays(today, -1);
+export function currentStreak(doneDays: ReadonlySet<string>, today: string = todayKey(), frozenDays: ReadonlySet<string> = new Set()): number {
+  const alive = (d: string) => doneDays.has(d) || frozenDays.has(d);
+  let cursor = alive(today) ? today : addDays(today, -1);
   let streak = 0;
-  while (doneDays.has(cursor)) {
-    streak += 1;
+  while (alive(cursor)) {
+    if (doneDays.has(cursor)) streak += 1;
     cursor = addDays(cursor, -1);
   }
   return streak;

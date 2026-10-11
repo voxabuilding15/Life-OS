@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import Animated, { FadeInDown, LinearTransition } from 'react-native-reanimated';
+import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Chip } from '@/components/ui/Chip';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -54,6 +55,7 @@ export default function Notes() {
   const [tab, setTab] = useState<'notes' | 'journal'>('notes');
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('All');
+  const [shown, setShown] = useState(30);
   const notes = useNotesData();
   const journal = useJournalData();
 
@@ -91,13 +93,14 @@ export default function Notes() {
               ))}
             </ScrollView>
             <View style={{ gap: 12 }}>
-              {filtered.map((n, i) => (
+              {filtered.slice(0, shown).map((n, i) => (
                 <NoteCard key={n.id} note={n} index={i} />
               ))}
+              {filtered.length > shown ? <Button title={`Show more (${filtered.length - shown})`} variant="ghost" size="md" onPress={() => setShown((c) => c + 30)} /> : null}
             </View>
             {filtered.length === 0 ? (
               notes.length === 0 ? (
-                <EmptyState icon="document-text-outline" title="Capture your thinking" message="Ideas, plans, things to remember. Everything in one place." actionLabel="New note" onAction={() => router.push('/note/new')} />
+                <EmptyState icon="document-text-outline" title="Capture your thinking" message="Ideas, plans, things to remember. Everything in one place." actionLabel="New note" onAction={() => router.push('/note/new')} satellites={['bulb', 'bookmark', 'star']} hint="Star a note to pin it to the top." />
               ) : (
                 <EmptyState icon="search" title="No matches" message="Try a different search or category." />
               )
@@ -136,7 +139,7 @@ export default function Notes() {
                   </Card>
                 </Animated.View>
               ))}
-            {entries.length === 0 ? <EmptyState icon="book-outline" title="Start your journal" message="A few lines a day builds clarity. Reflect on how you feel and what you did." /> : null}
+            {entries.length === 0 ? <EmptyState icon="book-outline" title="Start your journal" message="A few lines a day builds clarity. Reflect on how you feel and what you did." actionLabel="Write today's entry" onAction={() => router.push(`/journal/${todayKey()}`)} satellites={['heart', 'moon', 'sunny']} hint="Journaling counts toward your Life Score and earns +15 XP." /> : null}
           </View>
         )}
       </Screen>

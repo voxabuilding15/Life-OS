@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import Animated, { FadeInDown, LinearTransition } from 'react-native-reanimated';
+import { FreezeBanner } from '@/components/features/FreezeBanner';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Fab } from '@/components/ui/Fab';
@@ -17,14 +18,14 @@ import { toggleHabit } from '@/services/actions';
 import { useIsPro } from '@/store/subscription';
 import { useTheme } from '@/theme';
 
-function WeekDots({ doneDays }: { doneDays: ReadonlySet<string> }) {
+function WeekDots({ doneDays, frozenDays }: { doneDays: ReadonlySet<string>; frozenDays: ReadonlySet<string> }) {
   const t = useTheme();
   return (
     <View style={{ flexDirection: 'row', gap: 6 }}>
       {lastNDays(7).map((d) => (
         <View key={d} style={{ alignItems: 'center', gap: 4 }}>
-          <View style={{ width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center', backgroundColor: doneDays.has(d) ? t.accent : t.surfaceStrong }}>
-            {doneDays.has(d) ? <Icon name="checkmark" size={13} color={t.onAccent} /> : null}
+          <View style={{ width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center', backgroundColor: doneDays.has(d) ? t.accent : frozenDays.has(d) ? t.accentSoft : t.surfaceStrong }}>
+            {doneDays.has(d) ? <Icon name="checkmark" size={13} color={t.onAccent} /> : frozenDays.has(d) ? <Icon name="snow" size={12} color={t.accent} /> : null}
           </View>
           <Text variant="micro" color={d === todayKey() ? 'accent' : 'tertiary'} style={{ fontSize: 9 }}>
             {dayInitial(d)}
@@ -37,7 +38,7 @@ function WeekDots({ doneDays }: { doneDays: ReadonlySet<string> }) {
 
 function HabitCard({ item, index }: { item: HabitWithStats; index: number }) {
   const t = useTheme();
-  const { habit, doneToday, streak, doneDays } = item;
+  const { habit, doneToday, streak, doneDays, frozenDays, offer } = item;
   return (
     <Animated.View entering={FadeInDown.delay(index * 60).duration(400)} layout={LinearTransition.springify().damping(18)}>
       <Card onPress={() => router.push(`/habit/${habit.id}`)} padding={16} accessibilityLabel={`${habit.name}, ${streak} day streak`}>
@@ -50,7 +51,7 @@ function HabitCard({ item, index }: { item: HabitWithStats; index: number }) {
               {habit.name}
             </Text>
             <Text variant="caption" color={streak > 0 ? 'accent' : 'tertiary'} style={{ fontFamily: 'Inter_600SemiBold' }}>
-              🔥 {streak} day streak
+              🔥 {streak} day streak{frozenDays.size ? ' · ❄️' : ''}
             </Text>
           </View>
           <PressableScale
@@ -66,8 +67,9 @@ function HabitCard({ item, index }: { item: HabitWithStats; index: number }) {
           </PressableScale>
         </View>
         <View style={{ marginTop: 16 }}>
-          <WeekDots doneDays={doneDays} />
+          <WeekDots doneDays={doneDays} frozenDays={frozenDays} />
         </View>
+        {offer ? <FreezeBanner habitId={habit.id} offer={offer} /> : null}
       </Card>
     </Animated.View>
   );
@@ -102,7 +104,7 @@ export default function Habits() {
             <HabitCard key={item.habit.id} item={item} index={i} />
           ))}
         </View>
-        {data.total === 0 ? <EmptyState icon="flame-outline" title="Build your first streak" message="Pick a tiny daily action: reading, gym, coding, water or meditation." actionLabel="New habit" onAction={() => router.push('/habit/new')} /> : null}
+        {data.total === 0 ? <EmptyState icon="flame-outline" title="Build your first streak" message="Pick a tiny daily action: reading, gym, coding, water or meditation." actionLabel="New habit" onAction={() => router.push('/habit/new')} satellites={['barbell', 'book', 'water']} hint="Missing a day? Pro members can use a Streak Freeze to protect their streak." /> : null}
         {atLimit ? (
           <PressableScale onPress={() => router.push('/paywall?reason=habits')} style={{ marginTop: 16 }} feedback="tap">
             <Text variant="caption" color="accent" align="center" style={{ fontFamily: 'Inter_600SemiBold' }}>
