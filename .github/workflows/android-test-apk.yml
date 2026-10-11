@@ -1,0 +1,70 @@
+name: Android test APK
+
+# Manual only. Builds an installable APK for testing on a real device, using the production Supabase config.
+# No Google Play, no RevenueCat, no Firebase: purchases and push notifications stay off in this build.
+# The APK is signed with the throw-away debug key, so it can be sideloaded but never uploaded to Google Play.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-test-apk
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - run: npm ci
+
+      - name: Check Supabase configuration (values never printed)
+        env:
+          EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+        run: npm run check:supabase
+
+      - name: Generate the native Android project
+        run: npx expo prebuild --platform android --no-install --clean
+
+      - name: Build APK
+        env:
+          NODE_ENV: production
+          EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon -Dorg.gradle.jvmargs="-Xmx4g" -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
+
+      - name: Verify the APK contains the production config
+        env:
+          EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
+        run: |
+          APK=$(ls android/app/build/outputs/apk/release/*.apk | head -1)
+          mkdir -p /tmp/apk && unzip -q -o "$APK" 'assets/index.android.bundle' -d /tmp/apk
+          HOST=$(node -e 'console.log(new URL(process.env.EXPO_PUBLIC_SUPABASE_URL).host)')
+          grep -aq "$HOST" /tmp/apk/assets/index.android.bundle && echo "Supabase host is inlined in the bundle" || { echo "::error::Supabase host not found in the bundle"; exit 1; }
+          ls -l "$APK"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: life-os-test-apk
+          path: android/app/build/outputs/apk/release/*.apk
+          retention-days: 14
