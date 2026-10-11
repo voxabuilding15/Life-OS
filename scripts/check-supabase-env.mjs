@@ -13,6 +13,7 @@ import path from 'node:path';
 const url = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 const key = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
 const errors = [];
+let keyInfo = null;
 const fail = (m) => errors.push(m);
 
 if (!url) fail('EXPO_PUBLIC_SUPABASE_URL is empty (missing GitHub Actions secret?)');
@@ -31,8 +32,13 @@ else {
   const parts = key.split('.');
   if (parts.length === 3) {
     try {
-      const role = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8')).role;
-      if (role === 'service_role') fail('EXPO_PUBLIC_SUPABASE_ANON_KEY is a SERVICE-ROLE key. Never ship it in an app. Rotate it and use the anon key');
+      const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8'));
+      keyInfo = { role: payload.role, ref: payload.ref };
+      const host = (() => { try { return new URL(url).hostname.split('.')[0]; } catch { return ''; } })();
+      if (payload.ref && host && payload.ref !== host) fail(`anon key belongs to project "${payload.ref}" but the URL is project "${host}": key and URL come from different Supabase projects`);
+      if (payload.role && payload.role !== 'anon' && payload.role !== 'service_role') fail(`anon key has unexpected role "${payload.role}"`);
+      if (payload.exp && payload.exp * 1000 < Date.now()) fail('anon key has expired');
+      if (payload.role === 'service_role') fail('EXPO_PUBLIC_SUPABASE_ANON_KEY is a SERVICE-ROLE key. Never ship it in an app. Rotate it and use the anon key');
     } catch { /* not a decodable JWT: fine */ }
   }
   if (/^sb_secret_/.test(key)) fail('EXPO_PUBLIC_SUPABASE_ANON_KEY is a secret key (sb_secret_...). Use the anon / publishable key');
@@ -62,9 +68,40 @@ if (i > -1 && errors.length === 0) {
   }
 }
 
+// Live probe: does THIS project accept THIS key? (an "Invalid API key" at login means it does not)
+if (process.argv.includes('--live') && errors.length === 0) {
+  try {
+    const r = await fetch(`${url.replace(/\/$/, '')}/auth/v1/settings`, { headers: { apikey: key }, signal: AbortSignal.timeout(20000) });
+    if (r.status === 401 || r.status === 403) fail(`Supabase rejected the anon key for this project (HTTP ${r.status}: Invalid API key). The key does not belong to this URL, is truncated, or was rotated`);
+    else if (!r.ok) fail(`Supabase auth settings endpoint answered HTTP ${r.status}`);
+    else {
+      const st = await r.json();
+      console.log(`live probe OK: key accepted. email signup ${st.disable_signup ? 'DISABLED' : 'enabled'}, email auto-confirm ${st.mailer_autoconfirm ? 'on' : 'off (users must confirm email)'}`);
+    }
+  } catch (e) { fail(`could not reach ${new URL(url).host}: ${e.message}`); }
+}
+
+// APK: extract the bundle from the apk and look for BOTH url and key
+const a = process.argv.indexOf('--apk');
+if (a > -1 && errors.length === 0) {
+  const apk = process.argv[a + 1];
+  const tmp = fs.mkdtempSync('/tmp/apkcheck-');
+  try {
+    execSync(`unzip -q -o "${apk}" "assets/index.android.bundle" -d "${tmp}"`);
+    const bundle = fs.readFileSync(path.join(tmp, 'assets/index.android.bundle'));
+    if (!bundle.includes(url)) fail('APK bundle does not contain the Supabase URL');
+    if (!bundle.includes(key)) fail(`APK bundle does not contain the anon key (key length ${key.length}): the build did not embed this secret`);
+    // the embedded config must be the one used by the client: no stale/other supabase host and no second key
+    const otherHosts = new Set((bundle.toString('latin1').match(/https:\/\/[a-z0-9]{20}\.supabase\.co/g) ?? []).filter((h) => h !== url));
+    if (otherHosts.size) fail('APK bundle also contains a different Supabase project URL');
+    if (!errors.length) console.log('APK bundle contains the exact Supabase URL and anon key from the secrets');
+  } catch (e) { fail(`APK check failed: ${e.message}`); }
+  fs.rmSync(tmp, { recursive: true, force: true });
+}
+
 if (errors.length) {
   console.error('Supabase configuration check FAILED:');
   for (const e of errors) console.error(`  - ${e}`);
   process.exit(1);
 }
-console.log(`Supabase configuration OK (url host: ${new URL(url).host}; key length: ${key.length}; values not printed)`);
+console.log(`Supabase configuration OK (url host: ${new URL(url).host}; key length: ${key.length}${keyInfo ? `; key role: ${keyInfo.role}, key project: ${keyInfo.ref}` : '; opaque (non-JWT) key'}; values not printed)`);

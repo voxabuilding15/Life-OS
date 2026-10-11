@@ -47,7 +47,7 @@ jobs:
         env:
           EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
           EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
-        run: npm run check:supabase
+        run: node scripts/check-supabase-env.mjs --live
 
       - name: Generate the native Android project
         run: npx expo prebuild --platform android --no-install --clean
@@ -60,14 +60,13 @@ jobs:
         working-directory: android
         run: ./gradlew assembleRelease --no-daemon -Dorg.gradle.jvmargs="-Xmx4g" -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
 
-      - name: Verify the APK contains the production config
+      - name: Verify the APK embeds the exact production URL and anon key (values never printed)
         env:
           EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
         run: |
           APK=$(ls android/app/build/outputs/apk/release/*.apk | head -1)
-          mkdir -p /tmp/apk && unzip -q -o "$APK" 'assets/index.android.bundle' -d /tmp/apk
-          HOST=$(node -e 'console.log(new URL(process.env.EXPO_PUBLIC_SUPABASE_URL).host)')
-          grep -aq "$HOST" /tmp/apk/assets/index.android.bundle && echo "Supabase host is inlined in the bundle" || { echo "::error::Supabase host not found in the bundle"; exit 1; }
+          node scripts/check-supabase-env.mjs --apk "$APK"
           ls -l "$APK"
 
       - uses: actions/upload-artifact@v4
