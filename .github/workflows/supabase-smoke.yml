@@ -1,0 +1,28 @@
+name: Supabase production smoke test
+
+# Manual only. Uses just the public URL + anon key (the same secrets the app build uses). Creates two throw-away users
+# (lifeos-smoke-*@example.com), tests auth/profile/sync/RLS, and deletes them again via delete_my_account().
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Smoke test against production Supabase
+        env:
+          EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+        run: npm run check:supabase && node scripts/smoke-production.mjs
