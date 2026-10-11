@@ -100,6 +100,7 @@ if (a > -1 && errors.length === 0) {
 }
 
 if (errors.length) {
+  if (key) console.error(`diagnostics (no secrets): key format ${keyInfo ? 'JWT (legacy anon)' : /^sb_publishable_/.test(key) ? 'sb_publishable_ (new)' : 'unrecognised'}, length ${key.length}${keyInfo ? `, role ${keyInfo.role}, project ref ${keyInfo.ref}` : ''}; url host ${url ? new URL(url).host : '(empty)'}, url length ${url.length}`);
   console.error('Supabase configuration check FAILED:');
   for (const e of errors) console.error(`  - ${e}`);
   process.exit(1);
