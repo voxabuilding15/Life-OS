@@ -5,10 +5,12 @@ import { Field, FormModal } from '@/components/features/FormModal';
 import { Chip } from '@/components/ui/Chip';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { Input } from '@/components/ui/Input';
+import { useI18n } from '@/i18n';
 import { canCreateGoal, createGoal } from '@/services/actions';
 import { GOAL_CATEGORIES, type GoalCategory } from '@/types';
 
 export default function GoalForm() {
+  const { t: tr } = useI18n();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<GoalCategory>('Career');
@@ -21,32 +23,32 @@ export default function GoalForm() {
   }, []);
 
   const save = () => {
-    if (!title.trim()) return setError('Name your goal.');
+    if (!title.trim()) return setError(tr('goals.nameRequired'));
     const goal = createGoal({ title, description: description.trim(), category, targetDate }, milestones);
     if (!goal) return router.replace('/paywall?reason=goals');
     router.replace(`/goal/${goal.id}`);
   };
 
   return (
-    <FormModal title="New goal" saveLabel="Create goal" onSave={save}>
-      <Input label="Goal" value={title} onChangeText={(v) => (setTitle(v), setError(null))} placeholder="e.g. Become a Full Stack Developer" error={error} autoFocus />
-      <Input label="Why it matters" value={description} onChangeText={setDescription} placeholder="Optional" multiline />
-      <Field label="Category">
+    <FormModal title={tr('goals.new')} saveLabel={tr('goals.create')} onSave={save}>
+      <Input label={tr('goals.goal')} value={title} onChangeText={(v) => (setTitle(v), setError(null))} placeholder={tr('goals.goalPlaceholder')} error={error} autoFocus />
+      <Input label={tr('goals.why')} value={description} onChangeText={setDescription} placeholder={tr('common.optional')} multiline />
+      <Field label={tr('goals.category')}>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
           {GOAL_CATEGORIES.map((c) => (
-            <Chip key={c} label={c} selected={category === c} onPress={() => setCategory(c)} />
+            <Chip key={c} label={tr(`categories.goal.${c}`)} selected={category === c} onPress={() => setCategory(c)} />
           ))}
         </View>
       </Field>
-      <Field label="Milestones">
+      <Field label={tr('goals.milestones')}>
         <View style={{ gap: 10 }}>
           {milestones.map((m, i) => (
-            <Input key={i} value={m} onChangeText={(v) => setMilestones((all) => all.map((x, j) => (j === i ? v : x)))} placeholder={['HTML', 'CSS', 'JavaScript', 'React', 'Node.js'][i] ? `e.g. ${['HTML', 'CSS', 'JavaScript', 'React', 'Node.js'][i]}` : 'Next step'} icon="ellipse-outline" />
+            <Input key={i} value={m} onChangeText={(v) => setMilestones((all) => all.map((x, j) => (j === i ? v : x)))} placeholder={['HTML', 'CSS', 'JavaScript', 'React', 'Node.js'][i] ? tr('goals.milestoneExample', { example: ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js'][i] }) : tr('goals.nextStep')} icon="ellipse-outline" />
           ))}
-          <Chip label="Add milestone" icon="add" onPress={() => setMilestones((m) => [...m, ''])} />
+          <Chip label={tr('goals.addMilestone')} icon="add" onPress={() => setMilestones((m) => [...m, ''])} />
         </View>
       </Field>
-      <Field label="Target date">
+      <Field label={tr('goals.targetDate')}>
         <DatePicker value={targetDate} onChange={setTargetDate} />
       </Field>
     </FormModal>

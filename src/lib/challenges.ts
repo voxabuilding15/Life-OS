@@ -1,9 +1,8 @@
 export type ChallengeMetric = 'tasks' | 'habits' | 'allHabits' | 'focus' | 'journal' | 'milestone';
 
+/** Text lives in the locale files under `challenges.items.<id>.{title,description}`. */
 export interface ChallengeTemplate {
   id: string;
-  title: string;
-  description: string;
   icon: string;
   metric: ChallengeMetric;
   target: number;
@@ -31,14 +30,14 @@ export interface Availability {
 }
 
 const POOL: ChallengeTemplate[] = [
-  { id: 'tasks_2', title: 'Two down', description: 'Complete 2 tasks', icon: 'checkmark-done', metric: 'tasks', target: 2, xp: 25 },
-  { id: 'tasks_4', title: 'Task blitz', description: 'Complete 4 tasks', icon: 'flash', metric: 'tasks', target: 4, xp: 45 },
-  { id: 'habits_2', title: 'Double check-in', description: 'Check in 2 habits', icon: 'repeat', metric: 'habits', target: 2, xp: 25 },
-  { id: 'habits_all', title: 'Clean sweep', description: 'Check in every habit today', icon: 'flame', metric: 'allHabits', target: 1, xp: 40 },
-  { id: 'focus_25', title: 'One good session', description: 'Focus for 25 minutes', icon: 'timer', metric: 'focus', target: 25, xp: 30 },
-  { id: 'focus_50', title: 'Deep work', description: 'Focus for 50 minutes', icon: 'hourglass', metric: 'focus', target: 50, xp: 50 },
-  { id: 'journal_1', title: 'Reflect', description: "Write today's journal entry", icon: 'book', metric: 'journal', target: 1, xp: 25 },
-  { id: 'milestone_1', title: 'Move the needle', description: 'Reach a goal milestone', icon: 'flag', metric: 'milestone', target: 1, xp: 40 },
+  { id: 'tasks_2', icon: 'checkmark-done', metric: 'tasks', target: 2, xp: 25 },
+  { id: 'tasks_4', icon: 'flash', metric: 'tasks', target: 4, xp: 45 },
+  { id: 'habits_2', icon: 'repeat', metric: 'habits', target: 2, xp: 25 },
+  { id: 'habits_all', icon: 'flame', metric: 'allHabits', target: 1, xp: 40 },
+  { id: 'focus_25', icon: 'timer', metric: 'focus', target: 25, xp: 30 },
+  { id: 'focus_50', icon: 'hourglass', metric: 'focus', target: 50, xp: 50 },
+  { id: 'journal_1', icon: 'book', metric: 'journal', target: 1, xp: 25 },
+  { id: 'milestone_1', icon: 'flag', metric: 'milestone', target: 1, xp: 40 },
 ];
 
 /** Small deterministic PRNG so every device picks the same challenges for the same day. */

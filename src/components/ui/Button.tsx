@@ -66,7 +66,7 @@ export function Button({ title, onPress, variant = 'primary', size = 'lg', icon,
       ) : (
         <View style={styles.row}>
           {icon ? <Icon name={icon} size={size === 'sm' ? 16 : 20} color={fg} /> : null}
-          <Text variant={size === 'sm' ? 'caption' : 'bodyMedium'} style={{ color: fg, fontFamily: 'Inter_600SemiBold' }}>
+          <Text variant={size === 'sm' ? 'caption' : 'bodyMedium'} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} style={{ color: fg, fontFamily: 'Inter_600SemiBold', flexShrink: 1 }}>
             {title}
           </Text>
         </View>
@@ -77,6 +77,6 @@ export function Button({ title, onPress, variant = 'primary', size = 'lg', icon,
 
 const styles = StyleSheet.create({
   base: { borderRadius: radius.lg, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 22 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 8, maxWidth: '100%' },
   glow: { shadowOpacity: 0.35, shadowRadius: 18, shadowOffset: { width: 0, height: 6 }, elevation: 8 },
 });

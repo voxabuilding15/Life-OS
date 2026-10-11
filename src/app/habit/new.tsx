@@ -8,12 +8,14 @@ import { Input } from '@/components/ui/Input';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { formatHm, TimePicker } from '@/components/ui/TimePicker';
+import { useI18n } from '@/i18n';
 import { HABIT_ICONS, HABIT_PRESETS } from '@/lib/habitIcons';
 import { canCreateHabit, createHabit } from '@/services/actions';
 import { useTheme } from '@/theme';
 
 export default function HabitForm() {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const [name, setName] = useState('');
   const [icon, setIcon] = useState<string>('book');
   const [remind, setRemind] = useState(false);
@@ -25,24 +27,24 @@ export default function HabitForm() {
   }, []);
 
   const save = () => {
-    if (!name.trim()) return setError('Name your habit.');
+    if (!name.trim()) return setError(tr('habits.nameRequired'));
     const habit = createHabit({ name, icon, reminderTime: remind ? time : null });
     if (!habit) return router.replace('/paywall?reason=habits');
     router.back();
   };
 
   return (
-    <FormModal title="New habit" saveLabel="Create habit" onSave={save}>
-      <Field label="Quick start">
+    <FormModal title={tr('habits.new')} saveLabel={tr('habits.create')} onSave={save}>
+      <Field label={tr('habits.quickStart')}>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
           {HABIT_PRESETS.map((p) => (
             <Chip
-              key={p.name}
-              label={p.name}
+              key={p.id}
+              label={tr(`starterHabits.${p.id}`)}
               icon={p.icon}
-              selected={name === p.name}
+              selected={name === tr(`starterHabits.${p.id}`)}
               onPress={() => {
-                setName(p.name);
+                setName(tr(`starterHabits.${p.id}`));
                 setIcon(p.icon);
                 setError(null);
               }}
@@ -50,15 +52,15 @@ export default function HabitForm() {
           ))}
         </View>
       </Field>
-      <Input label="Name" value={name} onChangeText={(v) => (setName(v), setError(null))} placeholder="e.g. Read 20 pages" error={error} />
-      <Field label="Icon">
+      <Input label={tr('habits.name')} value={name} onChangeText={(v) => (setName(v), setError(null))} placeholder={tr('habits.namePlaceholder')} error={error} />
+      <Field label={tr('habits.icon')}>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
           {HABIT_ICONS.map((i) => (
             <PressableScale
               key={i}
               onPress={() => setIcon(i)}
               feedback="tap"
-              accessibilityLabel={`Icon ${i}`}
+              accessibilityLabel={tr('habits.iconLabel', { name: i })}
               accessibilityState={{ selected: icon === i }}
               style={{ width: 52, height: 52, borderRadius: 16, alignItems: 'center', justifyContent: 'center', borderWidth: 1.5, backgroundColor: icon === i ? t.accentSoft : t.surface, borderColor: icon === i ? t.accent : t.border }}
             >
@@ -67,12 +69,12 @@ export default function HabitForm() {
           ))}
         </View>
       </Field>
-      <Field label="Daily reminder">
+      <Field label={tr('habits.dailyReminder')}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <Text variant="body" color="secondary">
-            {remind ? `Every day at ${formatHm(time)}` : 'No reminder'}
+            {remind ? tr('habits.everyDayAt', { time: formatHm(time) }) : tr('tasks.noReminder')}
           </Text>
-          <Switch value={remind} onValueChange={setRemind} trackColor={{ false: t.surfaceStrong, true: t.accentMuted }} thumbColor={remind ? t.accent : '#FFFFFF'} accessibilityLabel="Enable daily reminder" />
+          <Switch value={remind} onValueChange={setRemind} trackColor={{ false: t.surfaceStrong, true: t.accentMuted }} thumbColor={remind ? t.accent : '#FFFFFF'} accessibilityLabel={tr('habits.enableDaily')} />
         </View>
         {remind ? <TimePicker value={time} onChange={setTime} presets={['07:00', '12:00', '18:00', '21:00']} /> : null}
       </Field>

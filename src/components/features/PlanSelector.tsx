@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { perMonthLabel, periodLabel, savingsPercent, trialLabel, type Plan, type PlanId } from '@/lib/plans';
+import { useI18n } from '@/i18n';
+import { perMonthLabel, periodLabel, periodShort, savingsPercent, trialLabel, type Plan, type PlanId } from '@/lib/plans';
 import { radius, useTheme } from '@/theme';
 import { Icon } from '../ui/Icon';
 import { PressableScale } from '../ui/PressableScale';
@@ -15,7 +16,10 @@ interface Props {
 
 function PlanCard({ plan, selected, onSelect, savings }: { plan: Plan; selected: boolean; onSelect: () => void; savings: number }) {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const yearly = plan.id === 'yearly';
+  const planName = tr(yearly ? 'plans.yearly' : 'plans.monthly');
+  const baseLabel = plan.trialDays ? tr('paywall.planLabelTrial', { plan: planName, price: plan.priceString, period: periodLabel(plan.id), trial: trialLabel(plan.trialDays) }) : tr('paywall.planLabel', { plan: planName, price: plan.priceString, period: periodLabel(plan.id) });
   return (
     <PressableScale
       onPress={onSelect}
@@ -23,13 +27,13 @@ function PlanCard({ plan, selected, onSelect, savings }: { plan: Plan; selected:
       scaleTo={0.985}
       accessibilityRole="radio"
       accessibilityState={{ selected }}
-      accessibilityLabel={`${yearly ? 'Yearly' : 'Monthly'} plan, ${plan.priceString} per ${periodLabel(plan.id)}${plan.trialDays ? `, ${trialLabel(plan.trialDays)}` : ''}${yearly && savings > 0 ? `, save ${savings} percent` : ''}`}
+      accessibilityLabel={yearly && savings > 0 ? tr('paywall.planLabelSave', { label: baseLabel, percent: savings }) : baseLabel}
       style={[styles.card, { backgroundColor: selected ? t.accentSoft : t.surface, borderColor: selected ? t.accent : t.border, shadowColor: t.accent, shadowOpacity: selected ? 0.35 : 0 }]}
     >
       {yearly && savings > 0 ? (
         <View style={[styles.ribbon, { backgroundColor: t.accent }]}>
           <Text variant="micro" color="onAccent" style={{ fontSize: 10 }}>
-            BEST VALUE · SAVE {savings}%
+            {tr('paywall.bestValue', { percent: savings })}
           </Text>
         </View>
       ) : null}
@@ -41,7 +45,7 @@ function PlanCard({ plan, selected, onSelect, savings }: { plan: Plan; selected:
         ) : null}
       </View>
       <View style={{ flex: 1, gap: 3 }}>
-        <Text variant="heading">{yearly ? 'Yearly' : 'Monthly'}</Text>
+        <Text variant="heading">{planName}</Text>
         {plan.trialDays ? (
           <View style={styles.trial}>
             <Icon name="gift" size={12} color={t.accent} />
@@ -51,7 +55,7 @@ function PlanCard({ plan, selected, onSelect, savings }: { plan: Plan; selected:
           </View>
         ) : (
           <Text variant="caption" color="secondary">
-            Flexible, cancel anytime
+            {tr('paywall.flexible')}
           </Text>
         )}
       </View>
@@ -59,12 +63,12 @@ function PlanCard({ plan, selected, onSelect, savings }: { plan: Plan; selected:
         <Text variant="heading">
           {plan.priceString}
           <Text variant="caption" color="secondary">
-            /{periodLabel(plan.id) === 'year' ? 'yr' : 'mo'}
+            /{periodShort(plan.id)}
           </Text>
         </Text>
         {yearly ? (
           <Text variant="caption" color="secondary">
-            {perMonthLabel(plan)}/mo
+            {tr('paywall.perMonth', { price: perMonthLabel(plan) })}
           </Text>
         ) : null}
       </View>
@@ -96,10 +100,11 @@ export function PlanSelector({ plans, selected, onSelect }: Props) {
 /** Today -> reminder -> billed. Makes the trial feel safe. */
 export function TrialTimeline({ days }: { days: number }) {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const steps = [
-    { icon: 'lock-open', title: 'Today', body: 'Full Pro access starts. Nothing to pay.' },
-    { icon: 'notifications', title: `Day ${days - 2}`, body: 'Open Google Play any time to cancel.' },
-    { icon: 'card', title: `Day ${days}`, body: 'Your plan begins unless cancelled.' },
+    { icon: 'lock-open', title: tr('paywall.timeline.today'), body: tr('paywall.timeline.todayBody') },
+    { icon: 'notifications', title: tr('paywall.timeline.day', { day: days - 2 }), body: tr('paywall.timeline.reminderBody') },
+    { icon: 'card', title: tr('paywall.timeline.day', { day: days }), body: tr('paywall.timeline.billedBody') },
   ];
   return (
     <View style={[styles.timeline, { backgroundColor: t.surface, borderColor: t.border }]}>
@@ -128,7 +133,7 @@ export function TrialTimeline({ days }: { days: number }) {
 const styles = StyleSheet.create({
   card: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16, paddingTop: 18, borderRadius: radius.lg, borderWidth: 1.5, shadowRadius: 18, shadowOffset: { width: 0, height: 6 } },
   radio: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
-  ribbon: { position: 'absolute', top: -10, right: 14, paddingHorizontal: 10, height: 20, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  ribbon: { position: 'absolute', top: -10, end: 14, paddingHorizontal: 10, height: 20, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   trial: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   timeline: { borderRadius: radius.lg, borderWidth: 1, padding: 14 },
   step: { flexDirection: 'row', gap: 12 },

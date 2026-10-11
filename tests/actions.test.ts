@@ -113,7 +113,7 @@ describe('entity store', () => {
 describe('daily challenges', () => {
   const stats = { tasks: 3, habits: 0, allHabitsDone: false, focusMinutes: 0, journal: false, milestones: 0 };
   const day = todayKey();
-  const sample = (): Challenge => ({ id: 'tasks_2', title: 'Two down', description: '', icon: 'x', metric: 'tasks', target: 2, xp: 25 });
+  const sample = (): Challenge => ({ id: 'tasks_2', icon: 'x', metric: 'tasks', target: 2, xp: 25 });
 
   it('claims a finished challenge once and pays its XP', () => {
     jest.useFakeTimers();

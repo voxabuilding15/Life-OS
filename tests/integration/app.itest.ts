@@ -128,18 +128,35 @@ describe('cloud sync', () => {
     await auth.signUp(e, PASSWORD, 'Sync User');
     await waitFor(() => authStore.useAuth.getState().status === 'signedIn');
     uid = authStore.useAuth.getState().userId!;
+    await sync.runSync(); // let the sign-in sync settle so it cannot interleave with the tests
     wipeLocal();
     syncStore.useSync.getState().patch({ online: true });
   });
 
   it('keeps data on the device for Free users but still syncs the profile', async () => {
-    profile.useProfile.getState().setProfile({ displayName: 'Free Fred' });
+    profile.useProfile.getState().setProfile({ displayName: 'Free Fred', language: 'ar' });
     profile.useProfile.getState().addXp(120);
     stores.useTasks.getState().add({ title: 'local only', description: '', category: 'Work', priority: 'low', dueDate: null, reminderAt: null, completed: false, completedAt: null });
     await sync.runSync();
     expect(await sql('select 1 from public.tasks where user_id = $1', [uid])).toHaveLength(0);
-    const p = (await sql('select display_name, xp, level from public.profiles where id = $1', [uid]))[0];
-    expect(p).toMatchObject({ display_name: 'Free Fred', xp: 120, level: 2 });
+    // First sync of this install: the account's name wins over a blank/fresh local one, XP is never lost.
+    let p = (await sql('select display_name, xp, level, language from public.profiles where id = $1', [uid]))[0];
+    expect(p).toMatchObject({ display_name: 'Sync User', xp: 120, level: 2, language: 'ar' });
+    // Later edits are plain last-write-wins.
+    profile.useProfile.getState().setProfile({ displayName: 'Free Fred', language: 'fr' });
+    await sync.runSync();
+    p = (await sql('select display_name, language from public.profiles where id = $1', [uid]))[0];
+    expect(p).toMatchObject({ display_name: 'Free Fred', language: 'fr' });
+    wipeLocal();
+  });
+
+  it('brings the saved language back on a fresh install and never lets a blank profile overwrite the account', async () => {
+    wipeLocal();
+    profile.useProfile.getState().setProfile({ language: 'en', onboarded: true }); // what onboarding does on a new device
+    await sync.runSync();
+    expect(profile.useProfile.getState()).toMatchObject({ language: 'fr', displayName: 'Free Fred', xp: 120 });
+    const p = (await sql('select xp, display_name, language from public.profiles where id = $1', [uid]))[0];
+    expect(p).toMatchObject({ xp: 120, display_name: 'Free Fred', language: 'fr' });
     wipeLocal();
   });
 

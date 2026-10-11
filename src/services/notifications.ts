@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import { t } from '@/i18n';
 import { useAuth } from '@/store/auth';
 import { useSettings } from '@/store/settings';
 import type { Habit, Task } from '@/types';
@@ -23,7 +24,7 @@ export async function ensureNotificationPermission(): Promise<boolean> {
   if (!supported) return false;
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {
-      name: 'Life OS',
+      name: t('app.name'),
       importance: Notifications.AndroidImportance.DEFAULT,
       lightColor: '#68C7EC',
     });
@@ -45,7 +46,7 @@ export async function scheduleTaskReminder(task: Task): Promise<void> {
   if (when.getTime() <= Date.now() || !(await ensureNotificationPermission())) return;
   await Notifications.scheduleNotificationAsync({
     identifier: id,
-    content: { title: task.title, body: task.description || 'Reminder from Life OS', data: { route: '/(tabs)/tasks' } },
+    content: { title: task.title, body: task.description || t('notifications.taskBody'), data: { route: '/(tabs)/tasks' } },
     trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: when },
   });
 }
@@ -63,7 +64,7 @@ export async function scheduleHabitReminder(habit: Habit): Promise<void> {
   if (!(await ensureNotificationPermission())) return;
   await Notifications.scheduleNotificationAsync({
     identifier: id,
-    content: { title: habit.name, body: 'Keep your streak alive.', data: { route: '/(tabs)/habits' } },
+    content: { title: habit.name, body: t('notifications.habitBody'), data: { route: '/(tabs)/habits' } },
     trigger: { type: Notifications.SchedulableTriggerInputTypes.DAILY, hour, minute },
   });
 }
@@ -83,7 +84,7 @@ export async function syncDailyReminder(): Promise<void> {
   if (!dailyReminder) return;
   await Notifications.scheduleNotificationAsync({
     identifier: id,
-    content: { title: 'Close out your day', body: 'Check off your tasks and habits to keep levelling up.' },
+    content: { title: t('notifications.dailyTitle'), body: t('notifications.dailyBody') },
     trigger: { type: Notifications.SchedulableTriggerInputTypes.DAILY, hour: 20, minute: 30 },
   });
 }
@@ -94,7 +95,7 @@ async function scheduleWeekly(): Promise<void> {
   if (!useSettings.getState().weeklyReport) return;
   await Notifications.scheduleNotificationAsync({
     identifier: id,
-    content: { title: 'Your weekly report is ready', body: 'See your Life Score and how your week went.', data: { route: '/report' } },
+    content: { title: t('notifications.weeklyTitle'), body: t('notifications.weeklyBody'), data: { route: '/report' } },
     trigger: { type: Notifications.SchedulableTriggerInputTypes.WEEKLY, weekday: 1, hour: 18, minute: 30 },
   });
 }
@@ -118,7 +119,7 @@ export async function scheduleFocusEnd(seconds: number, title: string): Promise<
   if (!(await ensureNotificationPermission())) return;
   await Notifications.scheduleNotificationAsync({
     identifier: 'focus:end',
-    content: { title, body: 'Time is up. Open Life OS to continue.', data: { route: '/focus' } },
+    content: { title, body: t('notifications.focusBody'), data: { route: '/focus' } },
     trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds: Math.max(1, Math.round(seconds)) },
   });
 }

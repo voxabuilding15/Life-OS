@@ -88,12 +88,13 @@ export interface AchievementRecord extends Entity {
   unlockedAt: string;
 }
 
+/** Labels live in the locale files under `onboarding.objectives.<id>`. */
 export const OBJECTIVES = [
-  { id: 'productivity', label: 'Productivity', icon: 'flash' },
-  { id: 'fitness', label: 'Fitness', icon: 'barbell' },
-  { id: 'learning', label: 'Learning', icon: 'school' },
-  { id: 'career', label: 'Career', icon: 'briefcase' },
-  { id: 'finance', label: 'Finance', icon: 'wallet' },
-  { id: 'growth', label: 'Personal growth', icon: 'leaf' },
+  { id: 'productivity', icon: 'flash' },
+  { id: 'fitness', icon: 'barbell' },
+  { id: 'learning', icon: 'school' },
+  { id: 'career', icon: 'briefcase' },
+  { id: 'finance', icon: 'wallet' },
+  { id: 'growth', icon: 'leaf' },
 ] as const;
 export type ObjectiveId = (typeof OBJECTIVES)[number]['id'];

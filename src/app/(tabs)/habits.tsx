@@ -13,7 +13,8 @@ import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { useHabitsData, type HabitWithStats } from '@/hooks/useData';
 import { config } from '@/lib/config';
-import { addDays, dayInitial, lastNDays, todayKey } from '@/lib/date';
+import { useI18n } from '@/i18n';
+import { dayInitial, lastNDays, todayKey } from '@/lib/date';
 import { toggleHabit } from '@/services/actions';
 import { useIsPro } from '@/store/subscription';
 import { useTheme } from '@/theme';
@@ -38,20 +39,21 @@ function WeekDots({ doneDays, frozenDays }: { doneDays: ReadonlySet<string>; fro
 
 function HabitCard({ item, index }: { item: HabitWithStats; index: number }) {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const { habit, doneToday, streak, doneDays, frozenDays, offer } = item;
   return (
     <Animated.View entering={FadeInDown.delay(index * 60).duration(400)} layout={LinearTransition.springify().damping(18)}>
-      <Card onPress={() => router.push(`/habit/${habit.id}`)} padding={16} accessibilityLabel={`${habit.name}, ${streak} day streak`}>
+      <Card onPress={() => router.push(`/habit/${habit.id}`)} padding={16} accessibilityLabel={tr('habits.streakLabel', { name: habit.name, streak: tr('habits.streak', { count: streak }) })}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
           <View style={{ width: 46, height: 46, borderRadius: 15, backgroundColor: t.accentSoft, alignItems: 'center', justifyContent: 'center' }}>
             <Icon name={habit.icon} size={22} color={t.accent} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text variant="heading" numberOfLines={1}>
+            <Text content variant="heading" numberOfLines={1}>
               {habit.name}
             </Text>
             <Text variant="caption" color={streak > 0 ? 'accent' : 'tertiary'} style={{ fontFamily: 'Inter_600SemiBold' }}>
-              🔥 {streak} day streak{frozenDays.size ? ' · ❄️' : ''}
+              🔥 {tr('habits.streak', { count: streak })}{frozenDays.size ? ' · ❄️' : ''}
             </Text>
           </View>
           <PressableScale
@@ -60,7 +62,7 @@ function HabitCard({ item, index }: { item: HabitWithStats; index: number }) {
             scaleTo={0.88}
             accessibilityRole="checkbox"
             accessibilityState={{ checked: doneToday }}
-            accessibilityLabel={`Check in ${habit.name}`}
+            accessibilityLabel={tr('habits.checkIn', { name: habit.name })}
             style={{ width: 52, height: 52, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: doneToday ? t.accent : 'transparent', borderWidth: 2, borderColor: doneToday ? t.accent : t.borderStrong, shadowColor: t.accent, shadowOpacity: doneToday ? 0.5 : 0, shadowRadius: 12, shadowOffset: { width: 0, height: 4 } }}
           >
             <Icon name="checkmark" size={26} color={doneToday ? t.onAccent : t.textTertiary} />
@@ -77,13 +79,14 @@ function HabitCard({ item, index }: { item: HabitWithStats; index: number }) {
 
 export default function Habits() {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const data = useHabitsData();
   const isPro = useIsPro();
   const atLimit = !isPro && data.total >= config.freeHabitLimit;
   return (
     <View style={{ flex: 1 }}>
       <Screen bottomInset={110}>
-        <Header title="Habits" subtitle={data.total ? `${data.doneToday} of ${data.total} done today` : 'Small actions, big results'} />
+        <Header title={tr('tabs.habits')} subtitle={data.total ? tr('habits.subtitleDone', { done: data.doneToday, total: data.total }) : tr('habits.subtitleEmpty')} />
         {data.total > 0 ? (
           <Card accent padding={18} style={{ marginBottom: 16 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18 }}>
@@ -91,9 +94,9 @@ export default function Habits() {
                 <Icon name="flame" size={26} color={t.accent} />
               </ProgressRing>
               <View style={{ flex: 1 }}>
-                <Text variant="heading">{data.doneToday === data.total ? 'All habits done' : `${data.total - data.doneToday} to go today`}</Text>
+                <Text variant="heading">{data.doneToday === data.total ? tr('habits.allDone') : tr('habits.toGo', { count: data.total - data.doneToday })}</Text>
                 <Text variant="caption" color="secondary">
-                  Each check-in earns +20 XP · best streak {data.bestStreak} days
+                  {tr('habits.xpBest', { days: data.bestStreak })}
                 </Text>
               </View>
             </View>
@@ -104,16 +107,16 @@ export default function Habits() {
             <HabitCard key={item.habit.id} item={item} index={i} />
           ))}
         </View>
-        {data.total === 0 ? <EmptyState icon="flame-outline" title="Build your first streak" message="Pick a tiny daily action: reading, gym, coding, water or meditation." actionLabel="New habit" onAction={() => router.push('/habit/new')} satellites={['barbell', 'book', 'water']} hint="Missing a day? Pro members can use a Streak Freeze to protect their streak." /> : null}
+        {data.total === 0 ? <EmptyState icon="flame-outline" title={tr('habits.emptyTitle')} message={tr('habits.emptyBody')} actionLabel={tr('habits.new')} onAction={() => router.push('/habit/new')} satellites={['barbell', 'book', 'water']} hint={tr('habits.emptyHint')} /> : null}
         {atLimit ? (
           <PressableScale onPress={() => router.push('/paywall?reason=habits')} style={{ marginTop: 16 }} feedback="tap">
             <Text variant="caption" color="accent" align="center" style={{ fontFamily: 'Inter_600SemiBold' }}>
-              Free plan: {config.freeHabitLimit}/{config.freeHabitLimit} habits · Unlock unlimited with Pro
+              {tr('habits.limitBanner', { count: config.freeHabitLimit })}
             </Text>
           </PressableScale>
         ) : null}
       </Screen>
-      <Fab onPress={() => router.push('/habit/new')} label="New habit" />
+      <Fab onPress={() => router.push('/habit/new')} label={tr('habits.new')} />
     </View>
   );
 }

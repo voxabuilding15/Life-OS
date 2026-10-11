@@ -1,0 +1,1076 @@
+{
+  "app": {
+    "name": "Life OS",
+    "tagline": "Your life. Organized."
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "close": "Close",
+    "back": "Back",
+    "goBack": "Go back",
+    "continue": "Continue",
+    "skip": "Skip",
+    "add": "Add",
+    "tryAgain": "Try again",
+    "seeAll": "See all",
+    "showMore": "Show more ({{count}})",
+    "showMoreDays": "Show more days",
+    "pro": "PRO",
+    "unlockWithPro": "Unlock with Pro",
+    "optional": "Optional",
+    "xp": "{{count}} XP",
+    "plusXp": "+{{count}} XP",
+    "level": "LV {{level}}",
+    "offline": "Offline. Changes are saved on this device.",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "That screen doesn’t exist or has moved.",
+    "backHome": "Back home",
+    "errorTitle": "Something went wrong",
+    "errorBody": "Your data is safe on this device. Try again, and if it keeps happening, restart the app.",
+    "profilePicture": "Profile picture",
+    "logo": "Life OS logo",
+    "chart": "Chart"
+  },
+  "greeting": {
+    "night": "Good night",
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "date": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "yesterday": "Yesterday",
+    "nextWeek": "Next week",
+    "noDate": "No date",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month"
+  },
+  "time": {
+    "minutes": "{{count}}m",
+    "hours": "{{count}}h",
+    "hoursMinutes": "{{h}}h {{m}}m",
+    "am": "AM",
+    "pm": "PM",
+    "hour": "hour",
+    "minute": "minute",
+    "increase": "Increase {{unit}}",
+    "decrease": "Decrease {{unit}}"
+  },
+  "tabs": {
+    "home": "Home",
+    "tasks": "Tasks",
+    "habits": "Habits",
+    "goals": "Goals",
+    "notes": "Notes"
+  },
+  "categories": {
+    "task": {
+      "Personal": "Personal",
+      "Work": "Work",
+      "Study": "Study",
+      "Health": "Health",
+      "Finance": "Finance",
+      "Creative": "Creative"
+    },
+    "goal": {
+      "Career": "Career",
+      "Learning": "Learning",
+      "Fitness": "Fitness",
+      "Finance": "Finance",
+      "Personal": "Personal",
+      "Creative": "Creative"
+    },
+    "note": {
+      "Ideas": "Ideas",
+      "Work": "Work",
+      "Study": "Study",
+      "Life": "Life",
+      "Reading": "Reading"
+    }
+  },
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  },
+  "mood": {
+    "1": "Rough",
+    "2": "Low",
+    "3": "Okay",
+    "4": "Good",
+    "5": "Great"
+  },
+  "themes": {
+    "ocean": {
+      "name": "Ocean",
+      "tagline": "The signature blue"
+    },
+    "aurora": {
+      "name": "Aurora",
+      "tagline": "Blue, with a brighter glow"
+    },
+    "ghost": {
+      "name": "Ghost",
+      "tagline": "Pure monochrome"
+    }
+  },
+  "levels": {
+    "0": "Newcomer",
+    "1": "Explorer",
+    "2": "Builder",
+    "3": "Achiever",
+    "4": "Strategist",
+    "5": "Architect",
+    "6": "Master",
+    "7": "Legend"
+  },
+  "habits": {
+    "heatmapLabel": "Habit calendar heatmap",
+    "streak_one": "{{count}} day streak",
+    "streak_other": "{{count}} day streak",
+    "streakLabel": "{{name}}, {{streak}}",
+    "checkIn": "Check in {{name}}",
+    "subtitleDone": "{{done}} of {{total}} done today",
+    "subtitleEmpty": "Small actions, big results",
+    "allDone": "All habits done",
+    "toGo": "{{count}} to go today",
+    "xpBest": "Each check-in earns +20 XP · best streak {{days}} days",
+    "emptyTitle": "Build your first streak",
+    "emptyBody": "Pick a tiny daily action: reading, gym, coding, water or meditation.",
+    "emptyHint": "Missing a day? Pro members can use a Streak Freeze to protect their streak.",
+    "new": "New habit",
+    "create": "Create habit",
+    "limitBanner": "Free plan: {{count}}/{{count}} habits · Unlock unlimited with Pro",
+    "quickStart": "Quick start",
+    "name": "Name",
+    "namePlaceholder": "e.g. Read 20 pages",
+    "icon": "Icon",
+    "iconLabel": "Icon {{name}}",
+    "dailyReminder": "Daily reminder",
+    "everyDayAt": "Every day at {{time}}",
+    "enableDaily": "Enable daily reminder",
+    "nameRequired": "Name your habit.",
+    "detail": "Habit",
+    "notFound": "Habit not found",
+    "deleted": "It may have been deleted.",
+    "bestStreak": "Best streak",
+    "checkins": "Check-ins",
+    "days30": "30 days",
+    "activity": "Activity",
+    "extendedHistory": "Unlock the extended history",
+    "checkInToday": "Check in today",
+    "undoToday": "Undo today",
+    "delete": "Delete habit",
+    "deleteTitle": "Delete habit?",
+    "deleteBody": "Your streak and history for this habit will be removed."
+  },
+  "auth": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Your password",
+    "name": "Name",
+    "firstName": "Your first name",
+    "passwordHint": "At least 8 characters",
+    "previewMode": "Continue in preview mode",
+    "signIn": "Sign in",
+    "createAccount": "Create account",
+    "forgot": "Forgot password?",
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to pick up where you left off.",
+      "newHere": "New to Life OS?"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "One account. Every device. Everything you’re building.",
+      "have": "Already have an account?",
+      "checkTitle": "Check your inbox",
+      "checkBody": "We sent a confirmation link to {{email}}. Open it, then sign in.",
+      "goSignIn": "Go to sign in"
+    },
+    "forgotScreen": {
+      "title": "Reset password",
+      "subtitle": "Enter your email and we’ll send you a link to set a new password.",
+      "send": "Send reset link",
+      "back": "Back to sign in",
+      "sent": "If an account exists for {{email}}, a reset link is on its way."
+    },
+    "validation": {
+      "email": "Enter a valid email address.",
+      "password6": "Password must be at least 6 characters.",
+      "password8": "Use at least 8 characters.",
+      "name": "Tell us what to call you."
+    },
+    "errors": {
+      "invalidLogin": "Incorrect email or password.",
+      "exists": "An account with this email already exists.",
+      "notConfirmed": "Please confirm your email first. Check your inbox.",
+      "rateLimit": "Too many attempts. Try again in a few minutes.",
+      "network": "No connection. Check your internet and try again.",
+      "notConfigured": "Backend is not configured.",
+      "generic": "Something went wrong"
+    }
+  },
+  "achievements": {
+    "items": {
+      "first_task": {
+        "title": "First Step",
+        "description": "Complete your first task"
+      },
+      "tasks_25": {
+        "title": "Getting Things Done",
+        "description": "Complete 25 tasks"
+      },
+      "tasks_100": {
+        "title": "Centurion",
+        "description": "Complete 100 tasks"
+      },
+      "tasks_500": {
+        "title": "Machine",
+        "description": "Complete 500 tasks"
+      },
+      "first_habit": {
+        "title": "Habit Forming",
+        "description": "Check in a habit for the first time"
+      },
+      "streak_7": {
+        "title": "On Fire",
+        "description": "Reach a 7 day streak"
+      },
+      "streak_30": {
+        "title": "Unstoppable",
+        "description": "Reach a 30 day streak"
+      },
+      "streak_100": {
+        "title": "Centennial",
+        "description": "Reach a 100 day streak"
+      },
+      "habit_100": {
+        "title": "Routine Builder",
+        "description": "Log 100 habit check-ins"
+      },
+      "freeze_1": {
+        "title": "Ice Cold",
+        "description": "Save a streak with a Streak Freeze"
+      },
+      "focus_1": {
+        "title": "In The Zone",
+        "description": "Finish a focus session"
+      },
+      "focus_25": {
+        "title": "Flow State",
+        "description": "Finish 25 focus sessions"
+      },
+      "focus_10h": {
+        "title": "Deep Worker",
+        "description": "Focus for 10 hours in total"
+      },
+      "focus_100h": {
+        "title": "Monk Mode",
+        "description": "Focus for 100 hours in total"
+      },
+      "first_goal": {
+        "title": "Dream Achieved",
+        "description": "Complete your first goal"
+      },
+      "goals_5": {
+        "title": "Visionary",
+        "description": "Complete 5 goals"
+      },
+      "first_note": {
+        "title": "Thinker",
+        "description": "Write your first note"
+      },
+      "notes_10": {
+        "title": "Second Brain",
+        "description": "Write 10 notes"
+      },
+      "journal_7": {
+        "title": "Reflective",
+        "description": "Write 7 journal entries"
+      },
+      "journal_30": {
+        "title": "Self-Aware",
+        "description": "Write 30 journal entries"
+      },
+      "level_5": {
+        "title": "Level 5",
+        "description": "Reach level 5"
+      },
+      "level_10": {
+        "title": "Level 10",
+        "description": "Reach level 10"
+      },
+      "challenge_1": {
+        "title": "Challenger",
+        "description": "Complete a daily challenge"
+      },
+      "challenge_25": {
+        "title": "Daily Driver",
+        "description": "Complete 25 daily challenges"
+      },
+      "score_70": {
+        "title": "Thriving",
+        "description": "Reach a Life Score of 70"
+      },
+      "score_90": {
+        "title": "Peak Performance",
+        "description": "Reach a Life Score of 90"
+      }
+    },
+    "categories": {
+      "Tasks": "Tasks",
+      "Habits": "Habits",
+      "Focus": "Focus",
+      "Goals": "Goals",
+      "Mind": "Mind",
+      "Growth": "Growth",
+      "All": "All"
+    },
+    "title": "Achievements",
+    "unlockedCount": "{{count}} of {{total}} unlocked",
+    "xpEarned": "{{count}} XP earned from badges",
+    "xpHint": "Every badge pays an XP bonus. Higher tiers pay more.",
+    "proUnlocks": "Pro unlocks {{count}} extra achievements and the biggest XP bonuses.",
+    "unlocked": "UNLOCKED · +{{xp}} XP",
+    "cardLabel": "{{title}}, tier {{tier}}, {{state}}. {{description}}",
+    "stateUnlocked": "unlocked",
+    "stateLocked": "locked, Pro",
+    "stateProgress": "{{value}} of {{target}}",
+    "unlockedToast": "ACHIEVEMENT UNLOCKED"
+  },
+  "challenges": {
+    "items": {
+      "tasks_2": {
+        "title": "Two down",
+        "description": "Complete 2 tasks"
+      },
+      "tasks_4": {
+        "title": "Task blitz",
+        "description": "Complete 4 tasks"
+      },
+      "habits_2": {
+        "title": "Double check-in",
+        "description": "Check in 2 habits"
+      },
+      "habits_all": {
+        "title": "Clean sweep",
+        "description": "Check in every habit today"
+      },
+      "focus_25": {
+        "title": "One good session",
+        "description": "Focus for 25 minutes"
+      },
+      "focus_50": {
+        "title": "Deep work",
+        "description": "Focus for 50 minutes"
+      },
+      "journal_1": {
+        "title": "Reflect",
+        "description": "Write today’s journal entry"
+      },
+      "milestone_1": {
+        "title": "Move the needle",
+        "description": "Reach a goal milestone"
+      }
+    },
+    "title": "Daily challenges",
+    "resets": "Resets at midnight",
+    "mission": "Today’s mission",
+    "perfectDay": "Perfect day",
+    "allBonus": "Finish all challenges for a +{{xp}} XP bonus.",
+    "today": "Today",
+    "proBonus": "Pro bonus",
+    "proBonusHint": "Pro adds a daily bonus challenge worth double XP.",
+    "autoHint": "Progress updates automatically as you complete tasks, habits and focus sessions.",
+    "backToDashboard": "Back to dashboard",
+    "allDone": "All done. Come back tomorrow.",
+    "readyToClaim": "{{count}} ready to claim",
+    "progressSummary": "{{done}} of {{total}} complete",
+    "openLabel": "Open daily challenges",
+    "claim": "Claim +{{xp}}",
+    "rowLabel": "{{title}}. {{description}}. {{state}}",
+    "claimed": "Claimed",
+    "complete": "Challenge complete",
+    "allComplete": "All challenges done"
+  },
+  "lifeScore": {
+    "title": "Life Score",
+    "subtitle": "Your last 7 days",
+    "outOf": "out of 100",
+    "vsYesterday": "{{delta}} vs yesterday",
+    "whatShapes": "What shapes your score",
+    "worth": "WORTH {{count}} POINTS",
+    "nextMove": "Next best move",
+    "last7": "Last 7 days",
+    "footer": "Habits 30 · Tasks 25 · Focus 20 · Goals 15 · Reflection 10. Pillars you haven’t started don’t count against you.",
+    "card": "Life Score {{score}} out of 100, {{band}}",
+    "label": "LIFE SCORE",
+    "bands": {
+      "elite": "Elite",
+      "thriving": "Thriving",
+      "momentum": "Building momentum",
+      "warming": "Warming up",
+      "starting": "Getting started"
+    },
+    "pillars": {
+      "habits": {
+        "label": "Habits",
+        "tip": "Check in your habits daily. Consistency is the biggest lever.",
+        "empty": "Add a habit to include this",
+        "detail_one": "{{count}} check-in this week",
+        "detail_other": "{{count}} check-ins this week"
+      },
+      "tasks": {
+        "label": "Tasks",
+        "tip": "Plan fewer tasks and finish them. Clear your overdue list.",
+        "empty": "Plan a task to include this",
+        "detail": "{{done}} of {{total}} planned tasks done"
+      },
+      "focus": {
+        "label": "Focus",
+        "tip": "Run a couple of 25 minute focus sessions this week.",
+        "detail": "{{minutes}} of {{target}} focus minutes"
+      },
+      "goals": {
+        "label": "Goals",
+        "tip": "Reach a milestone. Break the next step down until it is small.",
+        "empty": "Set a goal to include this",
+        "detail_one": "{{count}} milestone in 14 days",
+        "detail_other": "{{count}} milestones in 14 days"
+      },
+      "reflection": {
+        "label": "Reflection",
+        "tip": "Write a short journal entry. It takes a minute.",
+        "detail": "{{days}} of {{target}} journal days"
+      }
+    },
+    "slash100": "/ 100"
+  },
+  "report": {
+    "title": "Weekly report",
+    "thisWeek": "This week",
+    "winsPerDay": "Wins per day",
+    "insights": "Insights",
+    "tasks": "Tasks",
+    "checkins": "Check-ins",
+    "focus": "Focus",
+    "journalDays": "Journal days",
+    "scoreUp": "Life Score up {{count}} this week",
+    "scoreDown": "Life Score down {{count}} this week",
+    "scoreSame": "Life Score unchanged this week",
+    "activeDays": "Active {{count}} of 7 days",
+    "sameAsLast": "Same as last week",
+    "vsLast": "{{delta}} vs last week",
+    "vsLastMin": "{{delta}} min vs last week",
+    "unlockFull": "Unlock full report with Pro",
+    "noActivity": "No activity yet this week. Complete a task or habit to fill your report.",
+    "topHabit": "Most consistent habit: {{name}} ({{days}} days)",
+    "share": "Share my week",
+    "shareTitle": "My Life OS week ({{range}})",
+    "shareScore": "Life Score {{score}}/100 ({{delta}} vs last week)",
+    "shareTotals": "{{tasks}} tasks · {{habits}} habit check-ins · {{focus}} focus",
+    "openLabel": "Open weekly report",
+    "cardSubtitle": "Your week at a glance. Full insights with Pro.",
+    "bestDay": "Best day: {{day}} · {{wins}} wins",
+    "trendHint": "Complete tasks and habits to see your trend.",
+    "headlines": {
+      "fresh": "A fresh start",
+      "rising": "You are on the rise",
+      "quiet": "A quieter week",
+      "consistent": "Remarkably consistent",
+      "steady": "Steady progress"
+    },
+    "highlights": {
+      "tasks_one": "Finished {{count}} task.",
+      "tasks_other": "Finished {{count}} tasks.",
+      "tasksDelta_one": "Finished {{count}} task (+{{delta}} vs last week).",
+      "tasksDelta_other": "Finished {{count}} tasks (+{{delta}} vs last week).",
+      "habits_one": "Logged {{count}} habit check-in.",
+      "habits_other": "Logged {{count}} habit check-ins.",
+      "focus": "Focused for {{minutes}} minutes.",
+      "milestones_one": "Reached {{count}} goal milestone.",
+      "milestones_other": "Reached {{count}} goal milestones.",
+      "bestDay": "{{day}} was your strongest day with {{wins}} wins."
+    },
+    "emptyTip": "Add a habit or a task to start building your Life Score."
+  },
+  "plans": {
+    "month": "month",
+    "year": "year",
+    "monthShort": "mo",
+    "yearShort": "yr",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "trialLabel": "{{count}}-day free trial",
+    "startTrial": "Start {{trial}}",
+    "continuePrice": "Continue · {{price}}/{{period}}",
+    "pricePer": "{{price}}/{{period}}",
+    "billingTrial": "{{days}} days free, then {{price}}. Cancel anytime in Google Play before the trial ends and you won’t be charged.",
+    "billingYearly": "{{price}}, billed once a year. Cancel anytime in Google Play.",
+    "billingMonthly": "{{price}}, billed monthly. Cancel anytime in Google Play."
+  },
+  "xp": {
+    "taskCompleted": "Task completed",
+    "taskReopened": "Task reopened",
+    "habitCompleted": "Habit completed",
+    "habitUnchecked": "Habit unchecked",
+    "milestoneReached": "Milestone reached",
+    "milestoneReopened": "Milestone reopened",
+    "goalAchieved": "Goal achieved",
+    "focusComplete": "Focus session complete",
+    "journalEntry": "Journal entry",
+    "challengeComplete": "Challenge complete",
+    "allChallenges": "All challenges done",
+    "levelUp": "LEVEL UP",
+    "reachedLevel": "You reached level {{level}}",
+    "dismissLevelUp": "Dismiss level up"
+  },
+  "freeze": {
+    "save": "Save your {{count}}-day streak",
+    "left_one": "{{count}} freeze left this month",
+    "left_other": "{{count}} freezes left this month",
+    "proFeature": "Streak Freeze is a Pro feature",
+    "freeze": "Freeze",
+    "use": "Use Streak Freeze",
+    "used": "Streak Freeze used. Your streak is safe.",
+    "noneLeft": "No freezes left this month. They reset on the 1st.",
+    "title": "Streak Freeze",
+    "protect": "Protect your streak",
+    "proPitch": "Miss a day without losing your streak. 2 freezes every month.",
+    "proStatus": "{{left}} of {{total}} freezes left this month · {{used}} used on this habit"
+  },
+  "tasks": {
+    "overdue": "Overdue",
+    "rowLabel": "{{title}}, {{state}}",
+    "stateDone": "completed",
+    "stateOpen": "open",
+    "complete": "Complete {{title}}",
+    "subtitle": "{{count}} to do today",
+    "viewToday": "Today",
+    "viewUpcoming": "Upcoming",
+    "viewUpcomingCount": "Upcoming · {{count}}",
+    "viewCompleted": "Completed",
+    "cleanSweep": "Clean sweep",
+    "keepGoing": "Keep going",
+    "earnsXp": "Every task you finish earns +10 XP.",
+    "doneToday": "Done today",
+    "emptyTodayTitle": "A clear day",
+    "emptyTodayBody": "Plan what matters. Add your first task for today and earn +10 XP when it is done.",
+    "emptyTodayHint": "Tasks with a reminder will nudge you at the right time.",
+    "emptyUpcomingTitle": "Nothing scheduled",
+    "emptyUpcomingBody": "Tasks with a future date will show up here, grouped by day.",
+    "emptyUpcomingAction": "Plan ahead",
+    "emptyDoneTitle": "No wins yet",
+    "emptyDoneBody": "Every task you finish is collected here, a record of what you got done.",
+    "new": "New task",
+    "edit": "Edit task",
+    "create": "Create task",
+    "saveChanges": "Save changes",
+    "deleteTask": "Delete task",
+    "titleLabel": "Title",
+    "titlePlaceholder": "What needs to get done?",
+    "descLabel": "Description",
+    "descPlaceholder": "Add details (optional)",
+    "category": "Category",
+    "priority": "Priority",
+    "dueDate": "Due date",
+    "reminder": "Reminder",
+    "notifyAt": "Notify me at {{time}}",
+    "noReminder": "No reminder",
+    "enableReminder": "Enable reminder",
+    "needTitle": "Give your task a title.",
+    "reminderPassed": "That reminder time has already passed."
+  },
+  "goals": {
+    "milestonesCount": "{{done}}/{{total}} milestones",
+    "achieved": "Achieved",
+    "dueToday": "Due today",
+    "overdue": "Overdue",
+    "cardLabel": "{{title}}, {{percent}} percent",
+    "subtitle": "{{active}} in progress · {{done}} achieved",
+    "subtitleEmpty": "Think big. Break it down.",
+    "emptyTitle": "Set your first big goal",
+    "emptyBody": "Break it into milestones and watch the progress add up. Finishing a goal earns +500 XP.",
+    "emptyHint": "Try: Become a Full Stack Developer, with HTML, CSS, JavaScript, React and Node.js as milestones.",
+    "new": "New goal",
+    "create": "Create goal",
+    "achievedSection": "Achieved",
+    "limitBanner": "Free plan: {{count}} active goals · Go Pro for unlimited",
+    "goal": "Goal",
+    "goalPlaceholder": "e.g. Become a Full Stack Developer",
+    "why": "Why it matters",
+    "category": "Category",
+    "milestones": "Milestones",
+    "milestoneExample": "e.g. {{example}}",
+    "nextStep": "Next step",
+    "addMilestone": "Add milestone",
+    "targetDate": "Target date",
+    "nameRequired": "Name your goal.",
+    "notFound": "Goal not found",
+    "deleted": "It may have been deleted.",
+    "achievedTitle": "Goal achieved",
+    "earnedXp": "You earned +500 XP for finishing this.",
+    "milestonesOf": "{{done}} of {{count}} milestones",
+    "daysLeft_one": "{{date}} · {{count}} day left",
+    "daysLeft_other": "{{date}} · {{count}} days left",
+    "pastDue": "{{date}} · Past due",
+    "noTarget": "No target date",
+    "timeline": "Timeline",
+    "doneOn": "Done {{date}}",
+    "addHint": "Add milestones to track your progress.",
+    "addPlaceholder": "Add a milestone",
+    "delete": "Delete goal",
+    "deleteTitle": "Delete goal?",
+    "deleteBody": "The goal and its milestones will be removed.",
+    "completeMilestone": "Complete {{title}}"
+  },
+  "paywall": {
+    "free": "FREE",
+    "proCol": "PRO",
+    "bestValue": "BEST VALUE · SAVE {{percent}}%",
+    "flexible": "Flexible, cancel anytime",
+    "planLabel": "{{plan}} plan, {{price}} per {{period}}",
+    "planLabelTrial": "{{plan}} plan, {{price}} per {{period}}, {{trial}}",
+    "planLabelSave": "{{label}}, save {{percent}} percent",
+    "perMonth": "{{price}}/mo",
+    "timeline": {
+      "today": "Today",
+      "todayBody": "Full Pro access starts. Nothing to pay.",
+      "day": "Day {{day}}",
+      "reminderBody": "Open Google Play any time to cancel.",
+      "billedBody": "Your plan begins unless cancelled."
+    },
+    "slides": {
+      "insights": {
+        "eyebrow": "INSIGHTS",
+        "title": "See the full picture",
+        "body": "30-day trends, mood and focus analytics, and a weekly report you can share."
+      },
+      "freeze": {
+        "eyebrow": "STREAK FREEZE",
+        "title": "Never lose a streak",
+        "body": "Missed a day? Freeze it. Two freezes every month keep your hard work safe."
+      },
+      "everywhere": {
+        "eyebrow": "EVERYWHERE",
+        "title": "Sync, themes, no limits",
+        "body": "Back up to the cloud, switch devices freely and make Life OS look the way you like."
+      }
+    },
+    "compare": {
+      "core": "Tasks, reminders & focus timer",
+      "lifeScore": "Life Score",
+      "habits": "Habits",
+      "goals": "Active goals",
+      "challenges": "Daily challenges",
+      "freeze": "Streak Freeze",
+      "stats": "Statistics",
+      "report": "Weekly report",
+      "achievements": "Achievements",
+      "sync": "Cloud sync & backup",
+      "themes": "Themes",
+      "widgets": "Dashboard widgets",
+      "unlimited": "Unlimited",
+      "perDay3": "3 a day",
+      "bonus": "+ double-XP bonus",
+      "twoMonth": "2 a month",
+      "days7": "7 days",
+      "days30": "30 days + trends",
+      "summary": "Summary",
+      "fullInsights": "Full insights",
+      "ocean": "Ocean",
+      "moreThemes": "+ Aurora, Ghost",
+      "basic": "Basic",
+      "premium": "Premium",
+      "rowLabel": "{{label}}: Free {{free}}, Pro {{pro}}",
+      "yes": "included",
+      "no": "not included"
+    }
+  },
+  "splash": {
+    "loading": "Loading Life OS"
+  },
+  "onboarding": {
+    "language": "Language",
+    "skip": "Skip",
+    "chipStreak": "15 day streak",
+    "chipDone": "3/5 done",
+    "chipScore": "Life Score 82",
+    "chipXp": "+20 XP",
+    "titleLine1": "Your life.",
+    "titleLine2": "Organized.",
+    "welcomeBody": "Tasks, habits, goals and focus in one calm operating system. Built to level you up every single day.",
+    "getStarted": "Get started",
+    "haveAccount": "I already have an account",
+    "improveTitle": "What do you want to improve?",
+    "improveBody": "Pick as many as you like. We’ll tailor your starting point.",
+    "objectives": {
+      "productivity": "Productivity",
+      "fitness": "Fitness",
+      "learning": "Learning",
+      "career": "Career",
+      "finance": "Finance",
+      "growth": "Personal growth"
+    },
+    "habitsTitle": "Start with a few habits",
+    "habitsBody": "Pick up to {{count}}. Small and daily beats big and rare.",
+    "habitsLater": "You can add habits any time from the Habits tab.",
+    "habitsSelected": "{{count}}/{{max}} selected",
+    "addHabits_one": "Add {{count}} habit",
+    "addHabits_other": "Add {{count}} habits",
+    "nudgeTitle": "When should we nudge you?",
+    "nudgeBody": "A gentle daily check-in helps your streaks survive. Change it any time in Settings.",
+    "morning": "Morning",
+    "midday": "Midday",
+    "evening": "Evening",
+    "around": "Around {{time}}",
+    "turnOn": "Turn on reminders",
+    "nameTitle": "What should we call you?",
+    "nameBody": "Your command center is ready.",
+    "plan": "YOUR STARTING PLAN",
+    "planAreas_one": "{{count}} focus area",
+    "planAreas_other": "{{count}} focus areas",
+    "planYourAreas": "Your focus areas",
+    "planHabits_one": "{{count}} starter habit",
+    "planHabits_other": "{{count}} starter habits",
+    "planHabitsNone": "Add habits any time",
+    "planChallenges": "3 daily challenges every day",
+    "planScore": "A Life Score that tracks your week"
+  },
+  "starterHabits": {
+    "plan_tomorrow": "Plan tomorrow",
+    "deep_work": "Deep work block",
+    "gym": "Gym",
+    "walk": "Walk 8k steps",
+    "water": "Water",
+    "reading": "Reading",
+    "coding": "Coding",
+    "language": "Practice a language",
+    "side_project": "Work on a side project",
+    "network": "Network or reach out",
+    "spending": "Track spending",
+    "save": "Save something",
+    "meditation": "Meditation",
+    "journal": "Journal",
+    "sleep": "Sleep by 11pm"
+  },
+  "dashboard": {
+    "openProfile": "Open profile",
+    "settings": "Settings",
+    "levelXp": "Level and XP",
+    "today": "TODAY",
+    "xpToNext": "{{current}} / {{needed}} XP to level {{next}}",
+    "tileLabel": "{{label}}: {{value}}",
+    "focusMode": "Focus mode",
+    "startFocus": "Start focus mode",
+    "focusIdle": "Start a distraction-free session",
+    "focusToday_one": "{{count}} session today · {{minutes}} min",
+    "focusToday_other": "{{count}} sessions today · {{minutes}} min",
+    "todaysTasks": "Today’s tasks",
+    "add": "Add",
+    "completedOf": "{{done}}/{{total}} completed",
+    "allDone": "All done for today. Nice work.",
+    "nothingPlanned": "Nothing planned. Add a task to start your day.",
+    "habitProgress": "Habit progress",
+    "buildStreak": "Build a streak. Add your first habit.",
+    "currentGoals": "Current goals",
+    "milestonesOf": "{{done}} of {{total}} milestones",
+    "dreamBig": "Dream big. Set your first goal."
+  },
+  "notifications": {
+    "taskBody": "Reminder from Life OS",
+    "habitBody": "Keep your streak alive.",
+    "dailyTitle": "Close out your day",
+    "dailyBody": "Check off your tasks and habits to keep levelling up.",
+    "weeklyTitle": "Your weekly report is ready",
+    "weeklyBody": "See your Life Score and how your week went.",
+    "focusDone": "Focus session complete",
+    "breakOver": "Break is over",
+    "focusBody": "Time is up. Open Life OS to continue."
+  },
+  "notes": {
+    "countLabel_one": "{{count}} note",
+    "countLabel_other": "{{count}} notes",
+    "entriesLabel_one": "{{count}} entry",
+    "entriesLabel_other": "{{count}} entries",
+    "journal": "Journal",
+    "tabNotes": "Notes",
+    "tabJournal": "Daily journal",
+    "search": "Search notes",
+    "filterAll": "All",
+    "filterFavorites": "Favorites",
+    "untitled": "Untitled",
+    "emptyTitle": "Capture your thinking",
+    "emptyBody": "Ideas, plans, things to remember. Everything in one place.",
+    "emptyHint": "Star a note to pin it to the top.",
+    "new": "New note",
+    "noMatchesTitle": "No matches",
+    "noMatchesBody": "Try a different search or category.",
+    "writeToday": "Write today’s journal entry",
+    "todayEntry": "Today’s entry",
+    "howWasToday": "How was today?",
+    "tapToAdd": "Tap to add your thoughts",
+    "reflectPrompt": "Reflect for a minute · +15 XP",
+    "journalEmptyTitle": "Start your journal",
+    "journalEmptyBody": "A few lines a day builds clarity. Reflect on how you feel and what you did.",
+    "journalEmptyAction": "Write today’s entry",
+    "journalEmptyHint": "Journaling counts toward your Life Score and earns +15 XP.",
+    "edit": "Edit note",
+    "save": "Save note",
+    "deleteNote": "Delete note",
+    "titleLabel": "Title",
+    "noteLabel": "Note",
+    "bodyPlaceholder": "Write anything…",
+    "category": "Category",
+    "addFavorite": "Add to favorites",
+    "removeFavorite": "Remove from favorites",
+    "deleteTitle": "Delete note?",
+    "deleteBody": "This cannot be undone."
+  },
+  "journal": {
+    "saveEntry": "Save entry",
+    "feeling": "How are you feeling?",
+    "thoughts": "Your thoughts",
+    "prompts": {
+      "0": "What went well today?",
+      "1": "What did you learn?",
+      "2": "What will you do better tomorrow?"
+    }
+  },
+  "focus": {
+    "close": "Close focus mode",
+    "timer": "Timer",
+    "stats": "Stats",
+    "modes": {
+      "focus": "Focus",
+      "short": "Short break",
+      "long": "Long break"
+    },
+    "stayWith": "Stay with it",
+    "ready": "Ready when you are",
+    "remaining": "{{minutes}} minutes {{seconds}} seconds remaining",
+    "reset": "Reset timer",
+    "pause": "Pause",
+    "start": "Start",
+    "skip": "Skip to next phase",
+    "preset": "{{count}} min",
+    "focusOn": "FOCUS ON",
+    "today": "Today",
+    "thisWeek": "This week",
+    "sessions": "Sessions",
+    "last7": "Last 7 days (min)",
+    "history": "History",
+    "emptyTitle": "No sessions yet",
+    "emptyBody": "Finish a focus session and it will show up here.",
+    "sessionLine": "{{duration}} focus",
+    "completed": "Completed",
+    "stoppedEarly": "Stopped early"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "gateTitle": "Advanced analytics & reports",
+    "gateBody": "See trends across 30 days, your best days, habit consistency, focus time and mood, plus a weekly report.",
+    "range7": "7 days",
+    "range14": "14 days",
+    "range30": "30 days",
+    "tasks": "Tasks",
+    "checkins": "Check-ins",
+    "focus": "Focus",
+    "habitRate": "Habit rate",
+    "avgMood": "Avg mood",
+    "activeDays": "Active days",
+    "winsPerDay": "Wins per day",
+    "focusMinutes": "Focus minutes",
+    "reportWeekly": "Weekly report",
+    "reportFortnight": "Fortnight report",
+    "reportMonthly": "Monthly report",
+    "reportEmpty": "No activity in this period yet. Complete a task or habit to start your report.",
+    "reportBody": "You were active on {{active}} of {{days}} days. Tasks finished: {{tasks}}. Habit check-ins: {{habits}}. Focus time: {{focus}}.",
+    "reportBest": " Strongest day: {{day}}, wins: {{wins}}."
+  },
+  "profile": {
+    "title": "Profile",
+    "preview": "Preview mode",
+    "you": "You",
+    "changePhoto": "Change profile picture",
+    "levelTitle": "Level {{level}} · {{title}}",
+    "xpToLevel": "{{xp}} XP to level {{level}}",
+    "upgrade": "Upgrade to Pro",
+    "upgradeLabel": "Upgrade to Life OS Pro",
+    "upgradeBody": "Try free for 7 days. Streak Freeze, analytics, sync",
+    "statistics": "Statistics",
+    "advanced": "Advanced",
+    "tasksDone": "Tasks done",
+    "checkins": "Check-ins",
+    "bestStreak": "Best streak",
+    "focused": "Focused",
+    "goalsAchieved": "Goals achieved",
+    "notesEntries": "Notes & entries",
+    "advancedGate": "Advanced analytics & reports",
+    "achievementsTitle": "Achievements · {{count}}/{{total}}",
+    "days": "{{count}}d",
+    "photoAccess": "Allow photo access to set a profile picture.",
+    "photoOffline": "Saved on this device. Upload will retry when you are online."
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "themeLabel": "{{name}} theme",
+    "themeLabelPro": "{{name}} theme, Pro",
+    "language": "Language",
+    "notifications": "Notifications & feedback",
+    "reminders": "Reminders",
+    "remindersBody": "Task and habit reminders",
+    "evening": "Evening check-in",
+    "eveningBody": "Daily nudge at 8:30 PM",
+    "weekly": "Weekly report",
+    "weeklyBody": "Sunday evening summary",
+    "haptics": "Haptics",
+    "hapticsBody": "Tactile feedback",
+    "enableFirst": "Enable notifications in system settings first.",
+    "focusSection": "Focus",
+    "focusRow": "Focus",
+    "shortBreak": "Short break",
+    "longBreak": "Long break",
+    "sessionsPerCycle": "Sessions per cycle",
+    "decrease": "Decrease",
+    "increase": "Increase",
+    "minUnit": "min",
+    "cloud": "Cloud sync",
+    "cloudSynced": "Synced with your account",
+    "cloudFeature": "Cloud synchronization",
+    "syncing": "Syncing…",
+    "lastSynced": "Last synced {{date}}",
+    "notSynced": "Not synced yet",
+    "cloudPitch": "Back up and use Life OS on every device",
+    "syncNow": "Sync now",
+    "subscription": "Subscription",
+    "freePlan": "Free plan",
+    "proThanks": "Thanks for supporting Life OS",
+    "trialPitch": "Try free for {{days}} days, then from {{price}}/month",
+    "restore": "Restore purchases",
+    "proRestored": "Pro restored.",
+    "account": "Account",
+    "previewMode": "Preview mode",
+    "previewBody": "Data stays on this device",
+    "accountRow": "Account",
+    "signedIn": "Signed in",
+    "exitPreview": "Exit preview",
+    "signOut": "Sign out",
+    "signOutBody": "Data on this device will be cleared. Pro users can restore it by signing back in.",
+    "deleteAccount": "Delete account",
+    "deleteBody": "Permanently remove your account and cloud data",
+    "deleteConfirm": "This permanently deletes your account and all synced data. This cannot be undone.",
+    "about": "About",
+    "privacy": "Privacy policy",
+    "terms": "Terms of service",
+    "support": "Contact support",
+    "supportSubject": "Life OS support",
+    "version": "Life OS {{version}}",
+    "syncFailed": "Sync failed"
+  },
+  "pro": {
+    "title": "Life OS Pro",
+    "welcome": "Welcome to Pro",
+    "unlockAll": "Unlock everything",
+    "pitch": "Streak Freeze, advanced analytics, cloud sync, themes and more for {{price}}/month.",
+    "seePro": "See Pro",
+    "inTitle": "You’re in. Thank you.",
+    "activeTitle": "Pro is active",
+    "welcomeBody": "Every Pro feature is unlocked. Here is where to find them.",
+    "trialEnds": "Free trial ends {{date}}",
+    "renews": "Renews {{date}}",
+    "ends": "Ends {{date}}",
+    "thanks": "Thanks for supporting Life OS.",
+    "perks": {
+      "freeze": "Save a streak after a missed day.",
+      "analytics": "30-day trends, mood and focus.",
+      "report": "Insights, comparisons and sharing.",
+      "bonus": "A daily challenge worth double XP.",
+      "achievements": "{{count}} more badges to earn.",
+      "themes": "Aurora and Ghost."
+    },
+    "perkTitles": {
+      "freeze": "Streak Freeze",
+      "analytics": "Advanced analytics",
+      "report": "Full weekly report",
+      "bonus": "Bonus challenge",
+      "achievements": "Extra achievements",
+      "themes": "Custom themes"
+    },
+    "freezeLeft": "{{left}} of {{total}} left this month",
+    "themeActive": "Active: {{name}}",
+    "yourPlan": "Your plan",
+    "syncActive": "Cloud sync active · last synced {{date}}",
+    "syncOn": "Cloud sync is on",
+    "manage": "Manage subscription"
+  },
+  "paywallScreen": {
+    "defaultTitle": "Life OS Pro",
+    "defaultBody": "Your full personal operating system. No limits.",
+    "choosePlan": "Choose your plan",
+    "freeVsPro": "Free vs Pro",
+    "continue": "Continue",
+    "onPro": "You’re on Pro",
+    "devActivate": "Activate Pro (development only)",
+    "restore": "Restore",
+    "restoring": "Restoring…",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "welcomeToast": "Welcome to Life OS Pro.",
+    "purchaseFailed": "Purchase failed.",
+    "nothingToRestore": "Nothing to restore.",
+    "reasons": {
+      "habits": {
+        "title": "Build without limits",
+        "body": "You’ve reached the free limit of {{count}} habits. Pro removes it."
+      },
+      "goals": {
+        "title": "Dream bigger",
+        "body": "You’ve reached the free limit of {{count}} active goals. Pro removes it."
+      },
+      "themes": {
+        "title": "Make it yours",
+        "body": "Aurora and Ghost themes are part of Pro."
+      },
+      "analytics": {
+        "title": "Know your patterns",
+        "body": "Advanced analytics are part of Pro."
+      },
+      "report": {
+        "title": "Your week, decoded",
+        "body": "The full weekly report is part of Pro."
+      },
+      "sync": {
+        "title": "Your life, on every device",
+        "body": "Cloud sync and backup are part of Pro."
+      },
+      "freeze": {
+        "title": "Protect your streak",
+        "body": "Streak Freeze keeps a streak alive when life gets in the way."
+      },
+      "challenges": {
+        "title": "Earn double XP",
+        "body": "Pro adds a daily bonus challenge worth double XP."
+      },
+      "achievements": {
+        "title": "Unlock every badge",
+        "body": "Pro adds {{count}} extra achievements and the biggest XP bonuses."
+      }
+    }
+  },
+  "purchases": {
+    "unavailable": "Purchases are not available on this build.",
+    "planUnavailable": "This plan is not available right now. Try again later.",
+    "notVerified": "Purchase could not be verified.",
+    "failed": "Purchase failed.",
+    "noActive": "No active subscription found."
+  }
+}

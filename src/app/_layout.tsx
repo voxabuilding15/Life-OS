@@ -1,4 +1,10 @@
 import {
+  IBMPlexSansArabic_400Regular,
+  IBMPlexSansArabic_500Medium,
+  IBMPlexSansArabic_600SemiBold,
+  IBMPlexSansArabic_700Bold,
+} from '@expo-google-fonts/ibm-plex-sans-arabic';
+import {
   Inter_400Regular,
   Inter_500Medium,
   Inter_600SemiBold,
@@ -18,30 +24,33 @@ import { FeedbackLayer } from '@/components/features/FeedbackLayer';
 import { SplashOverlay } from '@/components/features/SplashOverlay';
 import { Button } from '@/components/ui/Button';
 import { Logo } from '@/components/ui/Logo';
+import { DirectionView } from '@/components/ui/DirectionView';
 import { OfflineBanner } from '@/components/ui/OfflineBanner';
 import { Text } from '@/components/ui/Text';
 import { useHydrated, useServices } from '@/hooks/useBootstrap';
+import { applyLocale, detectDeviceLocale, useI18n } from '@/i18n';
 import { useAuth } from '@/store/auth';
 import { useProfile } from '@/store/profile';
 import { BASE } from '@/theme';
 
 /** Last line of defence: a branded fallback instead of a white screen if a render throws. */
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+  const { t } = useI18n();
   return (
     <View style={{ flex: 1, backgroundColor: BASE.dark, alignItems: 'center', justifyContent: 'center', padding: 32, gap: 14 }}>
       <Logo size={64} />
       <Text variant="title" align="center">
-        Something went wrong
+        {t('common.errorTitle')}
       </Text>
       <Text variant="body" color="secondary" align="center">
-        Your data is safe on this device. Try again, and if it keeps happening, restart the app.
+        {t('common.errorBody')}
       </Text>
       {__DEV__ ? (
         <Text variant="caption" color="tertiary" align="center">
           {error.message}
         </Text>
       ) : null}
-      <Button title="Try again" onPress={retry} fullWidth={false} />
+      <Button title={t('common.tryAgain')} onPress={retry} fullWidth={false} />
     </View>
   );
 }
@@ -51,13 +60,36 @@ void SplashScreen.preventAutoHideAsync().catch(() => undefined);
 const MIN_SPLASH_MS = 2300;
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, Inter_800ExtraBold });
+  const [fontsLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_800ExtraBold,
+    IBMPlexSansArabic_400Regular,
+    IBMPlexSansArabic_500Medium,
+    IBMPlexSansArabic_600SemiBold,
+    IBMPlexSansArabic_700Bold,
+  });
   const hydrated = useHydrated();
   const status = useAuth((s) => s.status);
   const onboarded = useProfile((s) => s.onboarded);
   const [minElapsed, setMinElapsed] = useState(false);
+  const { rtl } = useI18n();
+  const savedLanguage = useProfile((p) => p.language);
 
   useServices(hydrated);
+
+  // Language: the saved preference wins; on first launch the device language is detected and saved.
+  useEffect(() => {
+    if (!hydrated) return;
+    if (savedLanguage) void applyLocale(savedLanguage);
+    else {
+      const detected = detectDeviceLocale();
+      useProfile.getState().setProfile({ language: detected });
+      void applyLocale(detected);
+    }
+  }, [hydrated, savedLanguage]);
 
   useEffect(() => {
     const timer = setTimeout(() => setMinElapsed(true), MIN_SPLASH_MS);
@@ -82,11 +114,12 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: BASE.dark }}>
+      <DirectionView rtl={rtl} style={{ flex: 1 }}>
       <SafeAreaProvider>
         <StatusBar style="light" />
         {fontsLoaded && hydrated ? (
           <View style={{ flex: 1, backgroundColor: BASE.dark }}>
-            <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: BASE.dark }, animation: 'slide_from_right' }}>
+            <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: BASE.dark }, animation: rtl ? 'slide_from_left' : 'slide_from_right' }}>
               <Stack.Protected guard={!authed && !onboarded}>
                 <Stack.Screen name="onboarding" />
               </Stack.Protected>
@@ -120,6 +153,7 @@ export default function RootLayout() {
         ) : null}
         {!(ready && minElapsed) ? <SplashOverlay /> : null}
       </SafeAreaProvider>
+      </DirectionView>
     </GestureHandlerRootView>
   );
 }

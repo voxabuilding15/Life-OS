@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { Easing, FadeOut, interpolate, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming } from 'react-native-reanimated';
+import { useI18n } from '@/i18n';
 import { BASE } from '@/theme';
 import { AmbientBackground } from '../ui/AmbientBackground';
 import { Glow } from '../ui/Glow';
@@ -9,6 +10,7 @@ import { Text } from '../ui/Text';
 
 /** Launch animation: the mark materialises inside a pulsing blue glow, then the wordmark rises. */
 export function SplashOverlay() {
+  const { t: tr } = useI18n();
   const logo = useSharedValue(0);
   const glow = useSharedValue(0);
   const word = useSharedValue(0);
@@ -24,7 +26,7 @@ export function SplashOverlay() {
   const wordStyle = useAnimatedStyle(() => ({ opacity: word.value, transform: [{ translateY: interpolate(word.value, [0, 1], [14, 0]) }] }));
 
   return (
-    <Animated.View exiting={FadeOut.duration(450)} style={[StyleSheet.absoluteFill, styles.root]} accessibilityLabel="Loading Life OS">
+    <Animated.View exiting={FadeOut.duration(450)} style={[StyleSheet.absoluteFill, styles.root]} accessibilityLabel={tr('splash.loading')}>
       <AmbientBackground />
       <View style={styles.center}>
         <Animated.View style={[styles.glow, glowStyle]}>
@@ -36,7 +38,7 @@ export function SplashOverlay() {
         <Animated.View style={[{ alignItems: 'center', marginTop: 36, gap: 14 }, wordStyle]}>
           <Wordmark height={40} />
           <Text variant="caption" color="secondary" style={{ letterSpacing: 2 }}>
-            YOUR LIFE. ORGANIZED.
+            {tr('app.tagline').toUpperCase()}
           </Text>
         </Animated.View>
       </View>

@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import Animated, { FadeInUp, FadeOutUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useI18n } from '@/i18n';
 import { useSync } from '@/store/sync';
 import { radius, useTheme } from '@/theme';
 import { Icon } from './Icon';
@@ -10,13 +11,14 @@ export function OfflineBanner() {
   const online = useSync((s) => s.online);
   const t = useTheme();
   const insets = useSafeAreaInsets();
+  const { t: tr } = useI18n();
   if (online) return null;
   return (
     <Animated.View entering={FadeInUp} exiting={FadeOutUp} style={[styles.wrap, { top: insets.top + 4 }]} pointerEvents="none">
       <View style={[styles.pill, { backgroundColor: t.surfaceSolid, borderColor: t.borderStrong }]}>
         <Icon name="cloud-offline-outline" size={14} color={t.textSecondary} />
         <Text variant="caption" color="secondary">
-          Offline. Changes are saved on this device.
+          {tr('common.offline')}
         </Text>
       </View>
     </Animated.View>

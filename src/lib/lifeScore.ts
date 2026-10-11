@@ -9,26 +9,28 @@ export const JOURNAL_TARGET_DAYS = 4;
 
 export type PillarId = 'habits' | 'tasks' | 'focus' | 'goals' | 'reflection';
 
+/** Text lives in the locale files under `lifeScore.pillars.<id>.*` and `lifeScore.bands.<band>`. */
 export interface Pillar {
   id: PillarId;
-  label: string;
   weight: number;
   /** 0-1 */
   ratio: number;
   /** False when the user has nothing to measure yet (e.g. no habits). Excluded from the score. */
   applicable: boolean;
-  detail: string;
-  tip: string;
+  /** Interpolation values for `lifeScore.pillars.<id>.detail`. */
+  values: Record<string, number>;
 }
+
+export type ScoreBand = 'elite' | 'thriving' | 'momentum' | 'warming' | 'starting';
 
 export interface LifeScoreResult {
   score: number;
-  band: string;
+  band: ScoreBand;
   pillars: Pillar[];
 }
 
-export const scoreBand = (score: number): string =>
-  score >= 90 ? 'Elite' : score >= 75 ? 'Thriving' : score >= 55 ? 'Building momentum' : score >= 30 ? 'Warming up' : 'Getting started';
+export const scoreBand = (score: number): ScoreBand =>
+  score >= 90 ? 'elite' : score >= 75 ? 'thriving' : score >= 55 ? 'momentum' : score >= 30 ? 'warming' : 'starting';
 
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 const dayOf = (iso: string) => toKey(new Date(iso));
@@ -62,11 +64,11 @@ export function computeLifeScore(data: LifeData, day: string = todayKey()): Life
   const reflectionRatio = clamp01(journalDays / JOURNAL_TARGET_DAYS);
 
   const pillars: Pillar[] = [
-    { id: 'habits', label: 'Habits', weight: 30, ratio: habitRatio, applicable: data.habitCount > 0, detail: `${checkins} check-ins this week`, tip: 'Check in your habits daily. Consistency is the biggest lever.' },
-    { id: 'tasks', label: 'Tasks', weight: 25, ratio: taskRatio, applicable: planned.length > 0, detail: `${finished.length} of ${planned.length} planned tasks done`, tip: 'Plan fewer tasks and finish them. Clear your overdue list.' },
-    { id: 'focus', label: 'Focus', weight: 20, ratio: focusRatio, applicable: true, detail: `${Math.round(focusMin)} of ${FOCUS_WEEKLY_TARGET_MIN} focus minutes`, tip: 'Run a couple of 25 minute focus sessions this week.' },
-    { id: 'goals', label: 'Goals', weight: 15, ratio: goalRatio, applicable: data.goals.length > 0, detail: `${reached} milestone${reached === 1 ? '' : 's'} in 14 days`, tip: 'Reach a milestone. Break the next step down until it is small.' },
-    { id: 'reflection', label: 'Reflection', weight: 10, ratio: reflectionRatio, applicable: true, detail: `${journalDays} of ${JOURNAL_TARGET_DAYS} journal days`, tip: 'Write a short journal entry. It takes a minute.' },
+    { id: 'habits', weight: 30, ratio: habitRatio, applicable: data.habitCount > 0, values: { count: checkins } },
+    { id: 'tasks', weight: 25, ratio: taskRatio, applicable: planned.length > 0, values: { done: finished.length, total: planned.length } },
+    { id: 'focus', weight: 20, ratio: focusRatio, applicable: true, values: { minutes: Math.round(focusMin), target: FOCUS_WEEKLY_TARGET_MIN } },
+    { id: 'goals', weight: 15, ratio: goalRatio, applicable: data.goals.length > 0, values: { count: reached } },
+    { id: 'reflection', weight: 10, ratio: reflectionRatio, applicable: true, values: { days: journalDays, target: JOURNAL_TARGET_DAYS } },
   ];
 
   const active = pillars.filter((p) => p.applicable);

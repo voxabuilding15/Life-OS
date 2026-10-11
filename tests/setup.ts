@@ -22,3 +22,7 @@ jest.mock('expo-notifications', () => ({
   SchedulableTriggerInputTypes: { DATE: 'date', DAILY: 'daily', WEEKLY: 'weekly', TIME_INTERVAL: 'timeInterval' },
 }));
 jest.mock('expo-device', () => ({ isDevice: false }));
+jest.mock('expo-localization', () => ({ getLocales: jest.fn(() => [{ languageCode: 'en', languageTag: 'en-US' }]) }));
+// Unit tests assert English copy; i18n.test.ts exercises the other languages explicitly.
+require('@/i18n');
+jest.mock('react-native-restart', () => ({ __esModule: true, default: { restart: jest.fn() } }));

@@ -1,40 +1,48 @@
 export const HABIT_ICONS = ['book', 'barbell', 'code-slash', 'water', 'leaf', 'moon', 'bicycle', 'musical-notes', 'restaurant', 'brush', 'language', 'cash', 'calendar', 'bulb', 'walk', 'heart', 'wallet', 'create'] as const;
 
-export const HABIT_PRESETS: { name: string; icon: (typeof HABIT_ICONS)[number] }[] = [
-  { name: 'Reading', icon: 'book' },
-  { name: 'Gym', icon: 'barbell' },
-  { name: 'Coding', icon: 'code-slash' },
-  { name: 'Water', icon: 'water' },
-  { name: 'Meditation', icon: 'leaf' },
+export type HabitIcon = (typeof HABIT_ICONS)[number];
+
+/** Habit ideas. Names live in the locale files under `starterHabits.<id>`. */
+export interface HabitIdea {
+  id: string;
+  icon: HabitIcon;
+}
+
+export const HABIT_PRESETS: HabitIdea[] = [
+  { id: 'reading', icon: 'book' },
+  { id: 'gym', icon: 'barbell' },
+  { id: 'coding', icon: 'code-slash' },
+  { id: 'water', icon: 'water' },
+  { id: 'meditation', icon: 'leaf' },
 ];
 
 /** Starter habit ideas per onboarding objective. */
-export const STARTER_HABITS: Record<string, { name: string; icon: (typeof HABIT_ICONS)[number] }[]> = {
+export const STARTER_HABITS: Record<string, HabitIdea[]> = {
   productivity: [
-    { name: 'Plan tomorrow', icon: 'calendar' },
-    { name: 'Deep work block', icon: 'bulb' },
+    { id: 'plan_tomorrow', icon: 'calendar' },
+    { id: 'deep_work', icon: 'bulb' },
   ],
   fitness: [
-    { name: 'Gym', icon: 'barbell' },
-    { name: 'Walk 8k steps', icon: 'walk' },
-    { name: 'Water', icon: 'water' },
+    { id: 'gym', icon: 'barbell' },
+    { id: 'walk', icon: 'walk' },
+    { id: 'water', icon: 'water' },
   ],
   learning: [
-    { name: 'Reading', icon: 'book' },
-    { name: 'Coding', icon: 'code-slash' },
-    { name: 'Practice a language', icon: 'language' },
+    { id: 'reading', icon: 'book' },
+    { id: 'coding', icon: 'code-slash' },
+    { id: 'language', icon: 'language' },
   ],
   career: [
-    { name: 'Work on a side project', icon: 'code-slash' },
-    { name: 'Network or reach out', icon: 'create' },
+    { id: 'side_project', icon: 'code-slash' },
+    { id: 'network', icon: 'create' },
   ],
   finance: [
-    { name: 'Track spending', icon: 'wallet' },
-    { name: 'Save something', icon: 'cash' },
+    { id: 'spending', icon: 'wallet' },
+    { id: 'save', icon: 'cash' },
   ],
   growth: [
-    { name: 'Meditation', icon: 'leaf' },
-    { name: 'Journal', icon: 'create' },
-    { name: 'Sleep by 11pm', icon: 'moon' },
+    { id: 'meditation', icon: 'leaf' },
+    { id: 'journal', icon: 'create' },
+    { id: 'sleep', icon: 'moon' },
   ],
 };

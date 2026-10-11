@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
+import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme';
 import { Text } from './Text';
 
@@ -21,9 +22,10 @@ function AnimatedBar({ ratio, index, height, highlight }: { ratio: number; index
 }
 
 export function BarChart({ data, height = 120, showValues }: { data: Bar[]; height?: number; showValues?: boolean }) {
+  const { t: tr } = useI18n();
   const max = Math.max(1, ...data.map((d) => d.value));
   return (
-    <View style={styles.row} accessibilityLabel="Bar chart">
+    <View style={styles.row} accessibilityLabel={tr('common.chart')}>
       {data.map((d, i) => (
         <View key={`${d.label}-${i}`} style={styles.col}>
           {showValues ? (

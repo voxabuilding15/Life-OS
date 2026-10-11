@@ -1,3 +1,4 @@
+import { t } from '@/i18n';
 import { config } from './config';
 
 export type PlanId = 'monthly' | 'yearly';
@@ -28,21 +29,22 @@ export function savingsPercent(monthly: Plan, yearly: Plan): number {
   return Math.max(0, Math.round((1 - yearly.price / full) * 100));
 }
 
-export const periodLabel = (id: PlanId) => (id === 'yearly' ? 'year' : 'month');
+/** Full period word ('month' / 'year') and the short form used next to prices ('mo' / 'yr'). */
+export const periodLabel = (id: PlanId) => t(id === 'yearly' ? 'plans.year' : 'plans.month');
+export const periodShort = (id: PlanId) => t(id === 'yearly' ? 'plans.yearShort' : 'plans.monthShort');
 
-export const trialLabel = (days: number) => `${days}-day free trial`;
+export const trialLabel = (days: number) => t('plans.trialLabel', { count: days });
 
 /** Text for the main purchase button. */
 export function ctaLabel(plan: Plan): string {
-  return plan.trialDays ? `Start ${trialLabel(plan.trialDays)}` : `Continue · ${plan.priceString}/${periodLabel(plan.id)}`;
+  return plan.trialDays ? t('plans.startTrial', { trial: trialLabel(plan.trialDays) }) : t('plans.continuePrice', { price: plan.priceString, period: periodLabel(plan.id) });
 }
 
 /** The one line that must sit next to the button: what you pay and when. */
 export function billingLine(plan: Plan): string {
-  const price = `${plan.priceString}/${periodLabel(plan.id)}`;
-  return plan.trialDays
-    ? `${plan.trialDays} days free, then ${price}. Cancel anytime in Google Play before the trial ends and you won't be charged.`
-    : `${price}, billed ${plan.id === 'yearly' ? 'once a year' : 'monthly'}. Cancel anytime in Google Play.`;
+  const price = t('plans.pricePer', { price: plan.priceString, period: periodLabel(plan.id) });
+  if (plan.trialDays) return t('plans.billingTrial', { days: plan.trialDays, price });
+  return t(plan.id === 'yearly' ? 'plans.billingYearly' : 'plans.billingMonthly', { price });
 }
 
 /** Converts a store billing period to days (approximate for months/years). */

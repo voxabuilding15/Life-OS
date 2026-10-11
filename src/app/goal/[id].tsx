@@ -14,6 +14,7 @@ import { ProgressRing } from '@/components/ui/ProgressRing';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { useGoalsData } from '@/hooks/useData';
+import { useI18n } from '@/i18n';
 import { diffDays, formatDay, todayKey } from '@/lib/date';
 import { haptic } from '@/lib/haptics';
 import { addMilestone, deleteGoal, toggleMilestone } from '@/services/actions';
@@ -21,6 +22,7 @@ import { useTheme } from '@/theme';
 
 export default function GoalDetail() {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { all } = useGoalsData();
   const item = useMemo(() => all.find((g) => g.goal.id === id), [all, id]);
@@ -30,8 +32,8 @@ export default function GoalDetail() {
   if (!item) {
     return (
       <Screen>
-        <Header title="Goal" back />
-        <EmptyState icon="alert-circle-outline" title="Goal not found" message="It may have been deleted." />
+        <Header title={tr('goals.goal')} back />
+        <EmptyState icon="alert-circle-outline" title={tr('goals.notFound')} message={tr('goals.deleted')} />
       </Screen>
     );
   }
@@ -44,16 +46,16 @@ export default function GoalDetail() {
       router.back();
     };
     if (Platform.OS === 'web') return run();
-    Alert.alert('Delete goal?', 'The goal and its milestones will be removed.', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: run },
+    Alert.alert(tr('goals.deleteTitle'), tr('goals.deleteBody'), [
+      { text: tr('common.cancel'), style: 'cancel' },
+      { text: tr('common.delete'), style: 'destructive', onPress: run },
     ]);
   };
 
   return (
     <View style={{ flex: 1 }}>
     <Screen keyboard>
-      <Header title={goal.title} subtitle={goal.category} back />
+      <Header title={goal.title} contentTitle subtitle={tr(`categories.goal.${goal.category}`)} back />
 
       {goal.completedAt ? (
         <Animated.View entering={ZoomIn.springify().damping(12)} style={{ marginBottom: 14 }}>
@@ -64,11 +66,11 @@ export default function GoalDetail() {
               </View>
               <View style={{ flex: 1 }}>
                 <Text variant="micro" color="accent">
-                  ACHIEVEMENT UNLOCKED
+                  {tr('achievements.unlockedToast')}
                 </Text>
-                <Text variant="heading">Goal achieved</Text>
+                <Text variant="heading">{tr('goals.achievedTitle')}</Text>
                 <Text variant="caption" color="secondary">
-                  You earned +500 XP for finishing this.
+                  {tr('goals.earnedXp')}
                 </Text>
               </View>
             </View>
@@ -83,31 +85,31 @@ export default function GoalDetail() {
           </ProgressRing>
           <View style={{ flex: 1, gap: 6 }}>
             <Text variant="heading">
-              {done} of {milestones.length} milestones
+              {tr('goals.milestonesOf', { done, count: milestones.length })}
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Icon name="calendar-outline" size={14} color={t.textSecondary} />
               <Text variant="caption" color="secondary">
-                {goal.targetDate ? `${formatDay(goal.targetDate)}${left != null && left >= 0 ? ` · ${left} day${left === 1 ? '' : 's'} left` : ' · Past due'}` : 'No target date'}
+                {goal.targetDate ? (left != null && left >= 0 ? tr('goals.daysLeft', { date: formatDay(goal.targetDate), count: left }) : tr('goals.pastDue', { date: formatDay(goal.targetDate) })) : tr('goals.noTarget')}
               </Text>
             </View>
           </View>
         </View>
         {goal.description ? (
-          <Text variant="body" color="secondary" style={{ marginTop: 16 }}>
+          <Text content variant="body" color="secondary" style={{ marginTop: 16 }}>
             {goal.description}
           </Text>
         ) : null}
       </Card>
 
-      <SectionHeader title="Timeline" />
+      <SectionHeader title={tr('goals.timeline')} />
       <View>
         {milestones.map((m, i) => (
           <Animated.View key={m.id} entering={FadeInDown.delay(i * 60).duration(350)} style={{ flexDirection: 'row', gap: 14 }}>
             <View style={{ alignItems: 'center' }}>
               <Checkbox
                 checked={m.completed}
-                label={`Complete ${m.title}`}
+                label={tr('goals.completeMilestone', { title: m.title })}
                 onToggle={() => {
                   const r = toggleMilestone(m.id);
                   if (r.goalCompleted) {
@@ -119,12 +121,12 @@ export default function GoalDetail() {
               {i < milestones.length - 1 ? <View style={{ flex: 1, width: 2, marginVertical: 4, backgroundColor: m.completed ? t.accent : t.surfaceStrong, minHeight: 22 }} /> : null}
             </View>
             <View style={{ flex: 1, paddingBottom: 18, paddingTop: 3 }}>
-              <Text variant="bodyMedium" style={m.completed && { color: t.textTertiary, textDecorationLine: 'line-through' }}>
+              <Text content variant="bodyMedium" style={m.completed && { color: t.textTertiary, textDecorationLine: 'line-through' }}>
                 {m.title}
               </Text>
               {m.completedAt ? (
                 <Text variant="caption" color="tertiary">
-                  Done {formatDay(todayKey(new Date(m.completedAt)))}
+                  {tr('goals.doneOn', { date: formatDay(todayKey(new Date(m.completedAt))) })}
                 </Text>
               ) : null}
             </View>
@@ -132,20 +134,20 @@ export default function GoalDetail() {
         ))}
         {milestones.length === 0 ? (
           <Text variant="body" color="tertiary" style={{ marginBottom: 12 }}>
-            Add milestones to track your progress.
+            {tr('goals.addHint')}
           </Text>
         ) : null}
       </View>
 
       <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center', marginTop: 4 }}>
         <View style={{ flex: 1 }}>
-          <Input value={next} onChangeText={setNext} placeholder="Add a milestone" icon="add" returnKeyType="done" onSubmitEditing={() => next.trim() && (addMilestone(goal.id, next), setNext(''))} />
+          <Input value={next} onChangeText={setNext} placeholder={tr('goals.addPlaceholder')} icon="add" returnKeyType="done" onSubmitEditing={() => next.trim() && (addMilestone(goal.id, next), setNext(''))} />
         </View>
-        <Button title="Add" size="md" fullWidth={false} disabled={!next.trim()} onPress={() => (addMilestone(goal.id, next), setNext(''))} />
+        <Button title={tr('common.add')} size="md" fullWidth={false} disabled={!next.trim()} onPress={() => (addMilestone(goal.id, next), setNext(''))} />
       </View>
 
       <View style={{ marginTop: 28 }}>
-        <Button title="Delete goal" variant="ghost" onPress={confirmDelete} />
+        <Button title={tr('goals.delete')} variant="ghost" onPress={confirmDelete} />
       </View>
     </Screen>
     <Confetti playKey={burst} />

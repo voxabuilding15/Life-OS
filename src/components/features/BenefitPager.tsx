@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { useI18n } from '@/i18n';
 import { springs, THEMES, useTheme } from '@/theme';
 import { Card } from '../ui/Card';
+import { SwipePager } from '../ui/SwipePager';
 import { BarChart } from '../ui/BarChart';
 import { Icon } from '../ui/Icon';
 import { ProgressRing } from '../ui/ProgressRing';
@@ -10,7 +12,7 @@ import { Text } from '../ui/Text';
 
 function Slide({ width, eyebrow, title, body, children }: { width: number; eyebrow: string; title: string; body: string; children: React.ReactNode }) {
   return (
-    <View style={{ width, paddingHorizontal: 20, gap: 14 }}>
+    <View style={{ width, gap: 14 }}>
       <Card padding={18} accent>
         <View style={{ height: 120, alignItems: 'center', justifyContent: 'center' }}>{children}</View>
       </Card>
@@ -38,35 +40,24 @@ function Dot({ active }: { active: boolean }) {
 /** Three swipeable benefit slides with live mini-mockups. Auto-advances until the user touches it. */
 export function BenefitPager() {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const { width } = useWindowDimensions();
-  const ref = useRef<ScrollView>(null);
   const touched = useRef(false);
   const [page, setPage] = useState(0);
+  const pageWidth = width - 40; // screen gutters
+  const SLIDES = 3;
 
   useEffect(() => {
     const id = setInterval(() => {
-      if (touched.current) return;
-      setPage((p) => {
-        const next = (p + 1) % 3;
-        ref.current?.scrollTo({ x: next * width, animated: true });
-        return next;
-      });
+      if (!touched.current) setPage((p) => (p + 1) % SLIDES);
     }, 4200);
     return () => clearInterval(id);
-  }, [width]);
+  }, []);
 
   return (
     <View style={{ gap: 14 }}>
-      <ScrollView
-        ref={ref}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScrollBeginDrag={() => (touched.current = true)}
-        onMomentumScrollEnd={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / width))}
-        style={{ marginHorizontal: -20 }}
-      >
-        <Slide width={width} eyebrow="INSIGHTS" title="See the full picture" body="30-day trends, mood and focus analytics, and a weekly report you can share.">
+      <SwipePager page={page} onPageChange={setPage} width={pageWidth} onTouch={() => (touched.current = true)}>
+        <Slide width={pageWidth} eyebrow={tr('paywall.slides.insights.eyebrow')} title={tr('paywall.slides.insights.title')} body={tr('paywall.slides.insights.body')}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 22 }}>
             <ProgressRing value={0.82} size={92} stroke={9}>
               <Text variant="title" style={{ fontFamily: 'Inter_800ExtraBold' }}>
@@ -74,11 +65,11 @@ export function BenefitPager() {
               </Text>
             </ProgressRing>
             <View style={{ width: 130 }}>
-              <BarChart height={60} data={[3, 5, 4, 7, 6, 9, 8].map((v, i) => ({ label: 'MTWTFSS'[i], value: v, highlight: i === 6 }))} />
+              <BarChart height={60} data={[3, 5, 4, 7, 6, 9, 8].map((v, i) => ({ label: String(i + 1), value: v, highlight: i === 6 }))} />
             </View>
           </View>
         </Slide>
-        <Slide width={width} eyebrow="STREAK FREEZE" title="Never lose a streak" body="Missed a day? Freeze it. Two freezes every month keep your hard work safe.">
+        <Slide width={pageWidth} eyebrow={tr('paywall.slides.freeze.eyebrow')} title={tr('paywall.slides.freeze.title')} body={tr('paywall.slides.freeze.body')}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             {[0, 1, 2, 3].map((i) => (
               <View key={i} style={[styles.day, { backgroundColor: t.accent }]}>
@@ -95,7 +86,7 @@ export function BenefitPager() {
             ))}
           </View>
         </Slide>
-        <Slide width={width} eyebrow="EVERYWHERE" title="Sync, themes, no limits" body="Back up to the cloud, switch devices freely and make Life OS look the way you like.">
+        <Slide width={pageWidth} eyebrow={tr('paywall.slides.everywhere.eyebrow')} title={tr('paywall.slides.everywhere.title')} body={tr('paywall.slides.everywhere.body')}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18 }}>
             <Icon name="cloud-done" size={44} color={t.accent} />
             {Object.values(THEMES).map((th) => (
@@ -103,7 +94,7 @@ export function BenefitPager() {
             ))}
           </View>
         </Slide>
-      </ScrollView>
+      </SwipePager>
       <View style={{ flexDirection: 'row', gap: 6, justifyContent: 'center' }}>
         {[0, 1, 2].map((i) => (
           <Dot key={i} active={page === i} />

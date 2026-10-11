@@ -50,9 +50,9 @@ describe('Life Score', () => {
   });
 
   it('labels bands', () => {
-    expect(scoreBand(10)).toBe('Getting started');
-    expect(scoreBand(60)).toBe('Building momentum');
-    expect(scoreBand(95)).toBe('Elite');
+    expect(scoreBand(10)).toBe('starting');
+    expect(scoreBand(60)).toBe('momentum');
+    expect(scoreBand(95)).toBe('elite');
   });
 });
 
@@ -70,11 +70,13 @@ describe('weekly report', () => {
     expect(r.topHabit).toEqual({ habitId: 'h1', count: 1 });
     expect(r.activeDays).toBe(1);
     expect(r.highlights.length).toBeGreaterThan(0);
+    expect(r.highlights[0]).toEqual({ key: 'tasksDelta', values: { count: 2, delta: 1 } });
+    expect(r.tipPillar).not.toBeNull();
   });
 
   it('handles an empty week', () => {
     const r = buildWeeklyReport(emptyLifeData(), DAY);
-    expect(r.headline).toBe('A fresh start');
+    expect(r.headline).toBe('fresh');
     expect(r.bestDay).toBeNull();
   });
 });

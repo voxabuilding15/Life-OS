@@ -13,7 +13,7 @@ import { StatTile } from '@/components/ui/StatTile';
 import { Text } from '@/components/ui/Text';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { formatDuration, shortDay, todayKey } from '@/lib/date';
-import { MOODS } from '@/lib/mood';
+import { useI18n } from '@/i18n';
 import { useIsPro } from '@/store/subscription';
 import { useTheme } from '@/theme';
 
@@ -32,6 +32,7 @@ function bucket(series: { key: string; label: string; v: number }[], max = 15) {
 
 export default function Analytics() {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const isPro = useIsPro();
   const [range, setRange] = useState<Range>('7');
   const days = Number(range);
@@ -40,64 +41,66 @@ export default function Analytics() {
   if (!isPro) {
     return (
       <Screen>
-        <Header title="Analytics" back right={<ProBadge />} />
+        <Header title={tr('analytics.title')} back right={<ProBadge />} />
         <Card accent padding={22}>
           <View style={{ gap: 14, alignItems: 'center' }}>
             <Icon name="analytics" size={34} color={t.accent} />
             <Text variant="heading" align="center">
-              Advanced analytics & reports
+              {tr('analytics.gateTitle')}
             </Text>
             <Text variant="body" color="secondary" align="center">
-              See trends across 30 days, your best days, habit consistency, focus time and mood, plus a weekly report.
+              {tr('analytics.gateBody')}
             </Text>
             <View style={{ opacity: 0.4, width: '100%' }}>
               <BarChart height={80} data={[3, 6, 4, 8, 5, 9, 7].map((v, i) => ({ label: 'MTWTFSS'[i], value: v }))} />
             </View>
-            <Button title="Unlock with Pro" icon="sparkles" onPress={() => router.replace('/paywall?reason=analytics')} />
+            <Button title={tr('common.unlockWithPro')} icon="sparkles" onPress={() => router.replace('/paywall?reason=analytics')} />
           </View>
         </Card>
       </Screen>
     );
   }
 
-  const avgMood = a.avgMood != null ? MOODS[Math.round(a.avgMood) - 1]?.label : '—';
-  const report = a.activeDays === 0
-    ? 'No activity in this period yet. Complete a task or habit to start your report.'
-    : `You were active on ${a.activeDays} of ${days} days, finished ${a.tasks} task${a.tasks === 1 ? '' : 's'}, logged ${a.habitCheckins} habit check-in${a.habitCheckins === 1 ? '' : 's'} and focused for ${formatDuration(a.focusMinutes * 60)}.${a.bestDay ? ` Your strongest day was ${shortDay(a.bestDay.key)} with ${a.bestDay.total} wins.` : ''}`;
+  const avgMood = a.avgMood != null ? tr(`mood.${Math.round(a.avgMood)}`) : '—';
+  const report =
+    a.activeDays === 0
+      ? tr('analytics.reportEmpty')
+      : tr('analytics.reportBody', { active: a.activeDays, days, tasks: a.tasks, habits: a.habitCheckins, focus: formatDuration(a.focusMinutes * 60) }) +
+        (a.bestDay ? tr('analytics.reportBest', { day: shortDay(a.bestDay.key), wins: a.bestDay.total }) : '');
 
   return (
     <Screen>
-      <Header title="Analytics" subtitle="Pro" back right={<ProBadge />} />
+      <Header title={tr('analytics.title')} subtitle={tr('common.pro')} back right={<ProBadge />} />
       <Segmented
         value={range}
         onChange={setRange}
         options={[
-          { value: '7', label: '7 days' },
-          { value: '14', label: '14 days' },
-          { value: '30', label: '30 days' },
+          { value: '7', label: tr('analytics.range7') },
+          { value: '14', label: tr('analytics.range14') },
+          { value: '30', label: tr('analytics.range30') },
         ]}
       />
       <View style={{ flexDirection: 'row', gap: 10, marginTop: 16 }}>
-        <StatTile icon="checkmark-done" value={a.tasks} label="Tasks" />
-        <StatTile icon="flame" value={a.habitCheckins} label="Check-ins" />
-        <StatTile icon="timer" value={formatDuration(a.focusMinutes * 60)} label="Focus" />
+        <StatTile icon="checkmark-done" value={a.tasks} label={tr('analytics.tasks')} />
+        <StatTile icon="flame" value={a.habitCheckins} label={tr('analytics.checkins')} />
+        <StatTile icon="timer" value={formatDuration(a.focusMinutes * 60)} label={tr('analytics.focus')} />
       </View>
       <View style={{ flexDirection: 'row', gap: 10, marginTop: 10 }}>
-        <StatTile icon="pulse" value={`${Math.round(a.habitRate * 100)}%`} label="Habit rate" />
-        <StatTile icon="happy" value={avgMood} label="Avg mood" />
-        <StatTile icon="calendar" value={`${a.activeDays}/${days}`} label="Active days" />
+        <StatTile icon="pulse" value={`${Math.round(a.habitRate * 100)}%`} label={tr('analytics.habitRate')} />
+        <StatTile icon="happy" value={avgMood} label={tr('analytics.avgMood')} />
+        <StatTile icon="calendar" value={`${a.activeDays}/${days}`} label={tr('analytics.activeDays')} />
       </View>
 
-      <SectionHeader title="Wins per day" />
+      <SectionHeader title={tr('analytics.winsPerDay')} />
       <Card padding={18}>
         <BarChart height={110} data={bucket(a.series.map((d) => ({ key: d.key, label: d.label, v: d.total })))} />
       </Card>
-      <SectionHeader title="Focus minutes" />
+      <SectionHeader title={tr('analytics.focusMinutes')} />
       <Card padding={18}>
         <BarChart height={90} data={bucket(a.series.map((d) => ({ key: d.key, label: d.label, v: d.focusMinutes })))} />
       </Card>
 
-      <SectionHeader title={`${days === 7 ? 'Weekly' : days === 14 ? 'Fortnight' : 'Monthly'} report`} />
+      <SectionHeader title={tr(days === 7 ? 'analytics.reportWeekly' : days === 14 ? 'analytics.reportFortnight' : 'analytics.reportMonthly')} />
       <Card accent padding={18}>
         <Text variant="body" color="secondary">
           {report}

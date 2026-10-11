@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useI18n } from '@/i18n';
 import { Button } from '../ui/Button';
 import { IconButton } from '../ui/Header';
 import { Screen } from '../ui/Screen';
@@ -18,19 +19,20 @@ interface Props {
 }
 
 /** Shared chrome for create/edit modals: close button, title, scrolling form, sticky actions. */
-export function FormModal({ title, children, saveLabel = 'Save', onSave, saving, disabled, onDelete, deleteLabel = 'Delete' }: Props) {
+export function FormModal({ title, children, saveLabel, onSave, saving, disabled, onDelete, deleteLabel }: Props) {
+  const { t } = useI18n();
   return (
     <Screen keyboard bottomInset={16}>
       <View style={styles.head}>
         <Text variant="title" style={{ flex: 1 }} accessibilityRole="header">
           {title}
         </Text>
-        <IconButton icon="close" label="Close" onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
+        <IconButton icon="close" label={t('common.close')} onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
       </View>
       <View style={styles.form}>{children}</View>
       <View style={styles.actions}>
-        <Button title={saveLabel} onPress={onSave} loading={saving} disabled={disabled} />
-        {onDelete ? <Button title={deleteLabel} variant="ghost" onPress={onDelete} /> : null}
+        <Button title={saveLabel ?? t('common.save')} onPress={onSave} loading={saving} disabled={disabled} />
+        {onDelete ? <Button title={deleteLabel ?? t('common.delete')} variant="ghost" onPress={onDelete} /> : null}
       </View>
     </Screen>
   );
@@ -39,7 +41,7 @@ export function FormModal({ title, children, saveLabel = 'Save', onSave, saving,
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <View style={{ gap: 10 }}>
-      <Text variant="micro" color="tertiary" style={{ marginLeft: 4 }}>
+      <Text variant="micro" color="tertiary" style={{ marginStart: 4 }}>
         {label.toUpperCase()}
       </Text>
       {children}

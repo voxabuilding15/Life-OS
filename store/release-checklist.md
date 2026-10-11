@@ -37,6 +37,13 @@ Use an internal-testing build (`eas build --profile preview --platform android`,
 - [ ] Cold start under 2.5s on the low-end device; no ANRs; rotate / background / kill during a focus session; font scaling 130%; TalkBack on onboarding, dashboard and paywall; dark mode only is intentional.
 - [ ] Check the Play **pre-launch report** and Android vitals.
 
+**Languages and RTL**
+- [ ] Change language in Settings -> Language: English <-> French updates instantly; switching to Arabic reloads the app once and the whole UI (tabs, headers, lists, charts, calendar, paywall) is mirrored. Switch back to English and confirm it reloads to LTR.
+- [ ] On a device whose system language is French or Arabic, a fresh install starts in that language; with another language it starts in English.
+- [ ] Sign in on a second device: the account's saved language is applied.
+- [ ] Check long French text on a small phone (320 dp wide), Arabic with font scale 130%, TalkBack in Arabic, and that task/habit reminders arrive in the chosen language.
+- [ ] Add the French and Arabic Play listings (`listing.fr.md`, `listing.ar.md`) and localized graphics (`store/play/fr`, `store/play/ar`).
+
 ## 4. Build and submit
 - [ ] `eas build --profile production --platform android` (AAB, EAS-managed upload key, Play App Signing).
 - [ ] Play Console: listing from `listing.md`, graphics from `store/play/` (`npm run brand` / `scripts/generate-store-assets.mjs` regenerate them), privacy URL, Data safety from `data-safety.md`, content rating, target audience 13+, ads = no, test account for reviewers.

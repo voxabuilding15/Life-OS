@@ -30,7 +30,8 @@ import { useFeedback } from '@/store/feedback';
 import { useProfile } from '@/store/profile';
 import { useSubscription } from '@/store/subscription';
 import type { FocusSession, Goal, Habit, JournalEntry, Note, Task } from '@/types';
-import { cancelHabitReminder, cancelTaskReminder, scheduleHabitReminder, scheduleTaskReminder } from './notifications';
+import { applyLocale, type Locale } from '@/i18n';
+import { cancelHabitReminder, cancelTaskReminder, scheduleHabitReminder, scheduleTaskReminder, syncDailyReminder } from './notifications';
 
 /* ------------------------------------------------------------------ */
 /* Gamification core                                                   */
@@ -133,13 +134,13 @@ export function toggleTask(id: string): void {
   if (!task || task.deletedAt) return;
   if (task.completed) {
     store.update(id, { completed: false, completedAt: null });
-    awardXp('task', 'Task reopened', -1);
+    awardXp('task', 'xp.taskReopened', -1);
     const next = useTasks.getState().items[id];
     if (next) void scheduleTaskReminder(next);
   } else {
     store.update(id, { completed: true, completedAt: nowIso() });
     void cancelTaskReminder(id);
-    awardXp('task', 'Task completed');
+    awardXp('task', 'xp.taskCompleted');
   }
 }
 
@@ -173,7 +174,7 @@ export function toggleHabit(habitId: string, date: string = todayKey()): boolean
   const active = matching.filter((l) => !l.deletedAt);
   if (active.length) {
     active.forEach((l) => logs.remove(l.id));
-    if (date === todayKey()) awardXp('habit', 'Habit unchecked', -1);
+    if (date === todayKey()) awardXp('habit', 'xp.habitUnchecked', -1);
     else useProfile.getState().addXp(-XP.habit);
     return false;
   }
@@ -181,7 +182,7 @@ export function toggleHabit(habitId: string, date: string = todayKey()): boolean
   if (revived) logs.update(revived.id, { deletedAt: null });
   else logs.add({ habitId, logDate: date });
   // Backfilled days earn XP too, but without celebration noise.
-  if (date === todayKey()) awardXp('habit', 'Habit completed');
+  if (date === todayKey()) awardXp('habit', 'xp.habitCompleted');
   else {
     useProfile.getState().addXp(XP.habit);
     checkAchievements();
@@ -237,7 +238,7 @@ export function toggleMilestone(id: string): { goalCompleted: boolean } {
   const goal = goals.items[m.goalId];
   if (m.completed) {
     store.update(id, { completed: false, completedAt: null });
-    awardXp('milestone', 'Milestone reopened', -1);
+    awardXp('milestone', 'xp.milestoneReopened', -1);
     if (goal?.completedAt) {
       goals.update(goal.id, { completedAt: null });
       useProfile.getState().addXp(-XP.goal);
@@ -245,11 +246,11 @@ export function toggleMilestone(id: string): { goalCompleted: boolean } {
     return { goalCompleted: false };
   }
   store.update(id, { completed: true, completedAt: nowIso() });
-  awardXp('milestone', 'Milestone reached');
+  awardXp('milestone', 'xp.milestoneReached');
   const siblings = liveItems(useMilestones).filter((x) => x.goalId === m.goalId);
   if (goal && !goal.completedAt && siblings.length && siblings.every((x) => x.completed)) {
     goals.update(goal.id, { completedAt: nowIso() });
-    awardXp('goal', 'Goal achieved');
+    awardXp('goal', 'xp.goalAchieved');
     return { goalCompleted: true };
   }
   return { goalCompleted: false };
@@ -262,7 +263,7 @@ export function toggleMilestone(id: string): { goalCompleted: boolean } {
 export function logFocusSession(s: Pick<FocusSession, 'startedAt' | 'durationSeconds' | 'plannedSeconds' | 'completed' | 'taskId'>): void {
   if (s.durationSeconds < 60) return; // ignore accidental starts
   useFocusSessions.getState().add(s);
-  if (s.completed) awardXp('focusSession', 'Focus session complete');
+  if (s.completed) awardXp('focusSession', 'xp.focusComplete');
 }
 
 export type NoteInput = Pick<Note, 'title' | 'body' | 'category'>;
@@ -280,11 +281,11 @@ export function saveJournal(date: string, mood: number, body: string): JournalEn
   if (existing) {
     const wasDeleted = Boolean(existing.deletedAt);
     const updated = store.update(existing.id, { mood, body, deletedAt: null })!;
-    if (wasDeleted) awardXp('journal', 'Journal entry');
+    if (wasDeleted) awardXp('journal', 'xp.journalEntry');
     return updated;
   }
   const created = store.add({ entryDate: date, mood, body });
-  awardXp('journal', 'Journal entry');
+  awardXp('journal', 'xp.journalEntry');
   return created;
 }
 
@@ -300,13 +301,13 @@ export function claimChallenge(day: string, challenge: Challenge, claimedKeys: R
   if (claimedKeys.has(key) || !challengeProgress(challenge, dayStats).done) return false;
   if (challenge.bonus && !useSubscription.getState().isPro) return false;
   useAchievementRecords.getState().add({ key, unlockedAt: nowIso() });
-  awardXpAmount(challenge.xp, 'Challenge complete');
+  awardXpAmount(challenge.xp, 'xp.challengeComplete');
   // Everything the user can claim today is claimed -> bonus.
   const claimable = allChallenges.filter((c) => !c.bonus || useSubscription.getState().isPro);
   const nowClaimed = new Set(liveItems(useAchievementRecords).map((r) => r.key));
   if (claimable.every((c) => nowClaimed.has(challengeKey(day, c.id))) && !nowClaimed.has(challengeKey(day, 'all'))) {
     useAchievementRecords.getState().add({ key: challengeKey(day, 'all'), unlockedAt: nowIso() });
-    setTimeout(() => awardXp('challengeAll', 'All challenges done'), 700);
+    setTimeout(() => awardXp('challengeAll', 'xp.allChallenges'), 700);
   }
   return true;
 }
@@ -333,3 +334,23 @@ export function freezeHabit(habitId: string): FreezeResult {
 }
 
 export { parseFreezeKey };
+
+/* ------------------------------------------------------------------ */
+/* Language                                                            */
+/* ------------------------------------------------------------------ */
+
+/** Re-creates every scheduled reminder so its text follows the active language. */
+export async function rescheduleAllNotifications(): Promise<void> {
+  await Promise.all([
+    ...liveItems(useTasks).map((task) => scheduleTaskReminder(task)),
+    ...liveItems(useHabits).map((habit) => scheduleHabitReminder(habit)),
+    syncDailyReminder(),
+  ]);
+}
+
+/** Switches the UI language everywhere: persisted on the profile (and synced), applied now, notifications refreshed. */
+export async function setAppLanguage(locale: Locale): Promise<void> {
+  useProfile.getState().setProfile({ language: locale });
+  await applyLocale(locale);
+  void rescheduleAllNotifications();
+}

@@ -20,5 +20,5 @@ export function Fab({ onPress, icon = 'add', label }: { onPress: () => void; ico
 }
 
 const styles = StyleSheet.create({
-  fab: { position: 'absolute', right: 20, width: 60, height: 60, borderRadius: 22, alignItems: 'center', justifyContent: 'center', shadowOpacity: 0.45, shadowRadius: 20, shadowOffset: { width: 0, height: 8 }, elevation: 10 },
+  fab: { position: 'absolute', end: 20, width: 60, height: 60, borderRadius: 22, alignItems: 'center', justifyContent: 'center', shadowOpacity: 0.45, shadowRadius: 20, shadowOffset: { width: 0, height: 8 }, elevation: 10 },
 });

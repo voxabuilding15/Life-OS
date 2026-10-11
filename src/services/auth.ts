@@ -1,4 +1,5 @@
 import type { AuthError } from '@supabase/supabase-js';
+import { t } from '@/i18n';
 import { isSupabaseConfigured } from '@/lib/config';
 import { resetAllEntities } from '@/store/entities';
 import { useAuth } from '@/store/auth';
@@ -11,13 +12,13 @@ import { runSync } from './sync';
 import { supabase } from './supabase';
 
 const friendly = (e: AuthError | Error | null): string => {
-  const msg = e?.message ?? 'Something went wrong';
-  if (/invalid login/i.test(msg)) return 'Incorrect email or password.';
-  if (/already registered/i.test(msg)) return 'An account with this email already exists.';
-  if (/email not confirmed/i.test(msg)) return 'Please confirm your email first. Check your inbox.';
-  if (/rate limit/i.test(msg)) return 'Too many attempts. Try again in a few minutes.';
-  if (/network|fetch/i.test(msg)) return 'No connection. Check your internet and try again.';
-  return msg;
+  const msg = e?.message ?? '';
+  if (/invalid login/i.test(msg)) return t('auth.errors.invalidLogin');
+  if (/already registered/i.test(msg)) return t('auth.errors.exists');
+  if (/email not confirmed/i.test(msg)) return t('auth.errors.notConfirmed');
+  if (/rate limit/i.test(msg)) return t('auth.errors.rateLimit');
+  if (/network|fetch/i.test(msg)) return t('auth.errors.network');
+  return msg || t('auth.errors.generic');
 };
 
 export type AuthResult = { ok: true; needsConfirmation?: boolean } | { ok: false; error: string };
@@ -57,13 +58,13 @@ function wipeLocal() {
 }
 
 export async function signIn(email: string, password: string): Promise<AuthResult> {
-  if (!supabase) return { ok: false, error: 'Backend is not configured.' };
+  if (!supabase) return { ok: false, error: t('auth.errors.notConfigured') };
   const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
   return error ? { ok: false, error: friendly(error) } : { ok: true };
 }
 
 export async function signUp(email: string, password: string, name: string): Promise<AuthResult> {
-  if (!supabase) return { ok: false, error: 'Backend is not configured.' };
+  if (!supabase) return { ok: false, error: t('auth.errors.notConfigured') };
   const profile = useProfile.getState();
   const { data, error } = await supabase.auth.signUp({
     email: email.trim(),
@@ -76,7 +77,7 @@ export async function signUp(email: string, password: string, name: string): Pro
 }
 
 export async function sendPasswordReset(email: string): Promise<AuthResult> {
-  if (!supabase) return { ok: false, error: 'Backend is not configured.' };
+  if (!supabase) return { ok: false, error: t('auth.errors.notConfigured') };
   const { error } = await supabase.auth.resetPasswordForEmail(email.trim());
   return error ? { ok: false, error: friendly(error) } : { ok: true };
 }
@@ -93,7 +94,7 @@ export async function signOut(): Promise<void> {
 }
 
 export async function deleteAccountData(): Promise<AuthResult> {
-  if (!supabase) return { ok: false, error: 'Backend is not configured.' };
+  if (!supabase) return { ok: false, error: t('auth.errors.notConfigured') };
   const { error } = await supabase.rpc('delete_my_account');
   if (error) return { ok: false, error: friendly(error as unknown as Error) };
   await signOut();

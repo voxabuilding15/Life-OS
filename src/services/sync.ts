@@ -1,5 +1,6 @@
 import { AppState } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
+import { isLocale, t } from '@/i18n';
 import { onLocalChange } from '@/lib/events';
 import { ENTITY_STORES } from '@/store/entities';
 import { useAuth } from '@/store/auth';
@@ -97,29 +98,56 @@ export async function syncProfile() {
     const p = useProfile.getState();
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
     const remoteUpdated = data?.updated_at ? new Date(data.updated_at as string).toISOString() : '';
-    if (data && (!p.updatedAt || remoteUpdated > p.updatedAt)) {
+    const remote = data
+      ? {
+          displayName: (data.display_name as string) ?? '',
+          avatarUrl: (data.avatar_url as string | null) ?? null,
+          objectives: ((data.objectives as string[]) ?? []) as never[],
+          xp: (data.xp as number) ?? 0,
+          onboarded: Boolean(data.onboarded),
+          language: isLocale(data.language) ? data.language : null,
+          updatedAt: remoteUpdated,
+        }
+      : null;
+    const sync = useSync.getState();
+
+    // First time this install meets this account: combine instead of letting a fresh install's empty
+    // profile overwrite the account's. The account's saved language wins so it follows the user.
+    if (remote && sync.profileUser !== userId) {
       p.mergeRemote({
-        displayName: (data.display_name as string) ?? '',
-        avatarUrl: (data.avatar_url as string | null) ?? null,
-        objectives: (data.objectives as never[]) ?? [],
-        xp: (data.xp as number) ?? 0,
-        onboarded: Boolean(data.onboarded),
-        updatedAt: remoteUpdated,
+        ...remote,
+        displayName: remote.displayName || p.displayName,
+        avatarUrl: remote.avatarUrl ?? p.avatarUrl,
+        objectives: remote.objectives.length ? remote.objectives : p.objectives,
+        xp: Math.max(remote.xp, p.xp),
+        language: remote.language ?? p.language,
+        updatedAt: new Date().toISOString(),
       });
-    } else if (!data || p.updatedAt > remoteUpdated) {
-      await supabase.from('profiles').upsert({
-        id: userId,
-        display_name: p.displayName,
-        avatar_url: p.avatarUrl,
-        objectives: p.objectives,
-        xp: p.xp,
-        onboarded: p.onboarded,
-        updated_at: p.updatedAt || new Date().toISOString(),
-      });
+      sync.patch({ profileUser: userId });
+      await pushProfile(userId);
+      return;
     }
+    sync.patch({ profileUser: userId });
+
+    if (remote && (!p.updatedAt || remoteUpdated > p.updatedAt)) p.mergeRemote(remote);
+    else if (!remote || p.updatedAt > remoteUpdated) await pushProfile(userId);
   } catch (e) {
-    useSync.getState().patch({ error: e instanceof Error ? e.message : 'Profile sync failed' });
+    useSync.getState().patch({ error: e instanceof Error ? e.message : t('settings.syncFailed') });
   }
+}
+
+async function pushProfile(userId: string) {
+  const p = useProfile.getState();
+  await supabase!.from('profiles').upsert({
+    id: userId,
+    display_name: p.displayName,
+    avatar_url: p.avatarUrl,
+    objectives: p.objectives,
+    xp: p.xp,
+    onboarded: p.onboarded,
+    language: p.language,
+    updated_at: p.updatedAt || new Date().toISOString(),
+  });
 }
 
 async function syncOnce(): Promise<void> {
@@ -134,7 +162,7 @@ async function syncOnce(): Promise<void> {
       useSync.getState().patch({ lastSyncAt: new Date().toISOString() });
     }
   } catch (e) {
-    useSync.getState().patch({ error: e instanceof Error ? e.message : (e as { message?: string })?.message ?? 'Sync failed' });
+    useSync.getState().patch({ error: e instanceof Error ? e.message : (e as { message?: string })?.message ?? t('settings.syncFailed') });
   } finally {
     useSync.getState().patch({ syncing: false });
   }

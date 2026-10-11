@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import type { ChallengeView } from '@/hooks/useLife';
 import { haptic } from '@/lib/haptics';
+import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme';
 import { Icon } from '../ui/Icon';
 import { PressableScale } from '../ui/PressableScale';
@@ -18,13 +19,16 @@ interface Props {
 
 export function ChallengeRow({ challenge: c, onClaim, onLocked, compact }: Props) {
   const t = useTheme();
+  const { t: tr } = useI18n();
+  const title = tr(`challenges.items.${c.id}.title`);
+  const description = tr(`challenges.items.${c.id}.description`);
   const ready = c.done && !c.claimed && !c.locked;
   return (
     <PressableScale
       feedback="none"
       scaleTo={0.99}
       onPress={() => (c.locked ? onLocked?.() : ready ? (haptic.success(), onClaim(c)) : undefined)}
-      accessibilityLabel={`${c.title}. ${c.description}. ${c.claimed ? 'Claimed' : `${c.current} of ${c.target}`}`}
+      accessibilityLabel={tr('challenges.rowLabel', { title, description, state: c.claimed ? tr('challenges.claimed') : tr('achievements.stateProgress', { value: c.current, target: c.target }) })}
       style={[styles.row, { opacity: c.claimed ? 0.6 : 1, paddingVertical: compact ? 8 : 12 }]}
     >
       <View style={[styles.icon, { backgroundColor: c.claimed || ready ? t.accent : t.accentSoft }]}>
@@ -33,13 +37,13 @@ export function ChallengeRow({ challenge: c, onClaim, onLocked, compact }: Props
       <View style={{ flex: 1, gap: 6 }}>
         <View style={styles.titleRow}>
           <Text variant="bodyMedium" numberOfLines={1} style={{ flexShrink: 1, textDecorationLine: c.claimed ? 'line-through' : 'none' }}>
-            {c.title}
+            {title}
           </Text>
           {c.bonus ? <ProBadge small /> : null}
         </View>
         {compact ? null : (
           <Text variant="caption" color="secondary">
-            {c.description}
+            {description}
           </Text>
         )}
         {!c.claimed && !c.locked ? <ProgressBar value={c.current / c.target} height={5} /> : null}
@@ -47,13 +51,13 @@ export function ChallengeRow({ challenge: c, onClaim, onLocked, compact }: Props
       {ready ? (
         <Animated.View entering={FadeIn} style={[styles.claim, { backgroundColor: t.accent, shadowColor: t.accent }]}>
           <Text variant="caption" color="onAccent" style={{ fontFamily: 'Inter_700Bold' }}>
-            Claim +{c.xp}
+            {tr('challenges.claim', { xp: c.xp })}
           </Text>
         </Animated.View>
       ) : (
         <View style={[styles.xp, { backgroundColor: t.surfaceStrong }]}>
           <Text variant="micro" color={c.claimed ? 'tertiary' : 'accent'}>
-            +{c.xp} XP
+            {tr('common.plusXp', { count: c.xp })}
           </Text>
         </View>
       )}

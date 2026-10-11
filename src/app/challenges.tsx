@@ -12,6 +12,7 @@ import { ProgressRing } from '@/components/ui/ProgressRing';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { useDailyChallenges } from '@/hooks/useLife';
+import { useI18n } from '@/i18n';
 import { XP } from '@/lib/gamification';
 import { claimChallenge } from '@/services/actions';
 import { useIsPro } from '@/store/subscription';
@@ -19,6 +20,7 @@ import { useTheme } from '@/theme';
 
 export default function Challenges() {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const d = useDailyChallenges();
   const isPro = useIsPro();
   const [burst, setBurst] = useState(0);
@@ -27,7 +29,7 @@ export default function Challenges() {
   return (
     <View style={{ flex: 1 }}>
       <Screen>
-        <Header title="Daily challenges" subtitle="Resets at midnight" back />
+        <Header title={tr('challenges.title')} subtitle={tr('challenges.resets')} back />
         <Card accent padding={20}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18 }}>
             <ProgressRing value={d.total ? d.claimedCount / d.total : 0} size={84} stroke={9}>
@@ -36,15 +38,15 @@ export default function Challenges() {
               </Text>
             </ProgressRing>
             <View style={{ flex: 1, gap: 4 }}>
-              <Text variant="heading">{d.allClaimed ? 'Perfect day' : 'Today’s mission'}</Text>
+              <Text variant="heading">{d.allClaimed ? tr('challenges.perfectDay') : tr('challenges.mission')}</Text>
               <Text variant="caption" color="secondary">
-                Finish all challenges for a +{XP.challengeAll} XP bonus.
+                {tr('challenges.allBonus', { xp: XP.challengeAll })}
               </Text>
             </View>
           </View>
         </Card>
 
-        <SectionHeader title="Today" />
+        <SectionHeader title={tr('challenges.today')} />
         <Card padding={14}>
           {regular.map((c, i) => (
             <Animated.View key={c.id} entering={FadeInDown.delay(i * 80)}>
@@ -60,7 +62,7 @@ export default function Challenges() {
 
         {bonus ? (
           <>
-            <SectionHeader title="Pro bonus" />
+            <SectionHeader title={tr('challenges.proBonus')} />
             <Card padding={14} accent={isPro}>
               <ChallengeRow
                 challenge={bonus}
@@ -72,7 +74,7 @@ export default function Challenges() {
             </Card>
             {!isPro ? (
               <Text variant="caption" color="secondary" align="center" style={{ marginTop: 10 }}>
-                Pro adds a daily bonus challenge worth double XP.
+                {tr('challenges.proBonusHint')}
               </Text>
             ) : null}
           </>
@@ -81,11 +83,11 @@ export default function Challenges() {
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 24, justifyContent: 'center' }}>
           <Icon name="information-circle-outline" size={14} color={t.textTertiary} />
           <Text variant="caption" color="tertiary">
-            Progress updates automatically as you complete tasks, habits and focus sessions.
+            {tr('challenges.autoHint')}
           </Text>
         </View>
         <View style={{ marginTop: 20 }}>
-          <Button title="Back to dashboard" variant="secondary" onPress={() => router.replace('/(tabs)')} />
+          <Button title={tr('challenges.backToDashboard')} variant="secondary" onPress={() => router.replace('/(tabs)')} />
         </View>
       </Screen>
       <Confetti playKey={burst} />

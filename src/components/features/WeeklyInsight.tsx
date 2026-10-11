@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { shortDay, todayKey } from '@/lib/date';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { useI18n } from '@/i18n';
 import { useIsPro } from '@/store/subscription';
 import { useTheme } from '@/theme';
 import { BarChart } from '../ui/BarChart';
@@ -13,20 +14,21 @@ import { Text } from '../ui/Text';
 /** Premium widget: 7-day momentum. Free users see a teaser that opens the paywall. */
 export function WeeklyInsight() {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const isPro = useIsPro();
   const a = useAnalytics(7);
   const today = todayKey();
 
   if (!isPro) {
     return (
-      <Card onPress={() => router.push('/report')} padding={18} accessibilityLabel="Open weekly report">
+      <Card onPress={() => router.push('/report')} padding={18} accessibilityLabel={tr('report.openLabel')}>
         <View style={styles.head}>
           <View style={{ flex: 1, gap: 4 }}>
             <View style={styles.titleRow}>
-              <Text variant="heading">Weekly report</Text>
+              <Text variant="heading">{tr('report.title')}</Text>
             </View>
             <Text variant="caption" color="secondary">
-              Your week at a glance. Full insights with Pro.
+              {tr('report.cardSubtitle')}
             </Text>
           </View>
           <Icon name="lock-closed" size={20} color={t.accent} />
@@ -38,15 +40,15 @@ export function WeeklyInsight() {
     );
   }
   return (
-    <Card padding={18} onPress={() => router.push('/report')} accessibilityLabel="Open weekly report">
+    <Card padding={18} onPress={() => router.push('/report')} accessibilityLabel={tr('report.openLabel')}>
       <View style={styles.head}>
         <View style={{ flex: 1, gap: 4 }}>
           <View style={styles.titleRow}>
-            <Text variant="heading">Weekly report</Text>
+            <Text variant="heading">{tr('report.title')}</Text>
             <ProBadge small />
           </View>
           <Text variant="caption" color="secondary">
-            {a.bestDay ? `Best day: ${shortDay(a.bestDay.key)} · ${a.bestDay.total} wins` : 'Complete tasks and habits to see your trend.'}
+            {a.bestDay ? tr('report.bestDay', { day: shortDay(a.bestDay.key), wins: a.bestDay.total }) : tr('report.trendHint')}
           </Text>
         </View>
         <Text variant="title" color="accent">

@@ -2,16 +2,18 @@ import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useI18n } from '@/i18n';
 import { IconButton } from '../ui/Header';
 import { Logo } from '../ui/Logo';
 import { Screen } from '../ui/Screen';
 import { Text } from '../ui/Text';
 
 export function AuthShell({ title, subtitle, children, back }: { title: string; subtitle: string; children: ReactNode; back?: boolean }) {
+  const { t } = useI18n();
   return (
     <Screen keyboard>
       <View style={{ height: 48, justifyContent: 'center' }}>
-        {back ? <IconButton icon="chevron-back" label="Go back" onPress={() => (router.canGoBack() ? router.back() : router.replace('/(auth)/login'))} /> : null}
+        {back ? <IconButton icon="chevron-back" label={t('common.goBack')} onPress={() => (router.canGoBack() ? router.back() : router.replace('/(auth)/login'))} /> : null}
       </View>
       <Animated.View entering={FadeInDown.duration(500)} style={{ marginTop: 12, marginBottom: 32, gap: 10 }}>
         <Logo size={56} />

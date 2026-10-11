@@ -5,11 +5,13 @@ import { Field, FormModal } from '@/components/features/FormModal';
 import { Chip } from '@/components/ui/Chip';
 import { Input } from '@/components/ui/Input';
 import { IconButton } from '@/components/ui/Header';
+import { useI18n } from '@/i18n';
 import { saveNote } from '@/services/actions';
 import { useNotes } from '@/store/entities';
 import { NOTE_CATEGORIES, type NoteCategory } from '@/types';
 
 export default function NoteEditor() {
+  const { t: tr } = useI18n();
   const { id } = useLocalSearchParams<{ id: string }>();
   const existing = id && id !== 'new' ? useNotes.getState().items[id] : undefined;
   const [title, setTitle] = useState(existing?.title ?? '');
@@ -31,25 +33,25 @@ export default function NoteEditor() {
       router.back();
     };
     if (Platform.OS === 'web') return run();
-    Alert.alert('Delete note?', 'This cannot be undone.', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: run },
+    Alert.alert(tr('notes.deleteTitle'), tr('notes.deleteBody'), [
+      { text: tr('common.cancel'), style: 'cancel' },
+      { text: tr('common.delete'), style: 'destructive', onPress: run },
     ]);
   };
 
   return (
-    <FormModal title={existing ? 'Edit note' : 'New note'} saveLabel="Save note" onSave={save} onDelete={existing ? remove : undefined} deleteLabel="Delete note">
+    <FormModal title={existing ? tr('notes.edit') : tr('notes.new')} saveLabel={tr('notes.save')} onSave={save} onDelete={existing ? remove : undefined} deleteLabel={tr('notes.deleteNote')}>
       <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 10 }}>
         <View style={{ flex: 1 }}>
-          <Input label="Title" value={title} onChangeText={setTitle} placeholder="Untitled" autoFocus={!existing} />
+          <Input label={tr('notes.titleLabel')} value={title} onChangeText={setTitle} placeholder={tr('notes.untitled')} autoFocus={!existing} />
         </View>
-        <IconButton icon={fav ? 'star' : 'star-outline'} label={fav ? 'Remove from favorites' : 'Add to favorites'} active={fav} onPress={() => setFav(!fav)} size={54} />
+        <IconButton icon={fav ? 'star' : 'star-outline'} label={fav ? tr('notes.removeFavorite') : tr('notes.addFavorite')} active={fav} onPress={() => setFav(!fav)} size={54} />
       </View>
-      <Input label="Note" value={body} onChangeText={setBody} placeholder="Write anything…" multiline style={{ minHeight: 180 }} />
-      <Field label="Category">
+      <Input label={tr('notes.noteLabel')} value={body} onChangeText={setBody} placeholder={tr('notes.bodyPlaceholder')} multiline style={{ minHeight: 180 }} />
+      <Field label={tr('notes.category')}>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
           {NOTE_CATEGORIES.map((c) => (
-            <Chip key={c} label={c} selected={category === c} onPress={() => setCategory(c)} />
+            <Chip key={c} label={tr(`categories.note.${c}`)} selected={category === c} onPress={() => setCategory(c)} />
           ))}
         </View>
       </Field>

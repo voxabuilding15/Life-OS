@@ -6,10 +6,12 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Text } from '@/components/ui/Text';
 import { allowPreview } from '@/lib/config';
+import { useI18n } from '@/i18n';
 import { signIn, validateEmail } from '@/services/auth';
 import { useAuth } from '@/store/auth';
 
 export default function Login() {
+  const { t } = useI18n();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,8 +19,8 @@ export default function Login() {
 
   const submit = async () => {
     const next: typeof errors = {};
-    if (!validateEmail(email)) next.email = 'Enter a valid email address.';
-    if (password.length < 6) next.password = 'Password must be at least 6 characters.';
+    if (!validateEmail(email)) next.email = t('auth.validation.email');
+    if (password.length < 6) next.password = t('auth.validation.password6');
     setErrors(next);
     if (Object.keys(next).length) return;
     setLoading(true);
@@ -28,12 +30,12 @@ export default function Login() {
   };
 
   return (
-    <AuthShell title="Welcome back" subtitle="Sign in to pick up where you left off.">
-      <Input label="Email" value={email} onChangeText={setEmail} placeholder="you@example.com" icon="mail-outline" keyboardType="email-address" autoCapitalize="none" autoComplete="email" error={errors.email} />
-      <Input label="Password" value={password} onChangeText={setPassword} placeholder="Your password" icon="lock-closed-outline" secure autoCapitalize="none" autoComplete="password" error={errors.password} onSubmitEditing={submit} returnKeyType="go" />
+    <AuthShell title={t('auth.login.title')} subtitle={t('auth.login.subtitle')}>
+      <Input label={t('auth.email')} value={email} onChangeText={setEmail} placeholder={t('auth.emailPlaceholder')} icon="mail-outline" keyboardType="email-address" autoCapitalize="none" autoComplete="email" error={errors.email} />
+      <Input label={t('auth.password')} value={password} onChangeText={setPassword} placeholder={t('auth.passwordPlaceholder')} icon="lock-closed-outline" secure autoCapitalize="none" autoComplete="password" error={errors.password} onSubmitEditing={submit} returnKeyType="go" />
       <Link href="/(auth)/forgot-password" asChild>
         <Text variant="caption" color="accent" style={{ alignSelf: 'flex-end', fontFamily: 'Inter_600SemiBold' }} accessibilityRole="link">
-          Forgot password?
+          {t('auth.forgot')}
         </Text>
       </Link>
       {errors.form ? (
@@ -41,14 +43,14 @@ export default function Login() {
           {errors.form}
         </Text>
       ) : null}
-      <Button title="Sign in" onPress={submit} loading={loading} />
-      {allowPreview ? <Button title="Continue in preview mode" variant="secondary" icon="eye-outline" onPress={() => useAuth.getState().enterGuest()} /> : null}
+      <Button title={t('auth.signIn')} onPress={submit} loading={loading} />
+      {allowPreview ? <Button title={t('auth.previewMode')} variant="secondary" icon="eye-outline" onPress={() => useAuth.getState().enterGuest()} /> : null}
       <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 6, marginTop: 8 }}>
         <Text variant="body" color="secondary">
-          New to Life OS?
+          {t('auth.login.newHere')}
         </Text>
         <Text variant="bodyMedium" color="accent" onPress={() => router.replace('/(auth)/register')} accessibilityRole="link">
-          Create account
+          {t('auth.createAccount')}
         </Text>
       </View>
     </AuthShell>

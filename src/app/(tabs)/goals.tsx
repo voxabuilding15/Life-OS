@@ -9,17 +9,19 @@ import { PressableScale } from '@/components/ui/PressableScale';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { useGoalsData } from '@/hooks/useData';
+import { useI18n } from '@/i18n';
 import { config } from '@/lib/config';
 import { useIsPro } from '@/store/subscription';
 
 export default function Goals() {
+  const { t: tr } = useI18n();
   const { active, completed, all } = useGoalsData();
   const isPro = useIsPro();
   const atLimit = !isPro && active.length >= config.freeGoalLimit;
   return (
     <View style={{ flex: 1 }}>
       <Screen bottomInset={110}>
-        <Header title="Goals" subtitle={all.length ? `${active.length} in progress · ${completed.length} achieved` : 'Think big. Break it down.'} />
+        <Header title={tr('tabs.goals')} subtitle={all.length ? tr('goals.subtitle', { active: active.length, done: completed.length }) : tr('goals.subtitleEmpty')} />
         <View style={{ gap: 12 }}>
           {active.map((g, i) => (
             <Animated.View key={g.goal.id} entering={FadeInDown.delay(i * 70).duration(400)}>
@@ -27,10 +29,10 @@ export default function Goals() {
             </Animated.View>
           ))}
         </View>
-        {active.length === 0 && completed.length === 0 ? <EmptyState icon="flag-outline" title="Set your first big goal" message="Break it into milestones and watch the progress add up. Finishing a goal earns +500 XP." actionLabel="New goal" onAction={() => router.push('/goal/new')} satellites={['rocket', 'trophy', 'star']} hint="Try: Become a Full Stack Developer, with HTML, CSS, JavaScript, React and Node.js as milestones." /> : null}
+        {active.length === 0 && completed.length === 0 ? <EmptyState icon="flag-outline" title={tr('goals.emptyTitle')} message={tr('goals.emptyBody')} actionLabel={tr('goals.new')} onAction={() => router.push('/goal/new')} satellites={['rocket', 'trophy', 'star']} hint={tr('goals.emptyHint')} /> : null}
         {completed.length > 0 ? (
           <>
-            <SectionHeader title="Achieved" />
+            <SectionHeader title={tr('goals.achievedSection')} />
             <View style={{ gap: 12 }}>
               {completed.map((g) => (
                 <GoalCard key={g.goal.id} item={g} />
@@ -41,12 +43,12 @@ export default function Goals() {
         {atLimit ? (
           <PressableScale onPress={() => router.push('/paywall?reason=goals')} style={{ marginTop: 16 }} feedback="tap">
             <Text variant="caption" color="accent" align="center" style={{ fontFamily: 'Inter_600SemiBold' }}>
-              Free plan: {config.freeGoalLimit} active goals · Go Pro for unlimited
+              {tr('goals.limitBanner', { count: config.freeGoalLimit })}
             </Text>
           </PressableScale>
         ) : null}
       </Screen>
-      <Fab onPress={() => router.push('/goal/new')} label="New goal" />
+      <Fab onPress={() => router.push('/goal/new')} label={tr('goals.new')} />
     </View>
   );
 }

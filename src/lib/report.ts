@@ -1,11 +1,19 @@
-import { addDays, dayInitial, shortDay, toKey, todayKey } from './date';
+import { addDays, dayInitial, toKey, todayKey } from './date';
 import type { LifeData } from './lifeData';
-import { computeLifeScore, weakestPillar } from './lifeScore';
+import { computeLifeScore, weakestPillar, type PillarId } from './lifeScore';
 
 export interface Delta {
   current: number;
   previous: number;
 }
+
+/** A translatable sentence: `report.highlights.<key>` with `values`. */
+export interface Highlight {
+  key: 'tasks' | 'tasksDelta' | 'habits' | 'focus' | 'milestones' | 'bestDay';
+  values: Record<string, number | string>;
+}
+
+export type Headline = 'fresh' | 'rising' | 'quiet' | 'consistent' | 'steady';
 
 export interface WeeklyReport {
   start: string;
@@ -20,9 +28,10 @@ export interface WeeklyReport {
   perDay: { day: string; label: string; wins: number }[];
   bestDay: { day: string; wins: number } | null;
   topHabit: { habitId: string; count: number } | null;
-  highlights: string[];
-  tip: string;
-  headline: string;
+  highlights: Highlight[];
+  /** Pillar whose tip to show (`lifeScore.pillars.<id>.tip`), or null for the empty-state tip. */
+  tipPillar: PillarId | null;
+  headline: Headline;
 }
 
 const dayOf = (iso: string) => toKey(new Date(iso));
@@ -69,26 +78,19 @@ export function buildWeeklyReport(data: LifeData, end: string = todayKey()): Wee
   const activeDays = perDay.filter((d) => d.wins > 0).length;
 
   const diff = (c: number, p: number) => c - p;
-  const highlights: string[] = [];
-  if (cur.tasksDone.length) highlights.push(`Finished ${cur.tasksDone.length} task${cur.tasksDone.length === 1 ? '' : 's'}${diff(cur.tasksDone.length, prev.tasksDone.length) > 0 ? ` (+${diff(cur.tasksDone.length, prev.tasksDone.length)} vs last week)` : ''}.`);
-  if (cur.logs.length) highlights.push(`Logged ${cur.logs.length} habit check-in${cur.logs.length === 1 ? '' : 's'}.`);
-  if (cur.focusMinutes) highlights.push(`Focused for ${cur.focusMinutes} minutes.`);
-  if (cur.milestones) highlights.push(`Reached ${cur.milestones} goal milestone${cur.milestones === 1 ? '' : 's'}.`);
-  if (bestDay) highlights.push(`${shortDay(bestDay.day)} was your strongest day with ${bestDay.wins} wins.`);
+  const highlights: Highlight[] = [];
+  const dTasks = diff(cur.tasksDone.length, prev.tasksDone.length);
+  if (cur.tasksDone.length) highlights.push(dTasks > 0 ? { key: 'tasksDelta', values: { count: cur.tasksDone.length, delta: dTasks } } : { key: 'tasks', values: { count: cur.tasksDone.length } });
+  if (cur.logs.length) highlights.push({ key: 'habits', values: { count: cur.logs.length } });
+  if (cur.focusMinutes) highlights.push({ key: 'focus', values: { minutes: cur.focusMinutes } });
+  if (cur.milestones) highlights.push({ key: 'milestones', values: { count: cur.milestones } });
+  // `day` is the ISO date; the screen formats it with the active language.
+  if (bestDay) highlights.push({ key: 'bestDay', values: { day: bestDay.day, wins: bestDay.wins } });
 
   const weak = weakestPillar(scoreNow);
-  const tip = weak ? weak.tip : 'Add a habit or a task to start building your Life Score.';
+  const tipPillar = weak ? weak.id : null;
   const d = scoreNow.score - scorePrev.score;
-  const headline =
-    activeDays === 0
-      ? 'A fresh start'
-      : d >= 5
-        ? 'You are on the rise'
-        : d <= -5
-          ? 'A quieter week'
-          : activeDays >= 6
-            ? 'Remarkably consistent'
-            : 'Steady progress';
+  const headline: Headline = activeDays === 0 ? 'fresh' : d >= 5 ? 'rising' : d <= -5 ? 'quiet' : activeDays >= 6 ? 'consistent' : 'steady';
 
   return {
     start,
@@ -104,7 +106,7 @@ export function buildWeeklyReport(data: LifeData, end: string = todayKey()): Wee
     bestDay,
     topHabit,
     highlights,
-    tip,
+    tipPillar,
     headline,
   };
 }

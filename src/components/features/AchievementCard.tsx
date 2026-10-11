@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import { achievementProgress, type AchievementDef, type AchievementStats } from '@/lib/gamification';
+import { useI18n } from '@/i18n';
 import { radius, useTheme } from '@/theme';
 import { Icon } from '../ui/Icon';
 import { PressableScale } from '../ui/PressableScale';
@@ -12,6 +13,7 @@ const ROMAN = ['', 'I', 'II', 'III', 'IV'];
 
 export function AchievementCard({ def, stats, unlocked, isPro }: { def: AchievementDef; stats: AchievementStats; unlocked: boolean; isPro: boolean }) {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const locked = Boolean(def.pro) && !isPro && !unlocked;
   const ratio = unlocked ? 1 : achievementProgress(def, stats);
   const value = Math.min(def.value(stats), def.target);
@@ -20,7 +22,7 @@ export function AchievementCard({ def, stats, unlocked, isPro }: { def: Achievem
       feedback="tap"
       scaleTo={0.99}
       onPress={locked ? () => router.push('/paywall?reason=achievements') : undefined}
-      accessibilityLabel={`${def.title}, tier ${ROMAN[def.tier]}, ${unlocked ? 'unlocked' : locked ? 'locked, Pro' : `${value} of ${def.target}`}. ${def.description}`}
+      accessibilityLabel={tr('achievements.cardLabel', { title: tr(`achievements.items.${def.key}.title`), tier: ROMAN[def.tier], state: unlocked ? tr('achievements.stateUnlocked') : locked ? tr('achievements.stateLocked') : tr('achievements.stateProgress', { value, target: def.target }), description: tr(`achievements.items.${def.key}.description`) })}
       style={[styles.card, { backgroundColor: unlocked ? t.accentSoft : t.surface, borderColor: unlocked ? t.accentBorder : t.border }]}
     >
       <View style={[styles.icon, { backgroundColor: unlocked ? t.accent : t.surfaceStrong }]}>
@@ -29,7 +31,7 @@ export function AchievementCard({ def, stats, unlocked, isPro }: { def: Achievem
       <View style={{ flex: 1, gap: 5 }}>
         <View style={styles.titleRow}>
           <Text variant="bodyMedium" style={{ fontFamily: 'Inter_600SemiBold', flexShrink: 1 }} numberOfLines={1}>
-            {def.title}
+            {tr(`achievements.items.${def.key}.title`)}
           </Text>
           <View style={[styles.tier, { borderColor: unlocked ? t.accent : t.border }]}>
             <Text variant="micro" color={unlocked ? 'accent' : 'tertiary'} style={{ fontSize: 9 }}>
@@ -39,11 +41,11 @@ export function AchievementCard({ def, stats, unlocked, isPro }: { def: Achievem
           {def.pro && !unlocked ? <ProBadge small /> : null}
         </View>
         <Text variant="caption" color="secondary" numberOfLines={1}>
-          {def.description}
+          {tr(`achievements.items.${def.key}.description`)}
         </Text>
         {unlocked ? (
           <Text variant="micro" color="accent" style={{ letterSpacing: 0.3 }}>
-            UNLOCKED · +{def.xp} XP
+            {tr('achievements.unlocked', { xp: def.xp })}
           </Text>
         ) : (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
@@ -51,7 +53,7 @@ export function AchievementCard({ def, stats, unlocked, isPro }: { def: Achievem
               <ProgressBar value={locked ? 0 : ratio} height={5} />
             </View>
             <Text variant="micro" color="tertiary" style={{ letterSpacing: 0.2 }}>
-              {locked ? `+${def.xp} XP` : `${value}/${def.target}`}
+              {locked ? tr('common.plusXp', { count: def.xp }) : `${value}/${def.target}`}
             </Text>
           </View>
         )}

@@ -61,15 +61,35 @@ for (const f of shots) {
   const ratio = s ? Math.max(s.w, s.h) / Math.min(s.w, s.h) : 99;
   check(s && Math.min(s.w, s.h) >= 320 && Math.max(s.w, s.h) <= 3840 && ratio <= 2, `${f} ${s?.w}x${s?.h}`, `${f} violates Play screenshot limits (320-3840px, max 2:1)`);
 }
-// Store text limits
-const listing = fs.readFileSync(rel('store/listing.md'), 'utf8');
-const field = (label) => listing.match(new RegExp(`\\*\\*${label}[^*]*\\*\\*\\s*\\n?([^\\n]+)`))?.[1]?.trim() ?? '';
-const title = field('Title');
-const short = field('Short description');
-const full = listing.split('**Full description')[1]?.split('**Category')[0] ?? '';
-check(title.length > 0 && title.length <= 30, `title ${title.length}/30`, `store title is ${title.length} chars (max 30)`);
-check(short.length > 0 && short.length <= 80, `short description ${short.length}/80`, `short description is ${short.length} chars (max 80)`);
-check(full.length > 0 && full.length <= 4000, `full description ${full.length}/4000`, `full description is ${full.length} chars (max 4000)`);
+// Store text limits, per language
+const LISTINGS = { en: ['listing.md', 'Title', 'Short description', 'Full description', 'Category'], fr: ['listing.fr.md', 'Titre', 'Description courte', 'Description complète', 'Catégorie'], ar: ['listing.ar.md', 'العنوان', 'الوصف القصير', 'الوصف الكامل', 'الفئة'] };
+for (const [lang, [file, tTitle, tShort, tFull, tNext]] of Object.entries(LISTINGS)) {
+  const listing = fs.readFileSync(rel(`store/${file}`), 'utf8');
+  const field = (label) => listing.match(new RegExp(`\\*\\*${label}[^*]*\\*\\*\\s*\\n?([^\\n]+)`))?.[1]?.trim() ?? '';
+  const title = field(tTitle);
+  const short = field(tShort);
+  const full = listing.split(`**${tFull}`)[1]?.split(`**${tNext}`)[0] ?? '';
+  check(title.length > 0 && title.length <= 30, `[${lang}] title ${title.length}/30`, `[${lang}] store title is ${title.length} chars (max 30)`);
+  check(short.length > 0 && short.length <= 80, `[${lang}] short description ${short.length}/80`, `[${lang}] short description is ${short.length} chars (max 80)`);
+  check(full.length > 0 && full.length <= 4000, `[${lang}] full description ${full.length}/4000`, `[${lang}] full description is ${full.length} chars (max 4000)`);
+}
+for (const lang of ['fr', 'ar']) {
+  const n = fs.existsSync(rel(`store/play/${lang}/screenshots`)) ? fs.readdirSync(rel(`store/play/${lang}/screenshots`)).filter((f) => f.endsWith('.png')).length : 0;
+  check(n >= 2 && n <= 8, `[${lang}] ${n} localized screenshots`, `[${lang}] needs 2-8 localized screenshots in store/play/${lang}/screenshots`);
+  const g = fs.existsSync(rel(`store/play/${lang}/feature-graphic-1024x500.png`)) && pngSize(rel(`store/play/${lang}/feature-graphic-1024x500.png`));
+  check(g && g.w === 1024 && g.h === 500, `[${lang}] feature graphic 1024x500`, `[${lang}] localized feature graphic missing`);
+}
+// Locale files: every language has every key
+{
+  const flat = (o, p = '') => Object.entries(o).flatMap(([k, v]) => (v && typeof v === 'object' ? flat(v, `${p}${k}.`) : [`${p}${k}`.replace(/_(zero|one|two|few|many|other)$/, '')]));
+  const keys = (l) => new Set(flat(JSON.parse(fs.readFileSync(rel(`locales/${l}.json`), 'utf8'))));
+  const en = keys('en');
+  for (const l of ['fr', 'ar']) {
+    const k = keys(l);
+    const missing = [...en].filter((x) => !k.has(x));
+    check(missing.length === 0, `[${l}] locale complete (${k.size} keys)`, `[${l}] locale is missing ${missing.length} keys, e.g. ${missing.slice(0, 3).join(', ')}`);
+  }
+}
 
 // ---- Code hygiene ----
 const grep = (pattern) => { try { return execSync(`grep -rIn --include=*.ts --include=*.tsx -E "${pattern}" src || true`, { cwd: root, encoding: 'utf8' }).trim(); } catch { return ''; } };

@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import { t } from '@/i18n';
 import { config } from '@/lib/config';
 import { fallbackPlans, periodToDays, type Plan, type PlanId } from '@/lib/plans';
 import { useSubscription } from '@/store/subscription';
@@ -118,25 +119,25 @@ export async function loadOffers(): Promise<Offers> {
 export type PurchaseResult = { ok: true } | { ok: false; cancelled?: boolean; error?: string };
 
 export async function purchasePro(plan: PlanId): Promise<PurchaseResult> {
-  if (!configured) return { ok: false, error: 'Purchases are not available on this build.' };
+  if (!configured) return { ok: false, error: t('purchases.unavailable') };
   try {
     if (!packages.has(plan)) await loadOffers();
     const pkg = packages.get(plan);
-    if (!pkg) return { ok: false, error: 'This plan is not available right now. Try again later.' };
+    if (!pkg) return { ok: false, error: t('purchases.planUnavailable') };
     const { customerInfo } = await sdk().purchasePackage(pkg);
     applyCustomerInfo(customerInfo);
-    return useSubscription.getState().isPro ? { ok: true } : { ok: false, error: 'Purchase could not be verified.' };
+    return useSubscription.getState().isPro ? { ok: true } : { ok: false, error: t('purchases.notVerified') };
   } catch (e) {
     const err = e as { userCancelled?: boolean; message?: string };
-    return err.userCancelled ? { ok: false, cancelled: true } : { ok: false, error: err.message ?? 'Purchase failed.' };
+    return err.userCancelled ? { ok: false, cancelled: true } : { ok: false, error: err.message ?? t('purchases.failed') };
   }
 }
 
 export async function restorePurchases(): Promise<PurchaseResult> {
-  if (!configured) return { ok: false, error: 'Purchases are not available on this build.' };
+  if (!configured) return { ok: false, error: t('purchases.unavailable') };
   try {
     applyCustomerInfo(await sdk().restorePurchases());
-    return useSubscription.getState().isPro ? { ok: true } : { ok: false, error: 'No active subscription found.' };
+    return useSubscription.getState().isPro ? { ok: true } : { ok: false, error: t('purchases.noActive') };
   } catch (e) {
     return { ok: false, error: (e as Error).message };
   }

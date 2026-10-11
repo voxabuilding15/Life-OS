@@ -13,6 +13,7 @@ import { ProgressRing } from '@/components/ui/ProgressRing';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { useLifeScore } from '@/hooks/useLife';
+import { useI18n } from '@/i18n';
 import { shortDay, todayKey } from '@/lib/date';
 import { useTheme } from '@/theme';
 
@@ -20,11 +21,12 @@ const ICONS = { habits: 'flame', tasks: 'checkmark-done', focus: 'timer', goals:
 
 export default function LifeScore() {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const ls = useLifeScore();
   const up = ls.delta >= 0;
   return (
     <Screen>
-      <Header title="Life Score" subtitle="Your last 7 days" back />
+      <Header title={tr('lifeScore.title')} subtitle={tr('lifeScore.subtitle')} back />
 
       <View style={{ alignItems: 'center', marginBottom: 8 }}>
         <View style={{ position: 'absolute', top: -60 }} pointerEvents="none">
@@ -34,23 +36,22 @@ export default function LifeScore() {
           <ProgressRing value={ls.score / 100} size={220} stroke={16} duration={1400}>
             <CountUp value={ls.score} duration={1200} style={{ fontSize: 64, lineHeight: 70, fontFamily: 'Inter_800ExtraBold', letterSpacing: -3 }} />
             <Text variant="caption" color="secondary">
-              out of 100
+              {tr('lifeScore.outOf')}
             </Text>
           </ProgressRing>
         </Floating>
         <Animated.View entering={FadeInDown.delay(300)} style={{ alignItems: 'center', gap: 6, marginTop: 18 }}>
-          <Text variant="title">{ls.band}</Text>
+          <Text variant="title">{tr(`lifeScore.bands.${ls.band}`)}</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <Icon name={up ? 'trending-up' : 'trending-down'} size={16} color={up ? t.accent : t.textSecondary} />
             <Text variant="bodyMedium" color={up ? 'accent' : 'secondary'}>
-              {up ? '+' : ''}
-              {ls.delta} vs yesterday
+              {tr('lifeScore.vsYesterday', { delta: `${up ? '+' : ''}${ls.delta}` })}
             </Text>
           </View>
         </Animated.View>
       </View>
 
-      <SectionHeader title="What shapes your score" />
+      <SectionHeader title={tr('lifeScore.whatShapes')} />
       <View style={{ gap: 10 }}>
         {ls.pillars.map((p, i) => (
           <Animated.View key={p.id} entering={FadeInDown.delay(80 * i).duration(400)}>
@@ -60,9 +61,9 @@ export default function LifeScore() {
                   <Icon name={ICONS[p.id]} size={18} color={t.accent} />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text variant="bodyMedium">{p.label}</Text>
+                  <Text variant="bodyMedium">{tr(`lifeScore.pillars.${p.id}.label`)}</Text>
                   <Text variant="caption" color="secondary">
-                    {p.applicable ? p.detail : p.id === 'habits' ? 'Add a habit to include this' : p.id === 'goals' ? 'Set a goal to include this' : 'Plan a task to include this'}
+                    {p.applicable ? tr(`lifeScore.pillars.${p.id}.detail`, p.values) : tr(`lifeScore.pillars.${p.id}.empty`)}
                   </Text>
                 </View>
                 <Text variant="caption" color={p.applicable ? 'accent' : 'tertiary'} style={{ fontFamily: 'Inter_700Bold' }}>
@@ -71,7 +72,7 @@ export default function LifeScore() {
               </View>
               <ProgressBar value={p.applicable ? p.ratio : 0} height={6} />
               <Text variant="micro" color="tertiary" style={{ marginTop: 8, letterSpacing: 0.3 }}>
-                WORTH {p.weight} POINTS
+                {tr('lifeScore.worth', { count: p.weight })}
               </Text>
             </Card>
           </Animated.View>
@@ -80,12 +81,12 @@ export default function LifeScore() {
 
       {ls.weakest && ls.score < 100 ? (
         <>
-          <SectionHeader title="Next best move" />
+          <SectionHeader title={tr('lifeScore.nextMove')} />
           <Card accent padding={16} onPress={() => router.push(ls.weakest!.id === 'focus' ? '/focus' : ls.weakest!.id === 'habits' ? '/(tabs)/habits' : ls.weakest!.id === 'goals' ? '/(tabs)/goals' : ls.weakest!.id === 'reflection' ? '/(tabs)/notes' : '/(tabs)/tasks')}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
               <Icon name="bulb" size={22} color={t.accent} />
               <Text variant="body" color="secondary" style={{ flex: 1 }}>
-                {ls.weakest.tip}
+                {tr(`lifeScore.pillars.${ls.weakest.id}.tip`)}
               </Text>
               <Icon name="arrow-forward" size={18} color={t.accent} />
             </View>
@@ -93,12 +94,12 @@ export default function LifeScore() {
         </>
       ) : null}
 
-      <SectionHeader title="Last 7 days" />
+      <SectionHeader title={tr('lifeScore.last7')} />
       <Card padding={18}>
         <BarChart height={110} showValues data={ls.trend.map((d) => ({ label: shortDay(d.day).charAt(0), value: d.score, highlight: d.day === todayKey() }))} />
       </Card>
       <Text variant="caption" color="tertiary" align="center" style={{ marginTop: 18, marginBottom: 8 }}>
-        Habits 30 · Tasks 25 · Focus 20 · Goals 15 · Reflection 10. Pillars you haven't started don't count against you.
+        {tr('lifeScore.footer')}
       </Text>
     </Screen>
   );

@@ -32,13 +32,13 @@ export function EmptyState({ icon, title, message, actionLabel, onAction, second
         <Floating style={[styles.core, { backgroundColor: t.surfaceSolid, borderColor: t.accentBorder, shadowColor: t.accent }]}>
           <Icon name={icon} size={34} color={t.accent} />
         </Floating>
-        <Floating distance={5} duration={1800} delay={200} style={[styles.sat, { top: 14, right: 18, backgroundColor: t.surfaceSolid, borderColor: t.border }]}>
+        <Floating distance={5} duration={1800} delay={200} style={[styles.sat, { top: 14, end: 18, backgroundColor: t.surfaceSolid, borderColor: t.border }]}>
           <Icon name={sat[0]} size={14} color={t.accent} />
         </Floating>
-        <Floating distance={4} duration={2100} delay={500} style={[styles.sat, { bottom: 20, left: 12, backgroundColor: t.surfaceSolid, borderColor: t.border }]}>
+        <Floating distance={4} duration={2100} delay={500} style={[styles.sat, { bottom: 20, start: 12, backgroundColor: t.surfaceSolid, borderColor: t.border }]}>
           <Icon name={sat[1]} size={14} color={t.textSecondary} />
         </Floating>
-        <Floating distance={6} duration={2500} delay={900} style={[styles.sat, { bottom: 6, right: 34, width: 22, height: 22, borderRadius: 11, backgroundColor: t.surfaceSolid, borderColor: t.border }]}>
+        <Floating distance={6} duration={2500} delay={900} style={[styles.sat, { bottom: 6, end: 34, width: 22, height: 22, borderRadius: 11, backgroundColor: t.surfaceSolid, borderColor: t.border }]}>
           <Icon name={sat[2]} size={10} color={t.accent} />
         </Floating>
       </View>

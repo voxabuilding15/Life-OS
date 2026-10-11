@@ -13,6 +13,7 @@ import { StatTile } from '@/components/ui/StatTile';
 import { Text } from '@/components/ui/Text';
 import { useLevelProgress } from '@/hooks/useData';
 import { useLifetimeStats, useUnlockedKeys } from '@/hooks/useStats';
+import { useI18n } from '@/i18n';
 import { formatDuration } from '@/lib/date';
 import { ACHIEVEMENTS, levelTitle } from '@/lib/gamification';
 import { pickAndUploadAvatar } from '@/services/avatar';
@@ -23,6 +24,7 @@ import { useTheme } from '@/theme';
 
 export default function Profile() {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const { displayName, avatarUrl } = useProfile();
   const email = useAuth((s) => s.email);
   const guest = useAuth((s) => s.guest);
@@ -30,17 +32,17 @@ export default function Profile() {
   const lvl = useLevelProgress();
   const stats = useLifetimeStats();
   const unlocked = useUnlockedKeys();
-  const name = displayName || email?.split('@')[0] || 'You';
+  const name = displayName || email?.split('@')[0] || tr('profile.you');
 
   return (
     <Screen>
-      <Header title="Profile" back right={<IconButton icon="settings-outline" label="Settings" onPress={() => router.push('/settings')} />} />
+      <Header title={tr('profile.title')} back right={<IconButton icon="settings-outline" label={tr('dashboard.settings')} onPress={() => router.push('/settings')} />} />
 
       <Card accent padding={22}>
         <View style={{ alignItems: 'center', gap: 12 }}>
-          <PressableScale onPress={pickAndUploadAvatar} feedback="tap" accessibilityLabel="Change profile picture">
+          <PressableScale onPress={pickAndUploadAvatar} feedback="tap" accessibilityLabel={tr('profile.changePhoto')}>
             <Avatar name={name} uri={avatarUrl} size={92} />
-            <View style={{ position: 'absolute', right: -2, bottom: -2, width: 30, height: 30, borderRadius: 15, backgroundColor: t.accent, alignItems: 'center', justifyContent: 'center', borderWidth: 3, borderColor: t.background }}>
+            <View style={{ position: 'absolute', end: -2, bottom: -2, width: 30, height: 30, borderRadius: 15, backgroundColor: t.accent, alignItems: 'center', justifyContent: 'center', borderWidth: 3, borderColor: t.background }}>
               <Icon name="camera" size={14} color={t.onAccent} />
             </View>
           </PressableScale>
@@ -50,36 +52,36 @@ export default function Profile() {
               {isPro ? <ProBadge /> : null}
             </View>
             <Text variant="caption" color="secondary">
-              {guest ? 'Preview mode' : email}
+              {guest ? tr('profile.preview') : email}
             </Text>
           </View>
           <View style={{ width: '100%', gap: 8, marginTop: 6 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
               <Text variant="heading">
-                Level {lvl.level} · <Text variant="heading" color="accent">{levelTitle(lvl.level)}</Text>
+                {tr('profile.levelTitle', { level: lvl.level, title: levelTitle(lvl.level) })}
               </Text>
               <Text variant="caption" color="secondary">
-                {lvl.xp} XP
+                {tr('common.xp', { count: lvl.xp })}
               </Text>
             </View>
             <ProgressBar value={lvl.ratio} height={10} />
             <Text variant="caption" color="secondary">
-              {lvl.needed - lvl.current} XP to level {lvl.level + 1}
+              {tr('profile.xpToLevel', { xp: lvl.needed - lvl.current, level: lvl.level + 1 })}
             </Text>
           </View>
         </View>
       </Card>
 
       {!isPro ? (
-        <Card onPress={() => router.push('/paywall')} padding={16} style={{ marginTop: 12 }} accessibilityLabel="Upgrade to Life OS Pro">
+        <Card onPress={() => router.push('/paywall')} padding={16} style={{ marginTop: 12 }} accessibilityLabel={tr('profile.upgradeLabel')}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
             <View style={{ width: 44, height: 44, borderRadius: 15, backgroundColor: t.accentSoft, alignItems: 'center', justifyContent: 'center' }}>
               <Icon name="sparkles" size={22} color={t.accent} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text variant="heading">Upgrade to Pro</Text>
+              <Text variant="heading">{tr('profile.upgrade')}</Text>
               <Text variant="caption" color="secondary">
-                Try free for 7 days. Streak Freeze, analytics, sync
+                {tr('profile.upgradeBody')}
               </Text>
             </View>
             <Icon name="chevron-forward" size={18} color={t.textSecondary} />
@@ -87,19 +89,19 @@ export default function Profile() {
         </Card>
       ) : null}
 
-      <SectionHeader title="Statistics" action={isPro ? 'Advanced' : undefined} onAction={() => router.push('/analytics')} />
+      <SectionHeader title={tr('profile.statistics')} action={isPro ? tr('profile.advanced') : undefined} onAction={() => router.push('/analytics')} />
       <View style={{ gap: 10 }}>
         <View style={{ flexDirection: 'row', gap: 10 }}>
-          <StatTile icon="checkmark-done" value={stats.tasksCompleted} label="Tasks done" />
-          <StatTile icon="flame" value={stats.habitCheckins} label="Check-ins" />
+          <StatTile icon="checkmark-done" value={stats.tasksCompleted} label={tr('profile.tasksDone')} />
+          <StatTile icon="flame" value={stats.habitCheckins} label={tr('profile.checkins')} />
         </View>
         <View style={{ flexDirection: 'row', gap: 10 }}>
-          <StatTile icon="trophy" value={`${stats.bestStreak}d`} label="Best streak" />
-          <StatTile icon="timer" value={formatDuration(stats.focusMinutes * 60)} label="Focused" />
+          <StatTile icon="trophy" value={tr('profile.days', { count: stats.bestStreak })} label={tr('profile.bestStreak')} />
+          <StatTile icon="timer" value={formatDuration(stats.focusMinutes * 60)} label={tr('profile.focused')} />
         </View>
         <View style={{ flexDirection: 'row', gap: 10 }}>
-          <StatTile icon="flag" value={stats.goalsCompleted} label="Goals achieved" />
-          <StatTile icon="document-text" value={stats.notes + stats.journal} label="Notes & entries" />
+          <StatTile icon="flag" value={stats.goalsCompleted} label={tr('profile.goalsAchieved')} />
+          <StatTile icon="document-text" value={stats.notes + stats.journal} label={tr('profile.notesEntries')} />
         </View>
       </View>
       {!isPro ? (
@@ -108,7 +110,7 @@ export default function Profile() {
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
               <Icon name="analytics" size={18} color={t.accent} />
               <Text variant="bodyMedium" style={{ flex: 1 }}>
-                Advanced analytics & reports
+                {tr('profile.advancedGate')}
               </Text>
               <ProBadge small />
             </View>
@@ -116,7 +118,7 @@ export default function Profile() {
         </PressableScale>
       ) : null}
 
-      <SectionHeader title={`Achievements · ${unlocked.size}/${ACHIEVEMENTS.length}`} action="See all" onAction={() => router.push('/achievements')} />
+      <SectionHeader title={tr('profile.achievementsTitle', { count: unlocked.size, total: ACHIEVEMENTS.length })} action={tr('common.seeAll')} onAction={() => router.push('/achievements')} />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }} style={{ marginHorizontal: -20 }} contentInset={{ left: 20, right: 20 }}>
         <View style={{ width: 10 }} />
         {ACHIEVEMENTS.slice(0, 8).map((a) => (

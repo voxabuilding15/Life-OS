@@ -1,6 +1,8 @@
 import { forwardRef, useState } from 'react';
 import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
-import { font, radius, useTheme } from '@/theme';
+import { useI18n } from '@/i18n';
+import { radius, useTheme } from '@/theme';
+import { arabicFamily } from '@/theme/arabic';
 import { Icon, type IconName } from './Icon';
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
@@ -15,13 +17,14 @@ interface Props extends TextInputProps {
 
 export const Input = forwardRef<TextInput, Props>(function Input({ label, error, icon, secure, multiline, style, onFocus, onBlur, ...rest }, ref) {
   const t = useTheme();
+  const { t: tr, rtl } = useI18n();
   const [focused, setFocused] = useState(false);
   const [hidden, setHidden] = useState(Boolean(secure));
   return (
     <View style={styles.wrap}>
       {label ? (
         <Text variant="micro" color="tertiary" style={styles.label}>
-          {label.toUpperCase()}
+          {rtl ? label : label.toUpperCase()}
         </Text>
       ) : null}
       <View
@@ -49,10 +52,10 @@ export const Input = forwardRef<TextInput, Props>(function Input({ label, error,
             onBlur?.(e);
           }}
           accessibilityLabel={label ?? rest.placeholder}
-          style={[styles.input, { color: t.text, fontFamily: font.regular }, multiline && { textAlignVertical: 'top', minHeight: 80 }, style]}
+          style={[styles.input, { color: t.text, fontFamily: rtl ? arabicFamily('Inter_400Regular') : 'Inter_400Regular', textAlign: rtl ? 'right' : 'left', writingDirection: rtl ? 'rtl' : 'ltr' }, multiline && { textAlignVertical: 'top', minHeight: 80 }, style]}
         />
         {secure ? (
-          <PressableScale onPress={() => setHidden((h) => !h)} feedback="none" accessibilityLabel={hidden ? 'Show password' : 'Hide password'} hitSlop={10}>
+          <PressableScale onPress={() => setHidden((h) => !h)} feedback="none" accessibilityLabel={hidden ? tr('auth.showPassword') : tr('auth.hidePassword')} hitSlop={10}>
             <Icon name={hidden ? 'eye-outline' : 'eye-off-outline'} size={18} color={t.textTertiary} />
           </PressableScale>
         ) : null}
@@ -68,8 +71,8 @@ export const Input = forwardRef<TextInput, Props>(function Input({ label, error,
 
 const styles = StyleSheet.create({
   wrap: { gap: 8 },
-  label: { marginLeft: 4 },
+  label: { marginStart: 4 },
   field: { flexDirection: 'row', alignItems: 'center', gap: 10, borderRadius: radius.md, borderWidth: 1, paddingHorizontal: 16 },
   input: { flex: 1, fontSize: 16, paddingVertical: 12, outlineStyle: 'none' } as never,
-  error: { marginLeft: 4 },
+  error: { marginStart: 4 },
 });

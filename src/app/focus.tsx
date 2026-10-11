@@ -16,7 +16,8 @@ import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { useFocusData, useTasksData } from '@/hooks/useData';
-import { MODE_LABEL, useFocusTimer } from '@/hooks/useFocusTimer';
+import { useFocusTimer } from '@/hooks/useFocusTimer';
+import { useI18n } from '@/i18n';
 import { clock, formatDay, formatDuration, formatTime, todayKey } from '@/lib/date';
 import { useSettings } from '@/store/settings';
 import { useTheme } from '@/theme';
@@ -25,6 +26,7 @@ const PRESETS = [15, 25, 45, 60];
 
 export default function Focus() {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const [tab, setTab] = useState<'timer' | 'stats'>('timer');
   const [taskId, setTaskId] = useState<string | null>(null);
   const timer = useFocusTimer(taskId);
@@ -36,14 +38,14 @@ export default function Focus() {
   return (
     <Screen scroll={tab === 'stats'}>
       <View style={styles.top}>
-        <IconButton icon="close" label="Close focus mode" onPress={() => router.back()} />
+        <IconButton icon="close" label={tr('focus.close')} onPress={() => router.back()} />
         <View style={{ flex: 1, paddingHorizontal: 14 }}>
           <Segmented
             value={tab}
             onChange={setTab}
             options={[
-              { value: 'timer', label: 'Timer' },
-              { value: 'stats', label: 'Stats' },
+              { value: 'timer', label: tr('focus.timer') },
+              { value: 'stats', label: tr('focus.stats') },
             ]}
           />
         </View>
@@ -53,16 +55,16 @@ export default function Focus() {
       {tab === 'timer' ? (
         <Animated.View entering={FadeIn} style={styles.timerWrap}>
           <Text variant="micro" color="accent" style={{ letterSpacing: 2 }}>
-            {MODE_LABEL[timer.mode].toUpperCase()}
+            {tr(`focus.modes.${timer.mode}`).toUpperCase()}
           </Text>
 
           <View style={{ marginVertical: 36 }}>
             <ProgressRing value={timer.running || timer.progress > 0 ? timer.progress : 0} size={288} stroke={10} duration={400}>
-              <Text style={styles.clock} accessibilityLiveRegion="none" accessibilityLabel={`${Math.floor(timer.remaining / 60)} minutes ${timer.remaining % 60} seconds remaining`}>
+              <Text style={styles.clock} accessibilityLiveRegion="none" accessibilityLabel={tr('focus.remaining', { minutes: Math.floor(timer.remaining / 60), seconds: timer.remaining % 60 })}>
                 {clock(timer.remaining)}
               </Text>
               <Text variant="caption" color="secondary">
-                {timer.running ? 'Stay with it' : 'Ready when you are'}
+                {timer.running ? tr('focus.stayWith') : tr('focus.ready')}
               </Text>
             </ProgressRing>
           </View>
@@ -74,30 +76,30 @@ export default function Focus() {
           </View>
 
           <View style={styles.controls}>
-            <IconButton icon="refresh" label="Reset timer" onPress={timer.reset} size={52} />
+            <IconButton icon="refresh" label={tr('focus.reset')} onPress={timer.reset} size={52} />
             <PressableScale
               onPress={timer.running ? timer.pause : timer.start}
               feedback="none"
               scaleTo={0.92}
-              accessibilityLabel={timer.running ? 'Pause' : 'Start'}
+              accessibilityLabel={timer.running ? tr('focus.pause') : tr('focus.start')}
               style={[styles.play, { backgroundColor: t.accent, shadowColor: t.accent }]}
             >
               <Icon name={timer.running ? 'pause' : 'play'} size={34} color={t.onAccent} />
             </PressableScale>
-            <IconButton icon="play-skip-forward" label="Skip to next phase" onPress={timer.skip} size={52} />
+            <IconButton icon="play-skip-forward" label={tr('focus.skip')} onPress={timer.skip} size={52} />
           </View>
 
           {!timer.running && timer.mode === 'focus' ? (
             <Animated.View entering={FadeInDown} style={{ gap: 18, marginTop: 36, alignItems: 'center' }}>
               <View style={styles.presets}>
                 {PRESETS.map((m) => (
-                  <Chip key={m} label={`${m} min`} selected={settings.focusMinutes === m} onPress={() => settings.set({ focusMinutes: m })} />
+                  <Chip key={m} label={tr('focus.preset', { count: m })} selected={settings.focusMinutes === m} onPress={() => settings.set({ focusMinutes: m })} />
                 ))}
               </View>
               {openTasks.length > 0 ? (
                 <View style={{ alignItems: 'center', gap: 10 }}>
                   <Text variant="micro" color="tertiary">
-                    FOCUS ON
+                    {tr('focus.focusOn')}
                   </Text>
                   <View style={styles.presets}>
                     {openTasks.slice(0, 3).map((task) => (
@@ -112,32 +114,32 @@ export default function Focus() {
       ) : (
         <Animated.View entering={FadeIn} style={{ gap: 16, paddingTop: 8, paddingBottom: 24 }}>
           <View style={{ flexDirection: 'row', gap: 10 }}>
-            <StatTile icon="today" value={formatDuration(stats.todayMinutes * 60)} label="Today" />
-            <StatTile icon="calendar" value={formatDuration(stats.weekMinutes * 60)} label="This week" />
-            <StatTile icon="checkmark-done" value={stats.totalSessions} label="Sessions" />
+            <StatTile icon="today" value={formatDuration(stats.todayMinutes * 60)} label={tr('focus.today')} />
+            <StatTile icon="calendar" value={formatDuration(stats.weekMinutes * 60)} label={tr('focus.thisWeek')} />
+            <StatTile icon="checkmark-done" value={stats.totalSessions} label={tr('focus.sessions')} />
           </View>
           <Card padding={18}>
             <Text variant="heading" style={{ marginBottom: 14 }}>
-              Last 7 days (min)
+              {tr('focus.last7')}
             </Text>
             <BarChart showValues height={110} data={week.series.map((d) => ({ label: d.label, value: d.focusMinutes, highlight: d.key === todayKey() }))} />
           </Card>
-          <Text variant="heading">History</Text>
+          <Text variant="heading">{tr('focus.history')}</Text>
           {stats.sessions.length === 0 ? (
-            <EmptyState icon="timer-outline" title="No sessions yet" message="Finish a focus session and it will show up here." />
+            <EmptyState icon="timer-outline" title={tr('focus.emptyTitle')} message={tr('focus.emptyBody')} />
           ) : (
             stats.sessions.slice(0, 20).map((s) => (
               <Card key={s.id} padding={14}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                   <Icon name={s.completed ? 'checkmark-circle' : 'pause-circle-outline'} size={24} color={s.completed ? t.accent : t.textTertiary} />
                   <View style={{ flex: 1 }}>
-                    <Text variant="bodyMedium">{formatDuration(s.durationSeconds)} focus</Text>
+                    <Text variant="bodyMedium">{tr('focus.sessionLine', { duration: formatDuration(s.durationSeconds) })}</Text>
                     <Text variant="caption" color="secondary">
                       {formatDay(todayKey(new Date(s.startedAt)))} · {formatTime(new Date(s.startedAt))}
                     </Text>
                   </View>
                   <Text variant="caption" color="tertiary">
-                    {s.completed ? 'Completed' : 'Stopped early'}
+                    {s.completed ? tr('focus.completed') : tr('focus.stoppedEarly')}
                   </Text>
                 </View>
               </Card>

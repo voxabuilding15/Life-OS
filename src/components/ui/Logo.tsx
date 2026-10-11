@@ -1,12 +1,14 @@
 import { View } from 'react-native';
+import { useI18n } from '@/i18n';
 import { WORDMARK_BOX, WORDMARK_PATH } from '@/lib/brandPaths';
 import Svg, { Circle, Defs, LinearGradient as SvgGradient, Path, Stop } from 'react-native-svg';
 import { BASE } from '@/theme';
 
 /** Life OS mark: an orbit ring with a rising node and a core. */
 export function Logo({ size = 96, color = BASE.blue }: { size?: number; color?: string }) {
+  const { t } = useI18n();
   return (
-    <Svg width={size} height={size} viewBox="0 0 96 96" accessibilityLabel="Life OS logo">
+    <Svg width={size} height={size} viewBox="0 0 96 96" accessibilityLabel={t('common.logo')}>
       <Defs>
         <SvgGradient id="ring" x1="0" y1="0" x2="1" y2="1">
           <Stop offset="0" stopColor={BASE.white} stopOpacity={0.95} />
@@ -24,9 +26,10 @@ export function Logo({ size = 96, color = BASE.blue }: { size?: number; color?: 
 
 /** "Life OS" wordmark (Inter ExtraBold outlines). Height is the cap-to-baseline height. */
 export function Wordmark({ height = 28, color = BASE.white }: { height?: number; color?: string }) {
+  const { t } = useI18n();
   const scale = height / WORDMARK_BOX.height;
   return (
-    <Svg width={WORDMARK_BOX.width * scale} height={height} viewBox={`0 0 ${WORDMARK_BOX.width} ${WORDMARK_BOX.height}`} accessibilityLabel="Life OS">
+    <Svg width={WORDMARK_BOX.width * scale} height={height} viewBox={`0 0 ${WORDMARK_BOX.width} ${WORDMARK_BOX.height}`} accessibilityLabel={t('app.name')}>
       <Path d={WORDMARK_PATH} fill={color} transform={`translate(${-WORDMARK_BOX.x} ${-WORDMARK_BOX.y})`} />
     </Svg>
   );
@@ -34,9 +37,10 @@ export function Wordmark({ height = 28, color = BASE.white }: { height?: number;
 
 /** Mark + wordmark, stacked (splash, paywall) or side by side (headers). */
 export function LogoLockup({ size = 72, layout = 'stacked' }: { size?: number; layout?: 'stacked' | 'horizontal' }) {
+  const { t } = useI18n();
   const stacked = layout === 'stacked';
   return (
-    <View style={{ alignItems: 'center', flexDirection: stacked ? 'column' : 'row', gap: stacked ? size * 0.28 : size * 0.3 }} accessibilityLabel="Life OS">
+    <View style={{ alignItems: 'center', flexDirection: stacked ? 'column' : 'row', gap: stacked ? size * 0.28 : size * 0.3 }} accessibilityLabel={t('app.name')}>
       <Logo size={size} />
       <Wordmark height={size * (stacked ? 0.3 : 0.34)} />
     </View>

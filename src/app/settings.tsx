@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Alert, Linking, Platform, Switch, View } from 'react-native';
 import Constants from 'expo-constants';
 import { Button } from '@/components/ui/Button';
+import { LANGUAGES, useI18n } from '@/i18n';
 import { Card } from '@/components/ui/Card';
 import { Header, IconButton, SectionHeader } from '@/components/ui/Header';
 import { Icon } from '@/components/ui/Icon';
@@ -11,6 +12,8 @@ import { ProBadge } from '@/components/ui/ProBadge';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { config, isSupabaseConfigured } from '@/lib/config';
+import { setAppLanguage } from '@/services/actions';
+import { dateTime } from '@/i18n/format';
 import { deleteAccountData, signOut } from '@/services/auth';
 import { ensureNotificationPermission, syncDailyReminder } from '@/services/notifications';
 import { runSync } from '@/services/sync';
@@ -55,19 +58,21 @@ function Toggle({ value, onChange, label }: { value: boolean; onChange: (v: bool
 }
 
 function Stepper({ value, onChange, min, max, unit }: { value: number; onChange: (v: number) => void; min: number; max: number; unit: string }) {
+  const { t: tr } = useI18n();
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-      <IconButton icon="remove" label="Decrease" size={34} onPress={() => onChange(Math.max(min, value - 1))} />
+      <IconButton icon="remove" label={tr('settings.decrease')} size={34} onPress={() => onChange(Math.max(min, value - 1))} />
       <Text variant="bodyMedium" style={{ minWidth: 56, textAlign: 'center' }}>
-        {value} {unit}
+        {unit ? `${value} ${unit}` : value}
       </Text>
-      <IconButton icon="add" label="Increase" size={34} onPress={() => onChange(Math.min(max, value + 1))} />
+      <IconButton icon="add" label={tr('settings.increase')} size={34} onPress={() => onChange(Math.min(max, value + 1))} />
     </View>
   );
 }
 
 export default function Settings() {
   const t = useTheme();
+  const { t: tr, locale } = useI18n();
   const s = useSettings();
   const isPro = useIsPro();
   const email = useAuth((a) => a.email);
@@ -77,16 +82,29 @@ export default function Settings() {
   const confirm = (title: string, message: string, action: () => void) => {
     if (Platform.OS === 'web') return action();
     Alert.alert(title, message, [
-      { text: 'Cancel', style: 'cancel' },
+      { text: tr('common.cancel'), style: 'cancel' },
       { text: title, style: 'destructive', onPress: action },
     ]);
   };
 
   return (
     <Screen>
-      <Header title="Settings" back />
+      <Header title={tr('settings.title')} back />
 
-      <SectionHeader title="Appearance" />
+      <SectionHeader title={tr('settings.language')} />
+      <Card padding={8}>
+        {LANGUAGES.map((l) => (
+          <Row
+            key={l.code}
+            icon="language"
+            title={`${l.flag}  ${l.native}`}
+            right={locale === l.code ? <Icon name="checkmark-circle" size={22} color={t.accent} /> : undefined}
+            onPress={() => void setAppLanguage(l.code)}
+          />
+        ))}
+      </Card>
+
+      <SectionHeader title={tr('settings.appearance')} />
       <Card padding={16}>
         <View style={{ flexDirection: 'row', gap: 10 }}>
           {Object.values(THEMES).map((th) => {
@@ -96,7 +114,7 @@ export default function Settings() {
               <PressableScale
                 key={th.id}
                 feedback="tap"
-                accessibilityLabel={`${th.name} theme${locked ? ', Pro' : ''}`}
+                accessibilityLabel={tr(locked ? 'settings.themeLabelPro' : 'settings.themeLabel', { name: tr(`themes.${th.id}.name`) })}
                 accessibilityState={{ selected }}
                 onPress={() => (locked ? router.push('/paywall?reason=themes') : s.set({ themeId: th.id }))}
                 style={{ flex: 1, alignItems: 'center', gap: 10, padding: 12, borderRadius: 18, borderWidth: 1.5, backgroundColor: selected ? t.accentSoft : t.surface, borderColor: selected ? t.accent : t.border }}
@@ -105,7 +123,7 @@ export default function Settings() {
                   {locked ? <Icon name="lock-closed" size={16} color={th.onAccent} /> : selected ? <Icon name="checkmark" size={20} color={th.onAccent} /> : null}
                 </View>
                 <Text variant="caption" style={{ fontFamily: 'Inter_600SemiBold' }}>
-                  {th.name}
+                  {tr(`themes.${th.id}.name`)}
                 </Text>
               </PressableScale>
             );
@@ -113,18 +131,18 @@ export default function Settings() {
         </View>
       </Card>
 
-      <SectionHeader title="Notifications & feedback" />
+      <SectionHeader title={tr('settings.notifications')} />
       <Card padding={16}>
         <Row
           icon="notifications"
-          title="Reminders"
-          subtitle="Task and habit reminders"
+          title={tr('settings.reminders')}
+          subtitle={tr('settings.remindersBody')}
           right={
             <Toggle
-              label="Reminders"
+              label={tr('settings.reminders')}
               value={s.notifications}
               onChange={async (v) => {
-                if (v && !(await ensureNotificationPermission())) return toast('Enable notifications in system settings first.');
+                if (v && !(await ensureNotificationPermission())) return toast(tr('settings.enableFirst'));
                 s.set({ notifications: v });
                 void syncDailyReminder();
               }}
@@ -133,11 +151,11 @@ export default function Settings() {
         />
         <Row
           icon="moon"
-          title="Evening check-in"
-          subtitle="Daily nudge at 8:30 PM"
+          title={tr('settings.evening')}
+          subtitle={tr('settings.eveningBody')}
           right={
             <Toggle
-              label="Evening check-in"
+              label={tr('settings.evening')}
               value={s.dailyReminder}
               onChange={(v) => {
                 s.set({ dailyReminder: v });
@@ -148,11 +166,11 @@ export default function Settings() {
         />
         <Row
           icon="stats-chart"
-          title="Weekly report"
-          subtitle="Sunday evening summary"
+          title={tr('settings.weekly')}
+          subtitle={tr('settings.weeklyBody')}
           right={
             <Toggle
-              label="Weekly report"
+              label={tr('settings.weekly')}
               value={s.weeklyReport}
               onChange={(v) => {
                 s.set({ weeklyReport: v });
@@ -161,27 +179,27 @@ export default function Settings() {
             />
           }
         />
-        <Row icon="phone-portrait" title="Haptics" subtitle="Tactile feedback" right={<Toggle label="Haptics" value={s.haptics} onChange={(v) => s.set({ haptics: v })} />} />
+        <Row icon="phone-portrait" title={tr('settings.haptics')} subtitle={tr('settings.hapticsBody')} right={<Toggle label={tr('settings.haptics')} value={s.haptics} onChange={(v) => s.set({ haptics: v })} />} />
       </Card>
 
-      <SectionHeader title="Focus" />
+      <SectionHeader title={tr('settings.focusSection')} />
       <Card padding={16}>
-        <Row icon="timer" title="Focus" right={<Stepper value={s.focusMinutes} min={5} max={120} unit="min" onChange={(v) => s.set({ focusMinutes: v })} />} />
-        <Row icon="cafe" title="Short break" right={<Stepper value={s.shortBreakMinutes} min={1} max={30} unit="min" onChange={(v) => s.set({ shortBreakMinutes: v })} />} />
-        <Row icon="bed" title="Long break" right={<Stepper value={s.longBreakMinutes} min={5} max={60} unit="min" onChange={(v) => s.set({ longBreakMinutes: v })} />} />
-        <Row icon="repeat" title="Sessions per cycle" right={<Stepper value={s.sessionsUntilLongBreak} min={2} max={8} unit="" onChange={(v) => s.set({ sessionsUntilLongBreak: v })} />} />
+        <Row icon="timer" title={tr('settings.focusRow')} right={<Stepper value={s.focusMinutes} min={5} max={120} unit={tr('settings.minUnit')} onChange={(v) => s.set({ focusMinutes: v })} />} />
+        <Row icon="cafe" title={tr('settings.shortBreak')} right={<Stepper value={s.shortBreakMinutes} min={1} max={30} unit={tr('settings.minUnit')} onChange={(v) => s.set({ shortBreakMinutes: v })} />} />
+        <Row icon="bed" title={tr('settings.longBreak')} right={<Stepper value={s.longBreakMinutes} min={5} max={60} unit={tr('settings.minUnit')} onChange={(v) => s.set({ longBreakMinutes: v })} />} />
+        <Row icon="repeat" title={tr('settings.sessionsPerCycle')} right={<Stepper value={s.sessionsUntilLongBreak} min={2} max={8} unit="" onChange={(v) => s.set({ sessionsUntilLongBreak: v })} />} />
       </Card>
 
-      <SectionHeader title="Cloud sync" />
+      <SectionHeader title={tr('settings.cloud')} />
       <Card padding={16}>
         <Row
           icon="cloud"
-          title={isPro ? 'Synced with your account' : 'Cloud synchronization'}
-          subtitle={isPro ? (sync.syncing ? 'Syncing…' : sync.lastSyncAt ? `Last synced ${new Date(sync.lastSyncAt).toLocaleString()}` : 'Not synced yet') : 'Back up and use Life OS on every device'}
+          title={isPro ? tr('settings.cloudSynced') : tr('settings.cloudFeature')}
+          subtitle={isPro ? (sync.syncing ? tr('settings.syncing') : sync.lastSyncAt ? tr('settings.lastSynced', { date: dateTime(new Date(sync.lastSyncAt)) }) : tr('settings.notSynced')) : tr('settings.cloudPitch')}
           right={isPro ? undefined : <ProBadge />}
           onPress={isPro ? undefined : () => router.push('/paywall?reason=sync')}
         />
-        {isPro && !guest ? <Button title="Sync now" variant="secondary" size="sm" fullWidth={false} loading={sync.syncing} onPress={() => void runSync()} /> : null}
+        {isPro && !guest ? <Button title={tr('settings.syncNow')} variant="secondary" size="sm" fullWidth={false} loading={sync.syncing} onPress={() => void runSync()} /> : null}
         {sync.error ? (
           <Text variant="caption" color="tertiary" style={{ marginTop: 8 }}>
             {sync.error}
@@ -189,27 +207,27 @@ export default function Settings() {
         ) : null}
       </Card>
 
-      <SectionHeader title="Subscription" />
+      <SectionHeader title={tr('settings.subscription')} />
       <Card padding={16}>
-        <Row icon="sparkles" title={isPro ? 'Life OS Pro' : 'Free plan'} subtitle={isPro ? 'Thanks for supporting Life OS' : `Try free for ${config.trialDays} days, then from ${config.proPriceLabel}/month`} right={isPro ? <ProBadge /> : undefined} onPress={() => router.push(isPro ? '/pro' : '/paywall')} />
+        <Row icon="sparkles" title={isPro ? tr('pro.title') : tr('settings.freePlan')} subtitle={isPro ? tr('settings.proThanks') : tr('settings.trialPitch', { days: config.trialDays, price: config.proPriceLabel })} right={isPro ? <ProBadge /> : undefined} onPress={() => router.push(isPro ? '/pro' : '/paywall')} />
         <Row
           icon="refresh"
-          title="Restore purchases"
+          title={tr('settings.restore')}
           onPress={async () => {
             const r = await restorePurchases();
-            toast(r.ok ? 'Pro restored.' : (r.error ?? 'Nothing to restore.'));
+            toast(r.ok ? tr('settings.proRestored') : (r.error ?? tr('paywallScreen.nothingToRestore')));
           }}
         />
       </Card>
 
-      <SectionHeader title="Account" />
+      <SectionHeader title={tr('settings.account')} />
       <Card padding={16}>
-        <Row icon="person" title={guest ? 'Preview mode' : (email ?? 'Signed in')} subtitle={guest ? 'Data stays on this device' : 'Account'} />
+        <Row icon="person" title={guest ? tr('settings.previewMode') : (email ?? tr('settings.signedIn'))} subtitle={guest ? tr('settings.previewBody') : tr('settings.accountRow')} />
         <Row
           icon="log-out"
-          title={guest ? 'Exit preview' : 'Sign out'}
+          title={guest ? tr('settings.exitPreview') : tr('settings.signOut')}
           onPress={() =>
-            confirm('Sign out', 'Data on this device will be cleared. Pro users can restore it by signing back in.', async () => {
+            confirm(tr('settings.signOut'), tr('settings.signOutBody'), async () => {
               await signOut();
             })
           }
@@ -217,10 +235,10 @@ export default function Settings() {
         {isSupabaseConfigured && !guest ? (
           <Row
             icon="trash"
-            title="Delete account"
-            subtitle="Permanently remove your account and cloud data"
+            title={tr('settings.deleteAccount')}
+            subtitle={tr('settings.deleteBody')}
             onPress={() =>
-              confirm('Delete account', 'This permanently deletes your account and all synced data. This cannot be undone.', async () => {
+              confirm(tr('settings.deleteAccount'), tr('settings.deleteConfirm'), async () => {
                 const r = await deleteAccountData();
                 if (!r.ok) toast(r.error);
               })
@@ -229,15 +247,15 @@ export default function Settings() {
         ) : null}
       </Card>
 
-      <SectionHeader title="About" />
+      <SectionHeader title={tr('settings.about')} />
       <Card padding={16}>
-        <Row icon="shield-checkmark" title="Privacy policy" onPress={() => void Linking.openURL(config.privacyUrl)} />
-        <Row icon="document-text" title="Terms of service" onPress={() => void Linking.openURL(config.termsUrl)} />
-        <Row icon="mail" title="Contact support" subtitle={config.supportEmail} onPress={() => void Linking.openURL(`mailto:${config.supportEmail}?subject=Life%20OS%20support`)} />
+        <Row icon="shield-checkmark" title={tr('settings.privacy')} onPress={() => void Linking.openURL(config.privacyUrl)} />
+        <Row icon="document-text" title={tr('settings.terms')} onPress={() => void Linking.openURL(config.termsUrl)} />
+        <Row icon="mail" title={tr('settings.support')} subtitle={config.supportEmail} onPress={() => void Linking.openURL(`mailto:${config.supportEmail}?subject=${encodeURIComponent(tr('settings.supportSubject'))}`)} />
       </Card>
 
       <Text variant="caption" color="tertiary" align="center" style={{ marginTop: 28, marginBottom: 12 }}>
-        Life OS {Constants.expoConfig?.version ?? '1.0.0'}
+        {tr('settings.version', { version: Constants.expoConfig?.version ?? '1.0.0' })}
       </Text>
     </Screen>
   );

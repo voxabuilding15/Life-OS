@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { useDailyChallenges } from '@/hooks/useLife';
+import { useI18n } from '@/i18n';
 import { claimChallenge } from '@/services/actions';
 import { useTheme } from '@/theme';
 import { Card } from '../ui/Card';
@@ -11,18 +12,19 @@ import { ChallengeRow } from './ChallengeRow';
 
 export function ChallengesCard() {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const d = useDailyChallenges();
   const visible = d.views.filter((c) => !c.bonus);
   return (
     <Card padding={14}>
-      <PressableScale feedback="tap" scaleTo={0.99} onPress={() => router.push('/challenges')} style={styles.head} accessibilityLabel="Open daily challenges">
+      <PressableScale feedback="tap" scaleTo={0.99} onPress={() => router.push('/challenges')} style={styles.head} accessibilityLabel={tr('challenges.openLabel')}>
         <View style={[styles.badge, { backgroundColor: t.accentSoft }]}>
           <Icon name="trophy" size={16} color={t.accent} />
         </View>
         <View style={{ flex: 1 }}>
-          <Text variant="heading">Daily challenges</Text>
+          <Text variant="heading">{tr('challenges.title')}</Text>
           <Text variant="caption" color="secondary">
-            {d.allClaimed ? 'All done. Come back tomorrow.' : d.ready ? `${d.ready} ready to claim` : `${d.claimedCount} of ${d.total} complete`}
+            {d.allClaimed ? tr('challenges.allDone') : d.ready ? tr('challenges.readyToClaim', { count: d.ready }) : tr('challenges.progressSummary', { done: d.claimedCount, total: d.total })}
           </Text>
         </View>
         <View style={styles.dots}>

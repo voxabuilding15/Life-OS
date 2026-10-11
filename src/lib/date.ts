@@ -1,3 +1,6 @@
+import { t } from '@/i18n';
+import { dayMonth, dayMonthShort, time12, weekdayNarrow, weekdayShort } from '@/i18n/format';
+
 /** Local-time date helpers. All "day" values are 'YYYY-MM-DD' strings in the user's time zone. */
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -26,40 +29,35 @@ export const lastNDays = (n: number, end: string = todayKey()): string[] =>
 
 export const greeting = (now: Date = new Date()): string => {
   const h = now.getHours();
-  if (h < 5) return 'Good night';
-  if (h < 12) return 'Good morning';
-  if (h < 18) return 'Good afternoon';
-  return 'Good evening';
+  if (h < 5) return t('greeting.night');
+  if (h < 12) return t('greeting.morning');
+  if (h < 18) return t('greeting.afternoon');
+  return t('greeting.evening');
 };
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-export const shortDay = (key: string) => DAYS[fromKey(key).getDay()];
-export const dayInitial = (key: string) => DAYS[fromKey(key).getDay()].charAt(0);
+export const shortDay = (key: string) => weekdayShort(fromKey(key));
+export const dayInitial = (key: string) => weekdayNarrow(fromKey(key));
 
 export const formatDay = (key: string, today: string = todayKey()): string => {
   const diff = diffDays(key, today);
-  if (diff === 0) return 'Today';
-  if (diff === 1) return 'Tomorrow';
-  if (diff === -1) return 'Yesterday';
-  const d = fromKey(key);
-  return `${DAYS[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}`;
+  if (diff === 0) return t('date.today');
+  if (diff === 1) return t('date.tomorrow');
+  if (diff === -1) return t('date.yesterday');
+  return dayMonth(fromKey(key));
 };
 
-export const formatLongDate = (d: Date = new Date()): string =>
-  `${DAYS[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}`;
+/** Short "Oct 5" style date used for ranges. */
+export const formatShortDate = (key: string): string => dayMonthShort(fromKey(key));
 
-export const formatTime = (d: Date): string => {
-  const h = d.getHours();
-  return `${h % 12 === 0 ? 12 : h % 12}:${pad(d.getMinutes())} ${h < 12 ? 'AM' : 'PM'}`;
-};
+export const formatLongDate = (d: Date = new Date()): string => dayMonth(d);
+
+export const formatTime = (d: Date): string => time12(d);
 
 export const formatDuration = (seconds: number): string => {
   const m = Math.round(seconds / 60);
-  if (m < 60) return `${m}m`;
+  if (m < 60) return t('time.minutes', { count: m });
   const h = Math.floor(m / 60);
-  return m % 60 ? `${h}h ${m % 60}m` : `${h}h`;
+  return m % 60 ? t('time.hoursMinutes', { h, m: m % 60 }) : t('time.hours', { count: h });
 };
 
 export const clock = (seconds: number): string => {

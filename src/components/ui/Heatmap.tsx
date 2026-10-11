@@ -1,25 +1,29 @@
 import { memo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useI18n } from '@/i18n';
+import { weekdayNarrow } from '@/i18n/format';
 import { heatmapGrid } from '@/lib/habits';
 import { alpha, useTheme } from '@/theme';
 import { Text } from './Text';
 
-const DAY_LABELS = ['', 'M', '', 'W', '', 'F', ''];
+/** Rows run Sunday..Saturday; label Monday, Wednesday and Friday. 2026-10-11 is a Sunday. */
+const labelFor = (row: number) => (row % 2 === 1 ? weekdayNarrow(new Date(2026, 9, 11 + row)) : '');
 
 /** GitHub-style calendar heatmap of check-ins (weeks as columns, Sun-Sat rows). */
 export const Heatmap = memo(function Heatmap({ doneDays, weeks = 15 }: { doneDays: ReadonlySet<string>; weeks?: number }) {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const grid = heatmapGrid(doneDays, weeks);
   const [width, setWidth] = useState(0);
   // Fit the grid to its container: label gutter + `weeks` columns separated by 4px gaps.
   const cell = width ? Math.min(22, Math.max(8, Math.floor((width - 14 - 6 - weeks * 4) / weeks))) : 12;
   return (
-    <View style={styles.row} accessibilityLabel="Habit calendar heatmap" onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+    <View style={styles.row} accessibilityLabel={tr('habits.heatmapLabel')} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
       <View style={[styles.labels, { gap: 4 }]}>
-        {DAY_LABELS.map((d, i) => (
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
           <View key={i} style={{ height: cell, justifyContent: 'center' }}>
             <Text variant="micro" color="tertiary">
-              {d}
+              {labelFor(i)}
             </Text>
           </View>
         ))}
@@ -49,4 +53,4 @@ export const Heatmap = memo(function Heatmap({ doneDays, weeks = 15 }: { doneDay
   );
 });
 
-const styles = StyleSheet.create({ row: { flexDirection: 'row', gap: 4 }, labels: { marginRight: 2 } });
+const styles = StyleSheet.create({ row: { flexDirection: 'row', gap: 4 }, labels: { marginEnd: 2 } });

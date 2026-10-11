@@ -1,6 +1,7 @@
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
+import { t } from '@/i18n';
 import { haptic } from '@/lib/haptics';
 import { nowIso } from '@/lib/id';
 import { logFocusSession } from '@/services/actions';
@@ -8,8 +9,6 @@ import { cancelFocusEnd, scheduleFocusEnd } from '@/services/notifications';
 import { useSettings } from '@/store/settings';
 
 export type FocusMode = 'focus' | 'short' | 'long';
-
-export const MODE_LABEL: Record<FocusMode, string> = { focus: 'Focus', short: 'Short break', long: 'Long break' };
 
 /**
  * Pomodoro engine. Time is derived from a wall-clock `endAt`, so it stays correct when the app is
@@ -99,7 +98,7 @@ export function useFocusTimer(taskId: string | null) {
     }
     setRunning(true);
     haptic.medium();
-    void scheduleFocusEnd(total, mode === 'focus' ? 'Focus session complete' : 'Break is over');
+    void scheduleFocusEnd(total, t(mode === 'focus' ? 'notifications.focusDone' : 'notifications.breakOver'));
   };
 
   const pause = () => {

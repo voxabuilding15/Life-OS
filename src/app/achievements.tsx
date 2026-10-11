@@ -11,10 +11,12 @@ import { ProgressRing } from '@/components/ui/ProgressRing';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { useAchievementStats, useUnlockedKeys } from '@/hooks/useStats';
+import { useI18n } from '@/i18n';
 import { ACHIEVEMENT_CATEGORIES, ACHIEVEMENTS, type AchievementCategory } from '@/lib/gamification';
 import { useIsPro } from '@/store/subscription';
 
 export default function Achievements() {
+  const { t: tr } = useI18n();
   const unlocked = useUnlockedKeys();
   const stats = useAchievementStats();
   const isPro = useIsPro();
@@ -32,7 +34,7 @@ export default function Achievements() {
 
   return (
     <Screen>
-      <Header title="Achievements" subtitle={`${count} of ${ACHIEVEMENTS.length} unlocked`} back />
+      <Header title={tr('achievements.title')} subtitle={tr('achievements.unlockedCount', { count, total: ACHIEVEMENTS.length })} back />
       <Card accent padding={18}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18 }}>
           <ProgressRing value={count / ACHIEVEMENTS.length} size={72} stroke={8}>
@@ -41,9 +43,9 @@ export default function Achievements() {
             </Text>
           </ProgressRing>
           <View style={{ flex: 1 }}>
-            <Text variant="heading">{earnedXp} XP earned from badges</Text>
+            <Text variant="heading">{tr('achievements.xpEarned', { count: earnedXp })}</Text>
             <Text variant="caption" color="secondary">
-              Every badge pays an XP bonus. Higher tiers pay more.
+              {tr('achievements.xpHint')}
             </Text>
           </View>
         </View>
@@ -51,7 +53,7 @@ export default function Achievements() {
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingVertical: 16 }} style={{ flexGrow: 0 }}>
         {(['All', ...ACHIEVEMENT_CATEGORIES] as const).map((c) => (
-          <Chip key={c} label={c} selected={filter === c} onPress={() => setFilter(c)} />
+          <Chip key={c} label={tr(`achievements.categories.${c}`)} selected={filter === c} onPress={() => setFilter(c)} />
         ))}
       </ScrollView>
 
@@ -65,9 +67,9 @@ export default function Achievements() {
       {!isPro ? (
         <View style={{ marginTop: 24, gap: 12 }}>
           <Text variant="body" color="secondary" align="center">
-            Pro unlocks {ACHIEVEMENTS.filter((a) => a.pro).length} extra achievements and the biggest XP bonuses.
+            {tr('achievements.proUnlocks', { count: ACHIEVEMENTS.filter((a) => a.pro).length })}
           </Text>
-          <Button title="Unlock with Pro" icon="sparkles" shimmer onPress={() => router.push('/paywall?reason=achievements')} />
+          <Button title={tr('common.unlockWithPro')} icon="sparkles" shimmer onPress={() => router.push('/paywall?reason=achievements')} />
         </View>
       ) : null}
     </Screen>

@@ -25,6 +25,8 @@ A premium personal operating system for young people: tasks, habits, goals, focu
 | **Weekly report** | This week vs last: Life Score, tasks, check-ins, focus, best day, top habit, tips, share (Pro for full insights); Sunday notification |
 | **Pro** (monthly $4.99, yearly $29.99 with a 7-day free trial) | Unlimited habits & goals, Streak Freeze, advanced analytics and full report, bonus challenge, themes, cloud sync, premium widget, 8 extra achievements; paywall with benefit slides and a Free vs Pro table |
 
+**Languages:** English, Français and العربية (full RTL). See `docs/i18n.md`.
+
 Free plan limits: 3 habits, 3 active goals, 7-day statistics, local-only data. Everything is offline-first.
 
 ## Design system
@@ -116,7 +118,7 @@ npx eas build --profile production  --platform all
 
 ## Testing
 
-- `npm test`: 71 unit tests. `npm run test:integration`: 16 tests against real PostgreSQL + migrations + RLS (auth, sync, isolation).
+- `npm test`: 95 unit tests (including i18n completeness and RTL). `npm run test:integration`: 17 tests against real PostgreSQL + migrations + RLS (auth, sync, isolation).
 - `npm run verify:release -- --build`: pre-flight for a store build (env, metadata, assets, store text limits, manifest permissions, R8, bundle size).
 - Real-device and store-billing tests are listed in `store/release-checklist.md`.
 

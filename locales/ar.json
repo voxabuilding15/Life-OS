@@ -1,0 +1,1136 @@
+{
+  "app": {
+    "name": "Life OS",
+    "tagline": "حياتك. منظّمة."
+  },
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "close": "إغلاق",
+    "back": "رجوع",
+    "goBack": "العودة",
+    "continue": "متابعة",
+    "skip": "تخطي",
+    "add": "إضافة",
+    "tryAgain": "إعادة المحاولة",
+    "seeAll": "عرض الكل",
+    "showMore": "عرض المزيد ({{count}})",
+    "showMoreDays": "عرض المزيد من الأيام",
+    "pro": "PRO",
+    "unlockWithPro": "افتح مع Pro",
+    "optional": "اختياري",
+    "xp": "{{count}} XP",
+    "plusXp": "+{{count}} XP",
+    "level": "م {{level}}",
+    "offline": "لا يوجد اتصال. يتم حفظ التغييرات على هذا الجهاز.",
+    "notFoundTitle": "الصفحة غير موجودة",
+    "notFoundBody": "هذه الشاشة غير موجودة أو تم نقلها.",
+    "backHome": "العودة إلى الرئيسية",
+    "errorTitle": "حدث خطأ ما",
+    "errorBody": "بياناتك آمنة على هذا الجهاز. حاول مرة أخرى، وإذا استمرت المشكلة فأعد تشغيل التطبيق.",
+    "profilePicture": "الصورة الشخصية",
+    "logo": "شعار Life OS",
+    "chart": "رسم بياني"
+  },
+  "greeting": {
+    "night": "طاب مساؤك",
+    "morning": "صباح الخير",
+    "afternoon": "مساء الخير",
+    "evening": "مساء الخير"
+  },
+  "date": {
+    "today": "اليوم",
+    "tomorrow": "غدًا",
+    "yesterday": "أمس",
+    "nextWeek": "الأسبوع القادم",
+    "noDate": "بدون تاريخ",
+    "previousMonth": "الشهر السابق",
+    "nextMonth": "الشهر التالي"
+  },
+  "time": {
+    "minutes": "{{count}} د",
+    "hours": "{{count}} س",
+    "hoursMinutes": "{{h}} س {{m}} د",
+    "am": "ص",
+    "pm": "م",
+    "hour": "الساعة",
+    "minute": "الدقيقة",
+    "increase": "زيادة: {{unit}}",
+    "decrease": "تقليل: {{unit}}"
+  },
+  "tabs": {
+    "home": "الرئيسية",
+    "tasks": "المهام",
+    "habits": "العادات",
+    "goals": "الأهداف",
+    "notes": "الملاحظات"
+  },
+  "categories": {
+    "task": {
+      "Personal": "شخصي",
+      "Work": "عمل",
+      "Study": "دراسة",
+      "Health": "صحة",
+      "Finance": "مالية",
+      "Creative": "إبداعي"
+    },
+    "goal": {
+      "Career": "مهنة",
+      "Learning": "تعلّم",
+      "Fitness": "لياقة",
+      "Finance": "مالية",
+      "Personal": "شخصي",
+      "Creative": "إبداعي"
+    },
+    "note": {
+      "Ideas": "أفكار",
+      "Work": "عمل",
+      "Study": "دراسة",
+      "Life": "حياة",
+      "Reading": "قراءة"
+    }
+  },
+  "priority": {
+    "low": "منخفضة",
+    "medium": "متوسطة",
+    "high": "عالية"
+  },
+  "mood": {
+    "1": "صعب",
+    "2": "منخفض",
+    "3": "عادي",
+    "4": "جيد",
+    "5": "رائع"
+  },
+  "themes": {
+    "ocean": {
+      "name": "المحيط",
+      "tagline": "الأزرق المميز"
+    },
+    "aurora": {
+      "name": "الشفق",
+      "tagline": "أزرق بتوهج أقوى"
+    },
+    "ghost": {
+      "name": "الطيف",
+      "tagline": "أحادي اللون"
+    }
+  },
+  "levels": {
+    "0": "مبتدئ",
+    "1": "مستكشف",
+    "2": "بنّاء",
+    "3": "مُنجِز",
+    "4": "استراتيجي",
+    "5": "مهندس",
+    "6": "خبير",
+    "7": "أسطورة"
+  },
+  "habits": {
+    "heatmapLabel": "خريطة حرارية لتقويم العادة",
+    "streak_zero": "لا سلسلة حالية",
+    "streak_one": "سلسلة يوم واحد",
+    "streak_two": "سلسلة يومين",
+    "streak_few": "سلسلة {{count}} أيام",
+    "streak_many": "سلسلة {{count}} يومًا",
+    "streak_other": "سلسلة {{count}} يوم",
+    "streakLabel": "{{name}}، {{streak}}",
+    "checkIn": "تسجيل التزام: {{name}}",
+    "subtitleDone": "أُنجز {{done}} من {{total}} اليوم",
+    "subtitleEmpty": "أفعال صغيرة، نتائج كبيرة",
+    "allDone": "اكتملت كل العادات",
+    "toGo": "المتبقي اليوم: {{count}}",
+    "xpBest": "كل التزام يمنحك +20 XP · أفضل سلسلة: {{days}} يومًا",
+    "emptyTitle": "ابنِ سلسلتك الأولى",
+    "emptyBody": "اختر فعلًا يوميًا صغيرًا: القراءة أو الرياضة أو البرمجة أو الماء أو التأمل.",
+    "emptyHint": "فاتك يوم؟ يستطيع أعضاء Pro استخدام تجميد السلسلة لحمايتها.",
+    "new": "عادة جديدة",
+    "create": "إنشاء العادة",
+    "limitBanner": "الباقة المجانية: {{count}}/{{count}} عادات · غير محدود مع Pro",
+    "quickStart": "بداية سريعة",
+    "name": "الاسم",
+    "namePlaceholder": "مثال: اقرأ 20 صفحة",
+    "icon": "الأيقونة",
+    "iconLabel": "أيقونة {{name}}",
+    "dailyReminder": "تذكير يومي",
+    "everyDayAt": "كل يوم عند {{time}}",
+    "enableDaily": "تفعيل التذكير اليومي",
+    "nameRequired": "أعطِ عادتك اسمًا.",
+    "detail": "العادة",
+    "notFound": "العادة غير موجودة",
+    "deleted": "ربما تم حذفها.",
+    "bestStreak": "أفضل سلسلة",
+    "checkins": "الالتزامات",
+    "days30": "30 يومًا",
+    "activity": "النشاط",
+    "extendedHistory": "افتح السجل الموسّع",
+    "checkInToday": "سجّل التزام اليوم",
+    "undoToday": "تراجع عن اليوم",
+    "delete": "حذف العادة",
+    "deleteTitle": "حذف العادة؟",
+    "deleteBody": "ستُحذف سلسلتك وسجلّ هذه العادة."
+  },
+  "auth": {
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "you@example.com",
+    "password": "كلمة المرور",
+    "passwordPlaceholder": "كلمة مرورك",
+    "name": "الاسم",
+    "firstName": "اسمك الأول",
+    "passwordHint": "8 أحرف على الأقل",
+    "previewMode": "المتابعة في وضع المعاينة",
+    "signIn": "تسجيل الدخول",
+    "createAccount": "إنشاء حساب",
+    "forgot": "هل نسيت كلمة المرور؟",
+    "login": {
+      "title": "أهلًا بعودتك",
+      "subtitle": "سجّل الدخول لتكمل من حيث توقفت.",
+      "newHere": "جديد على Life OS؟"
+    },
+    "register": {
+      "title": "أنشئ حسابك",
+      "subtitle": "حساب واحد. كل أجهزتك. كل ما تبنيه.",
+      "have": "لديك حساب بالفعل؟",
+      "checkTitle": "تحقق من بريدك",
+      "checkBody": "أرسلنا رابط تأكيد إلى {{email}}. افتحه ثم سجّل الدخول.",
+      "goSignIn": "الذهاب إلى تسجيل الدخول"
+    },
+    "forgotScreen": {
+      "title": "إعادة تعيين كلمة المرور",
+      "subtitle": "أدخل بريدك الإلكتروني وسنرسل لك رابطًا لتعيين كلمة مرور جديدة.",
+      "send": "إرسال رابط إعادة التعيين",
+      "back": "العودة إلى تسجيل الدخول",
+      "sent": "إذا كان هناك حساب لـ {{email}} فرابط إعادة التعيين في طريقه إليك."
+    },
+    "validation": {
+      "email": "أدخل بريدًا إلكترونيًا صالحًا.",
+      "password6": "يجب ألا تقل كلمة المرور عن 6 أحرف.",
+      "password8": "استخدم 8 أحرف على الأقل.",
+      "name": "أخبرنا بما نناديك به."
+    },
+    "errors": {
+      "invalidLogin": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+      "exists": "يوجد حساب بهذا البريد الإلكتروني بالفعل.",
+      "notConfirmed": "يرجى تأكيد بريدك الإلكتروني أولًا. تحقق من صندوق الوارد.",
+      "rateLimit": "محاولات كثيرة. حاول مرة أخرى بعد بضع دقائق.",
+      "network": "لا يوجد اتصال. تحقق من الإنترنت وحاول مجددًا.",
+      "notConfigured": "الخادم غير مُعدّ.",
+      "generic": "حدث خطأ ما"
+    }
+  },
+  "achievements": {
+    "items": {
+      "first_task": {
+        "title": "الخطوة الأولى",
+        "description": "أنجز مهمتك الأولى"
+      },
+      "tasks_25": {
+        "title": "منجِز",
+        "description": "أنجز 25 مهمة"
+      },
+      "tasks_100": {
+        "title": "المئوي",
+        "description": "أنجز 100 مهمة"
+      },
+      "tasks_500": {
+        "title": "آلة إنجاز",
+        "description": "أنجز 500 مهمة"
+      },
+      "first_habit": {
+        "title": "بداية عادة",
+        "description": "سجّل التزامك بعادة لأول مرة"
+      },
+      "streak_7": {
+        "title": "مشتعل",
+        "description": "حقق سلسلة من 7 أيام"
+      },
+      "streak_30": {
+        "title": "لا يُوقَف",
+        "description": "حقق سلسلة من 30 يومًا"
+      },
+      "streak_100": {
+        "title": "المئة يوم",
+        "description": "حقق سلسلة من 100 يوم"
+      },
+      "habit_100": {
+        "title": "باني الروتين",
+        "description": "سجّل 100 التزام بالعادات"
+      },
+      "freeze_1": {
+        "title": "بارد الأعصاب",
+        "description": "أنقذ سلسلة باستخدام تجميد السلسلة"
+      },
+      "focus_1": {
+        "title": "في التركيز التام",
+        "description": "أكمل جلسة تركيز"
+      },
+      "focus_25": {
+        "title": "حالة التدفق",
+        "description": "أكمل 25 جلسة تركيز"
+      },
+      "focus_10h": {
+        "title": "عمل عميق",
+        "description": "ركّز لمدة 10 ساعات إجمالًا"
+      },
+      "focus_100h": {
+        "title": "وضع الراهب",
+        "description": "ركّز لمدة 100 ساعة إجمالًا"
+      },
+      "first_goal": {
+        "title": "تحقق الحلم",
+        "description": "حقق هدفك الأول"
+      },
+      "goals_5": {
+        "title": "صاحب رؤية",
+        "description": "حقق 5 أهداف"
+      },
+      "first_note": {
+        "title": "مفكّر",
+        "description": "اكتب ملاحظتك الأولى"
+      },
+      "notes_10": {
+        "title": "عقل ثانٍ",
+        "description": "اكتب 10 ملاحظات"
+      },
+      "journal_7": {
+        "title": "متأمل",
+        "description": "اكتب 7 تدوينات في اليوميات"
+      },
+      "journal_30": {
+        "title": "واعٍ بذاته",
+        "description": "اكتب 30 تدوينة في اليوميات"
+      },
+      "level_5": {
+        "title": "المستوى 5",
+        "description": "ابلغ المستوى 5"
+      },
+      "level_10": {
+        "title": "المستوى 10",
+        "description": "ابلغ المستوى 10"
+      },
+      "challenge_1": {
+        "title": "متحدٍّ",
+        "description": "أكمل تحديًا يوميًا"
+      },
+      "challenge_25": {
+        "title": "ملتزم يوميًا",
+        "description": "أكمل 25 تحديًا يوميًا"
+      },
+      "score_70": {
+        "title": "مزدهر",
+        "description": "ابلغ 70 في نقاط الحياة"
+      },
+      "score_90": {
+        "title": "أداء استثنائي",
+        "description": "ابلغ 90 في نقاط الحياة"
+      }
+    },
+    "categories": {
+      "Tasks": "المهام",
+      "Habits": "العادات",
+      "Focus": "التركيز",
+      "Goals": "الأهداف",
+      "Mind": "الذهن",
+      "Growth": "النمو",
+      "All": "الكل"
+    },
+    "title": "الإنجازات",
+    "unlockedCount": "تم فتح {{count}} من {{total}}",
+    "xpEarned": "{{count}} XP من الأوسمة",
+    "xpHint": "كل وسام يمنح مكافأة XP، والمستويات الأعلى تمنح أكثر.",
+    "proUnlocks": "يفتح Pro عدد {{count}} إنجازات إضافية وأكبر مكافآت XP.",
+    "unlocked": "تم الفتح · +{{xp}} XP",
+    "cardLabel": "{{title}}، المستوى {{tier}}، {{state}}. {{description}}",
+    "stateUnlocked": "مفتوح",
+    "stateLocked": "مقفل، Pro",
+    "stateProgress": "{{value}} من {{target}}",
+    "unlockedToast": "تم فتح إنجاز"
+  },
+  "challenges": {
+    "items": {
+      "tasks_2": {
+        "title": "اثنتان وانتهينا",
+        "description": "أنجز مهمتين"
+      },
+      "tasks_4": {
+        "title": "ماراثون المهام",
+        "description": "أنجز 4 مهام"
+      },
+      "habits_2": {
+        "title": "التزام مزدوج",
+        "description": "سجّل التزامك بعادتين"
+      },
+      "habits_all": {
+        "title": "إنجاز شامل",
+        "description": "سجّل التزامك بكل عاداتك اليوم"
+      },
+      "focus_25": {
+        "title": "جلسة جيدة",
+        "description": "ركّز لمدة 25 دقيقة"
+      },
+      "focus_50": {
+        "title": "عمل عميق",
+        "description": "ركّز لمدة 50 دقيقة"
+      },
+      "journal_1": {
+        "title": "وقفة تأمل",
+        "description": "اكتب يوميات اليوم"
+      },
+      "milestone_1": {
+        "title": "خطوة للأمام",
+        "description": "حقق مرحلة في أحد أهدافك"
+      }
+    },
+    "title": "التحديات اليومية",
+    "resets": "تُجدَّد عند منتصف الليل",
+    "mission": "مهمة اليوم",
+    "perfectDay": "يوم مثالي",
+    "allBonus": "أكمل كل التحديات لتحصل على مكافأة +{{xp}} XP.",
+    "today": "اليوم",
+    "proBonus": "مكافأة Pro",
+    "proBonusHint": "يضيف Pro تحديًا يوميًا إضافيًا بضعف نقاط XP.",
+    "autoHint": "يتحدّث التقدّم تلقائيًا عند إنجاز المهام والعادات وجلسات التركيز.",
+    "backToDashboard": "العودة إلى لوحة التحكم",
+    "allDone": "اكتمل كل شيء. عُد غدًا.",
+    "readyToClaim": "{{count}} جاهزة للاستلام",
+    "progressSummary": "اكتمل {{done}} من {{total}}",
+    "openLabel": "فتح التحديات اليومية",
+    "claim": "استلم +{{xp}}",
+    "rowLabel": "{{title}}. {{description}}. {{state}}",
+    "claimed": "تم الاستلام",
+    "complete": "تم إكمال التحدي",
+    "allComplete": "اكتملت كل التحديات"
+  },
+  "lifeScore": {
+    "title": "نقاط الحياة",
+    "subtitle": "آخر 7 أيام",
+    "outOf": "من 100",
+    "vsYesterday": "{{delta}} مقارنةً بالأمس",
+    "whatShapes": "ما الذي يشكّل نقاطك",
+    "worth": "قيمتها {{count}} نقطة",
+    "nextMove": "الخطوة التالية الأفضل",
+    "last7": "آخر 7 أيام",
+    "footer": "العادات 30 · المهام 25 · التركيز 20 · الأهداف 15 · التأمل 10. المحاور التي لم تبدأها لا تُحتسب عليك.",
+    "card": "نقاط الحياة {{score}} من 100، {{band}}",
+    "label": "نقاط الحياة",
+    "bands": {
+      "elite": "نخبة",
+      "thriving": "مزدهر",
+      "momentum": "زخم متصاعد",
+      "warming": "في طور الانطلاق",
+      "starting": "البداية"
+    },
+    "pillars": {
+      "habits": {
+        "label": "العادات",
+        "tip": "سجّل التزامك بعاداتك يوميًا. الاستمرارية هي أقوى عامل.",
+        "empty": "أضف عادة ليُحتسب هذا المحور",
+        "detail_zero": "لا التزامات هذا الأسبوع",
+        "detail_one": "التزام واحد هذا الأسبوع",
+        "detail_two": "التزامان هذا الأسبوع",
+        "detail_few": "{{count}} التزامات هذا الأسبوع",
+        "detail_many": "{{count}} التزامًا هذا الأسبوع",
+        "detail_other": "{{count}} التزام هذا الأسبوع"
+      },
+      "tasks": {
+        "label": "المهام",
+        "tip": "خطّط لمهام أقل وأنجزها. صفِّ قائمة المهام المتأخرة.",
+        "empty": "خطّط لمهمة ليُحتسب هذا المحور",
+        "detail": "أُنجزت {{done}} من {{total}} مهام مخطط لها"
+      },
+      "focus": {
+        "label": "التركيز",
+        "tip": "أنجز جلستي تركيز مدة كل منهما 25 دقيقة هذا الأسبوع.",
+        "detail": "{{minutes}} من {{target}} دقيقة تركيز"
+      },
+      "goals": {
+        "label": "الأهداف",
+        "tip": "حقق مرحلة جديدة. قسّم الخطوة التالية حتى تصبح صغيرة.",
+        "empty": "حدّد هدفًا ليُحتسب هذا المحور",
+        "detail_zero": "لا مراحل في 14 يومًا",
+        "detail_one": "مرحلة واحدة في 14 يومًا",
+        "detail_two": "مرحلتان في 14 يومًا",
+        "detail_few": "{{count}} مراحل في 14 يومًا",
+        "detail_many": "{{count}} مرحلة في 14 يومًا",
+        "detail_other": "{{count}} مرحلة في 14 يومًا"
+      },
+      "reflection": {
+        "label": "التأمل",
+        "tip": "اكتب تدوينة قصيرة في اليوميات. تستغرق دقيقة واحدة.",
+        "detail": "{{days}} من {{target}} أيام تدوين"
+      }
+    },
+    "slash100": "/ 100"
+  },
+  "report": {
+    "title": "التقرير الأسبوعي",
+    "thisWeek": "هذا الأسبوع",
+    "winsPerDay": "الإنجازات في اليوم",
+    "insights": "رؤى",
+    "tasks": "المهام",
+    "checkins": "الالتزامات",
+    "focus": "التركيز",
+    "journalDays": "أيام اليوميات",
+    "scoreUp": "ارتفعت نقاط الحياة {{count}} هذا الأسبوع",
+    "scoreDown": "انخفضت نقاط الحياة {{count}} هذا الأسبوع",
+    "scoreSame": "نقاط الحياة دون تغيير هذا الأسبوع",
+    "activeDays": "نشِط {{count}} من 7 أيام",
+    "sameAsLast": "مثل الأسبوع الماضي",
+    "vsLast": "{{delta}} مقارنة بالأسبوع الماضي",
+    "vsLastMin": "{{delta}} د مقارنة بالأسبوع الماضي",
+    "unlockFull": "افتح التقرير الكامل مع Pro",
+    "noActivity": "لا نشاط هذا الأسبوع بعد. أنجز مهمة أو عادة لتمتلئ التقرير.",
+    "topHabit": "أكثر عادة التزامًا: {{name}} ({{days}} أيام)",
+    "share": "شارك أسبوعي",
+    "shareTitle": "أسبوعي في Life OS ({{range}})",
+    "shareScore": "نقاط الحياة {{score}}/100 ({{delta}} مقارنة بالأسبوع الماضي)",
+    "shareTotals": "{{tasks}} مهام · {{habits}} التزامات · {{focus}} تركيز",
+    "openLabel": "فتح التقرير الأسبوعي",
+    "cardSubtitle": "أسبوعك في لمحة. الرؤى الكاملة مع Pro.",
+    "bestDay": "أفضل يوم: {{day}} · {{wins}} إنجازات",
+    "trendHint": "أنجز مهامًا وعادات لترى اتجاهك.",
+    "headlines": {
+      "fresh": "بداية جديدة",
+      "rising": "أنت في تصاعد",
+      "quiet": "أسبوع أهدأ",
+      "consistent": "التزام لافت",
+      "steady": "تقدّم ثابت"
+    },
+    "highlights": {
+      "tasks_zero": "لم تُنجز أي مهمة.",
+      "tasks_one": "أنجزت مهمة واحدة.",
+      "tasks_two": "أنجزت مهمتين.",
+      "tasks_few": "أنجزت {{count}} مهام.",
+      "tasks_many": "أنجزت {{count}} مهمة.",
+      "tasks_other": "أنجزت {{count}} مهمة.",
+      "tasksDelta_zero": "لم تُنجز أي مهمة.",
+      "tasksDelta_one": "أنجزت مهمة واحدة (+{{delta}} مقارنة بالأسبوع الماضي).",
+      "tasksDelta_two": "أنجزت مهمتين (+{{delta}} مقارنة بالأسبوع الماضي).",
+      "tasksDelta_few": "أنجزت {{count}} مهام (+{{delta}} مقارنة بالأسبوع الماضي).",
+      "tasksDelta_many": "أنجزت {{count}} مهمة (+{{delta}} مقارنة بالأسبوع الماضي).",
+      "tasksDelta_other": "أنجزت {{count}} مهمة (+{{delta}} مقارنة بالأسبوع الماضي).",
+      "habits_zero": "لا التزامات بالعادات.",
+      "habits_one": "سجّلت التزامًا واحدًا بعادة.",
+      "habits_two": "سجّلت التزامين بالعادات.",
+      "habits_few": "سجّلت {{count}} التزامات بالعادات.",
+      "habits_many": "سجّلت {{count}} التزامًا بالعادات.",
+      "habits_other": "سجّلت {{count}} التزام بالعادات.",
+      "focus": "ركّزت لمدة {{minutes}} دقيقة.",
+      "milestones_zero": "لم تبلغ أي مرحلة.",
+      "milestones_one": "بلغت مرحلة واحدة من أهدافك.",
+      "milestones_two": "بلغت مرحلتين من أهدافك.",
+      "milestones_few": "بلغت {{count}} مراحل من أهدافك.",
+      "milestones_many": "بلغت {{count}} مرحلة من أهدافك.",
+      "milestones_other": "بلغت {{count}} مرحلة من أهدافك.",
+      "bestDay": "كان {{day}} أقوى أيامك بـ {{wins}} إنجازات."
+    },
+    "emptyTip": "أضف عادة أو مهمة لتبدأ ببناء نقاط الحياة."
+  },
+  "plans": {
+    "month": "شهر",
+    "year": "سنة",
+    "monthShort": "شهر",
+    "yearShort": "سنة",
+    "monthly": "شهري",
+    "yearly": "سنوي",
+    "trialLabel": "تجربة مجانية لمدة {{count}} أيام",
+    "startTrial": "ابدأ: {{trial}}",
+    "continuePrice": "متابعة · {{price}}/{{period}}",
+    "pricePer": "{{price}}/{{period}}",
+    "billingTrial": "{{days}} أيام مجانًا، ثم {{price}}. يمكنك الإلغاء في أي وقت عبر Google Play قبل انتهاء التجربة دون أي رسوم.",
+    "billingYearly": "{{price}}، تُحصَّل مرة واحدة سنويًا. يمكنك الإلغاء في أي وقت عبر Google Play.",
+    "billingMonthly": "{{price}}، تُحصَّل شهريًا. يمكنك الإلغاء في أي وقت عبر Google Play."
+  },
+  "xp": {
+    "taskCompleted": "تم إنجاز المهمة",
+    "taskReopened": "أُعيد فتح المهمة",
+    "habitCompleted": "تم تسجيل العادة",
+    "habitUnchecked": "أُلغي تسجيل العادة",
+    "milestoneReached": "تم بلوغ المرحلة",
+    "milestoneReopened": "أُعيد فتح المرحلة",
+    "goalAchieved": "تم تحقيق الهدف",
+    "focusComplete": "اكتملت جلسة التركيز",
+    "journalEntry": "تدوينة في اليوميات",
+    "challengeComplete": "تم إكمال التحدي",
+    "allChallenges": "اكتملت كل التحديات",
+    "levelUp": "ارتقاء بالمستوى",
+    "reachedLevel": "لقد بلغت المستوى {{level}}",
+    "dismissLevelUp": "إغلاق إشعار المستوى"
+  },
+  "freeze": {
+    "save": "أنقذ سلسلتك البالغة {{count}} يومًا",
+    "left_zero": "لا عمليات تجميد متبقية هذا الشهر",
+    "left_one": "تجميد واحد متبقٍّ هذا الشهر",
+    "left_two": "تجميدان متبقيان هذا الشهر",
+    "left_few": "{{count}} عمليات تجميد متبقية هذا الشهر",
+    "left_many": "{{count}} عملية تجميد متبقية هذا الشهر",
+    "left_other": "{{count}} عملية تجميد متبقية هذا الشهر",
+    "proFeature": "تجميد السلسلة ميزة في Pro",
+    "freeze": "جمّد",
+    "use": "استخدام تجميد السلسلة",
+    "used": "تم استخدام تجميد السلسلة. سلسلتك بأمان.",
+    "noneLeft": "لا عمليات تجميد متبقية هذا الشهر. تتجدد في الأول من الشهر.",
+    "title": "تجميد السلسلة",
+    "protect": "احمِ سلسلتك",
+    "proPitch": "فوّت يومًا دون أن تخسر سلسلتك. تجميدان كل شهر.",
+    "proStatus": "{{left}} من {{total}} متبقٍّ هذا الشهر · {{used}} مستخدم لهذه العادة"
+  },
+  "tasks": {
+    "overdue": "متأخرة",
+    "rowLabel": "{{title}}، {{state}}",
+    "stateDone": "منجزة",
+    "stateOpen": "مفتوحة",
+    "complete": "إنجاز {{title}}",
+    "subtitle": "{{count}} للإنجاز اليوم",
+    "viewToday": "اليوم",
+    "viewUpcoming": "القادمة",
+    "viewUpcomingCount": "القادمة · {{count}}",
+    "viewCompleted": "المنجزة",
+    "cleanSweep": "إنجاز كامل",
+    "keepGoing": "واصل",
+    "earnsXp": "كل مهمة تنجزها تمنحك +10 XP.",
+    "doneToday": "أُنجزت اليوم",
+    "emptyTodayTitle": "يوم خالٍ",
+    "emptyTodayBody": "خطّط لما يهم. أضف أول مهمة لليوم واكسب +10 XP عند إنجازها.",
+    "emptyTodayHint": "المهام ذات التذكير تنبّهك في الوقت المناسب.",
+    "emptyUpcomingTitle": "لا شيء مجدول",
+    "emptyUpcomingBody": "ستظهر هنا المهام ذات التاريخ المستقبلي مجمّعة حسب اليوم.",
+    "emptyUpcomingAction": "خطّط مسبقًا",
+    "emptyDoneTitle": "لا إنجازات بعد",
+    "emptyDoneBody": "كل مهمة تنجزها تُحفظ هنا كسجلّ لما أنجزته.",
+    "new": "مهمة جديدة",
+    "edit": "تعديل المهمة",
+    "create": "إنشاء المهمة",
+    "saveChanges": "حفظ التغييرات",
+    "deleteTask": "حذف المهمة",
+    "titleLabel": "العنوان",
+    "titlePlaceholder": "ما الذي يجب إنجازه؟",
+    "descLabel": "الوصف",
+    "descPlaceholder": "أضف تفاصيل (اختياري)",
+    "category": "الفئة",
+    "priority": "الأولوية",
+    "dueDate": "تاريخ الاستحقاق",
+    "reminder": "التذكير",
+    "notifyAt": "نبّهني عند {{time}}",
+    "noReminder": "بدون تذكير",
+    "enableReminder": "تفعيل التذكير",
+    "needTitle": "أعطِ مهمتك عنوانًا.",
+    "reminderPassed": "وقت التذكير هذا قد مضى."
+  },
+  "goals": {
+    "milestonesCount": "{{done}}/{{total}} مراحل",
+    "achieved": "تم التحقيق",
+    "dueToday": "مستحق اليوم",
+    "overdue": "متأخر",
+    "cardLabel": "{{title}}، {{percent}} بالمئة",
+    "subtitle": "{{active}} قيد التنفيذ · {{done}} محققة",
+    "subtitleEmpty": "فكّر بطموح. قسّمه إلى خطوات.",
+    "emptyTitle": "حدّد هدفك الكبير الأول",
+    "emptyBody": "قسّمه إلى مراحل وشاهد تقدمك يتراكم. تحقيق الهدف يمنحك +500 XP.",
+    "emptyHint": "جرّب: أصبح مطوّر Full Stack مع مراحل HTML وCSS وJavaScript وReact وNode.js.",
+    "new": "هدف جديد",
+    "create": "إنشاء الهدف",
+    "achievedSection": "المحققة",
+    "limitBanner": "الباقة المجانية: {{count}} أهداف نشطة · غير محدود مع Pro",
+    "goal": "الهدف",
+    "goalPlaceholder": "مثال: أصبح مطوّر Full Stack",
+    "why": "لماذا يهمّك",
+    "category": "الفئة",
+    "milestones": "المراحل",
+    "milestoneExample": "مثال: {{example}}",
+    "nextStep": "الخطوة التالية",
+    "addMilestone": "إضافة مرحلة",
+    "targetDate": "التاريخ المستهدف",
+    "nameRequired": "أعطِ هدفك اسمًا.",
+    "notFound": "الهدف غير موجود",
+    "deleted": "ربما تم حذفه.",
+    "achievedTitle": "تم تحقيق الهدف",
+    "earnedXp": "حصلت على +500 XP لإتمام هذا الهدف.",
+    "milestonesOf": "{{done}} من {{count}} مراحل",
+    "daysLeft_zero": "{{date}} · لا أيام متبقية",
+    "daysLeft_one": "{{date}} · يوم واحد متبقٍّ",
+    "daysLeft_two": "{{date}} · يومان متبقيان",
+    "daysLeft_few": "{{date}} · {{count}} أيام متبقية",
+    "daysLeft_many": "{{date}} · {{count}} يومًا متبقيًا",
+    "daysLeft_other": "{{date}} · {{count}} يوم متبقٍّ",
+    "pastDue": "{{date}} · متأخر",
+    "noTarget": "بدون تاريخ مستهدف",
+    "timeline": "المسار الزمني",
+    "doneOn": "أُنجز {{date}}",
+    "addHint": "أضف مراحل لتتابع تقدمك.",
+    "addPlaceholder": "أضف مرحلة",
+    "delete": "حذف الهدف",
+    "deleteTitle": "حذف الهدف؟",
+    "deleteBody": "سيُحذف الهدف ومراحله.",
+    "completeMilestone": "إنجاز {{title}}"
+  },
+  "paywall": {
+    "free": "مجاني",
+    "proCol": "PRO",
+    "bestValue": "أفضل قيمة · وفّر {{percent}}%",
+    "flexible": "مرن، ويمكن الإلغاء في أي وقت",
+    "planLabel": "باقة {{plan}}، {{price}} لكل {{period}}",
+    "planLabelTrial": "باقة {{plan}}، {{price}} لكل {{period}}، {{trial}}",
+    "planLabelSave": "{{label}}، وفّر {{percent}} بالمئة",
+    "perMonth": "{{price}}/شهر",
+    "timeline": {
+      "today": "اليوم",
+      "todayBody": "يبدأ الوصول الكامل إلى Pro. لا شيء لتدفعه.",
+      "day": "اليوم {{day}}",
+      "reminderBody": "افتح Google Play في أي وقت للإلغاء.",
+      "billedBody": "تبدأ باقتك ما لم تُلغِها."
+    },
+    "slides": {
+      "insights": {
+        "eyebrow": "رؤى",
+        "title": "شاهد الصورة كاملة",
+        "body": "اتجاهات 30 يومًا وتحليلات للمزاج والتركيز وتقرير أسبوعي يمكنك مشاركته."
+      },
+      "freeze": {
+        "eyebrow": "تجميد السلسلة",
+        "title": "لا تخسر سلسلتك أبدًا",
+        "body": "فاتك يوم؟ جمّده. تجميدان كل شهر يحفظان جهدك."
+      },
+      "everywhere": {
+        "eyebrow": "في كل مكان",
+        "title": "مزامنة وسمات بلا حدود",
+        "body": "انسخ احتياطيًا إلى السحابة، وبدّل أجهزتك بحرية، وخصّص مظهر Life OS كما تحب."
+      }
+    },
+    "compare": {
+      "core": "المهام والتذكيرات ومؤقت التركيز",
+      "lifeScore": "نقاط الحياة",
+      "habits": "العادات",
+      "goals": "الأهداف النشطة",
+      "challenges": "التحديات اليومية",
+      "freeze": "تجميد السلسلة",
+      "stats": "الإحصاءات",
+      "report": "التقرير الأسبوعي",
+      "achievements": "الإنجازات",
+      "sync": "المزامنة والنسخ الاحتياطي",
+      "themes": "السمات",
+      "widgets": "عناصر لوحة التحكم",
+      "unlimited": "غير محدود",
+      "perDay3": "3 يوميًا",
+      "bonus": "+ مكافأة بضعف XP",
+      "twoMonth": "2 شهريًا",
+      "days7": "7 أيام",
+      "days30": "30 يومًا + اتجاهات",
+      "summary": "ملخص",
+      "fullInsights": "رؤى كاملة",
+      "ocean": "المحيط",
+      "moreThemes": "+ الشفق، الطيف",
+      "basic": "أساسية",
+      "premium": "متقدمة",
+      "rowLabel": "{{label}}: المجاني {{free}}، Pro {{pro}}",
+      "yes": "متضمّن",
+      "no": "غير متضمّن"
+    }
+  },
+  "splash": {
+    "loading": "جارٍ تحميل Life OS"
+  },
+  "onboarding": {
+    "language": "اللغة",
+    "skip": "تخطي",
+    "chipStreak": "سلسلة 15 يومًا",
+    "chipDone": "3/5 منجزة",
+    "chipScore": "نقاط الحياة 82",
+    "chipXp": "+20 XP",
+    "titleLine1": "حياتك.",
+    "titleLine2": "منظّمة.",
+    "welcomeBody": "المهام والعادات والأهداف والتركيز في نظام واحد هادئ. صُمّم ليرتقي بك كل يوم.",
+    "getStarted": "ابدأ الآن",
+    "haveAccount": "لدي حساب بالفعل",
+    "improveTitle": "ما الذي تريد تطويره؟",
+    "improveBody": "اختر ما تشاء. سنهيّئ لك نقطة بداية مناسبة.",
+    "objectives": {
+      "productivity": "الإنتاجية",
+      "fitness": "اللياقة",
+      "learning": "التعلّم",
+      "career": "المسار المهني",
+      "finance": "المال",
+      "growth": "التطوير الذاتي"
+    },
+    "habitsTitle": "ابدأ ببضع عادات",
+    "habitsBody": "اختر حتى {{count}}. الصغير اليومي أفضل من الكبير النادر.",
+    "habitsLater": "يمكنك إضافة العادات في أي وقت من تبويب العادات.",
+    "habitsSelected": "تم اختيار {{count}}/{{max}}",
+    "addHabits_zero": "متابعة",
+    "addHabits_one": "إضافة عادة واحدة",
+    "addHabits_two": "إضافة عادتين",
+    "addHabits_few": "إضافة {{count}} عادات",
+    "addHabits_many": "إضافة {{count}} عادة",
+    "addHabits_other": "إضافة {{count}} عادة",
+    "nudgeTitle": "متى نذكّرك؟",
+    "nudgeBody": "تذكير يومي لطيف يحافظ على سلاسلك. يمكنك تغييره في أي وقت من الإعدادات.",
+    "morning": "الصباح",
+    "midday": "الظهيرة",
+    "evening": "المساء",
+    "around": "نحو {{time}}",
+    "turnOn": "تفعيل التذكيرات",
+    "nameTitle": "بماذا نناديك؟",
+    "nameBody": "مركز القيادة الخاص بك جاهز.",
+    "plan": "خطتك للبداية",
+    "planAreas_zero": "لا مجالات",
+    "planAreas_one": "مجال تركيز واحد",
+    "planAreas_two": "مجالا تركيز",
+    "planAreas_few": "{{count}} مجالات تركيز",
+    "planAreas_many": "{{count}} مجال تركيز",
+    "planAreas_other": "{{count}} مجال تركيز",
+    "planYourAreas": "مجالات تركيزك",
+    "planHabits_zero": "لا عادات بداية",
+    "planHabits_one": "عادة بداية واحدة",
+    "planHabits_two": "عادتا بداية",
+    "planHabits_few": "{{count}} عادات بداية",
+    "planHabits_many": "{{count}} عادة بداية",
+    "planHabits_other": "{{count}} عادة بداية",
+    "planHabitsNone": "أضف العادات في أي وقت",
+    "planChallenges": "3 تحديات يومية كل يوم",
+    "planScore": "نقاط حياة تتابع أسبوعك"
+  },
+  "starterHabits": {
+    "plan_tomorrow": "خطّط لغدك",
+    "deep_work": "فترة عمل عميق",
+    "gym": "النادي الرياضي",
+    "walk": "امشِ 8000 خطوة",
+    "water": "شرب الماء",
+    "reading": "القراءة",
+    "coding": "البرمجة",
+    "language": "تدرّب على لغة",
+    "side_project": "اعمل على مشروع جانبي",
+    "network": "تواصل مع شخص في مجالك",
+    "spending": "تتبّع المصروفات",
+    "save": "ادّخر شيئًا",
+    "meditation": "التأمل",
+    "journal": "كتابة اليوميات",
+    "sleep": "النوم قبل الحادية عشرة"
+  },
+  "dashboard": {
+    "openProfile": "فتح الملف الشخصي",
+    "settings": "الإعدادات",
+    "levelXp": "المستوى ونقاط XP",
+    "today": "اليوم",
+    "xpToNext": "{{current}} / {{needed}} XP للوصول إلى المستوى {{next}}",
+    "tileLabel": "{{label}}: {{value}}",
+    "focusMode": "وضع التركيز",
+    "startFocus": "بدء وضع التركيز",
+    "focusIdle": "ابدأ جلسة بلا مشتتات",
+    "focusToday_zero": "لا جلسات اليوم",
+    "focusToday_one": "جلسة واحدة اليوم · {{minutes}} د",
+    "focusToday_two": "جلستان اليوم · {{minutes}} د",
+    "focusToday_few": "{{count}} جلسات اليوم · {{minutes}} د",
+    "focusToday_many": "{{count}} جلسة اليوم · {{minutes}} د",
+    "focusToday_other": "{{count}} جلسة اليوم · {{minutes}} د",
+    "todaysTasks": "مهام اليوم",
+    "add": "إضافة",
+    "completedOf": "أُنجز {{done}}/{{total}}",
+    "allDone": "أنجزت كل شيء اليوم. عمل رائع.",
+    "nothingPlanned": "لا شيء مخطط. أضف مهمة لتبدأ يومك.",
+    "habitProgress": "تقدّم العادات",
+    "buildStreak": "ابنِ سلسلة. أضف عادتك الأولى.",
+    "currentGoals": "الأهداف الحالية",
+    "milestonesOf": "{{done}} من {{total}} مراحل",
+    "dreamBig": "فكّر بطموح كبير. حدّد هدفك الأول."
+  },
+  "notifications": {
+    "taskBody": "تذكير من Life OS",
+    "habitBody": "حافظ على سلسلتك.",
+    "dailyTitle": "اختم يومك",
+    "dailyBody": "أنجز مهامك وسجّل عاداتك لتواصل الارتقاء.",
+    "weeklyTitle": "تقريرك الأسبوعي جاهز",
+    "weeklyBody": "اطّلع على نقاط حياتك وكيف مضى أسبوعك.",
+    "focusDone": "اكتملت جلسة التركيز",
+    "breakOver": "انتهت الاستراحة",
+    "focusBody": "انتهى الوقت. افتح Life OS للمتابعة."
+  },
+  "notes": {
+    "countLabel_zero": "لا ملاحظات",
+    "countLabel_one": "ملاحظة واحدة",
+    "countLabel_two": "ملاحظتان",
+    "countLabel_few": "{{count}} ملاحظات",
+    "countLabel_many": "{{count}} ملاحظة",
+    "countLabel_other": "{{count}} ملاحظة",
+    "entriesLabel_zero": "لا تدوينات",
+    "entriesLabel_one": "تدوينة واحدة",
+    "entriesLabel_two": "تدوينتان",
+    "entriesLabel_few": "{{count}} تدوينات",
+    "entriesLabel_many": "{{count}} تدوينة",
+    "entriesLabel_other": "{{count}} تدوينة",
+    "journal": "اليوميات",
+    "tabNotes": "الملاحظات",
+    "tabJournal": "اليوميات",
+    "search": "ابحث في الملاحظات",
+    "filterAll": "الكل",
+    "filterFavorites": "المفضلة",
+    "untitled": "بلا عنوان",
+    "emptyTitle": "دوّن أفكارك",
+    "emptyBody": "أفكار وخطط وأشياء لا تريد نسيانها. كل شيء في مكان واحد.",
+    "emptyHint": "ضع نجمة على ملاحظة لتثبيتها في الأعلى.",
+    "new": "ملاحظة جديدة",
+    "noMatchesTitle": "لا نتائج",
+    "noMatchesBody": "جرّب بحثًا أو فئة مختلفة.",
+    "writeToday": "اكتب يوميات اليوم",
+    "todayEntry": "تدوينة اليوم",
+    "howWasToday": "كيف كان يومك؟",
+    "tapToAdd": "المس لإضافة أفكارك",
+    "reflectPrompt": "تأمّل لدقيقة · +15 XP",
+    "journalEmptyTitle": "ابدأ يومياتك",
+    "journalEmptyBody": "بضعة أسطر كل يوم تصنع الوضوح. تأمّل في شعورك وما فعلته.",
+    "journalEmptyAction": "اكتب تدوينة اليوم",
+    "journalEmptyHint": "كتابة اليوميات تُحتسب في نقاط الحياة وتمنحك +15 XP.",
+    "edit": "تعديل الملاحظة",
+    "save": "حفظ الملاحظة",
+    "deleteNote": "حذف الملاحظة",
+    "titleLabel": "العنوان",
+    "noteLabel": "الملاحظة",
+    "bodyPlaceholder": "اكتب أي شيء…",
+    "category": "الفئة",
+    "addFavorite": "إضافة إلى المفضلة",
+    "removeFavorite": "إزالة من المفضلة",
+    "deleteTitle": "حذف الملاحظة؟",
+    "deleteBody": "لا يمكن التراجع عن هذا الإجراء."
+  },
+  "journal": {
+    "saveEntry": "حفظ التدوينة",
+    "feeling": "كيف تشعر؟",
+    "thoughts": "أفكارك",
+    "prompts": {
+      "0": "ما الذي سار على ما يرام اليوم؟",
+      "1": "ماذا تعلّمت؟",
+      "2": "ماذا ستفعل بشكل أفضل غدًا؟"
+    }
+  },
+  "focus": {
+    "close": "إغلاق وضع التركيز",
+    "timer": "المؤقت",
+    "stats": "الإحصاءات",
+    "modes": {
+      "focus": "تركيز",
+      "short": "استراحة قصيرة",
+      "long": "استراحة طويلة"
+    },
+    "stayWith": "واصل",
+    "ready": "جاهز متى شئت",
+    "remaining": "متبقٍّ {{minutes}} دقيقة و{{seconds}} ثانية",
+    "reset": "إعادة ضبط المؤقت",
+    "pause": "إيقاف مؤقت",
+    "start": "ابدأ",
+    "skip": "التخطي إلى المرحلة التالية",
+    "preset": "{{count}} د",
+    "focusOn": "التركيز على",
+    "today": "اليوم",
+    "thisWeek": "هذا الأسبوع",
+    "sessions": "الجلسات",
+    "last7": "آخر 7 أيام (دقائق)",
+    "history": "السجل",
+    "emptyTitle": "لا جلسات بعد",
+    "emptyBody": "أكمل جلسة تركيز وستظهر هنا.",
+    "sessionLine": "تركيز {{duration}}",
+    "completed": "مكتملة",
+    "stoppedEarly": "أُوقفت مبكرًا"
+  },
+  "analytics": {
+    "title": "التحليلات",
+    "gateTitle": "تحليلات وتقارير متقدمة",
+    "gateBody": "اطّلع على اتجاهات 30 يومًا وأفضل أيامك والتزامك بالعادات ووقت التركيز والمزاج، مع تقرير أسبوعي.",
+    "range7": "7 أيام",
+    "range14": "14 يومًا",
+    "range30": "30 يومًا",
+    "tasks": "المهام",
+    "checkins": "الالتزامات",
+    "focus": "التركيز",
+    "habitRate": "معدل العادات",
+    "avgMood": "متوسط المزاج",
+    "activeDays": "الأيام النشطة",
+    "winsPerDay": "الإنجازات في اليوم",
+    "focusMinutes": "دقائق التركيز",
+    "reportWeekly": "التقرير الأسبوعي",
+    "reportFortnight": "تقرير 14 يومًا",
+    "reportMonthly": "التقرير الشهري",
+    "reportEmpty": "لا نشاط في هذه الفترة بعد. أنجز مهمة أو عادة لتبدأ تقريرك.",
+    "reportBody": "كنت نشِطًا في {{active}} من {{days}} يومًا. المهام المنجزة: {{tasks}}. التزامات العادات: {{habits}}. وقت التركيز: {{focus}}.",
+    "reportBest": " أقوى يوم: {{day}}، الإنجازات: {{wins}}."
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "preview": "وضع المعاينة",
+    "you": "أنت",
+    "changePhoto": "تغيير الصورة الشخصية",
+    "levelTitle": "المستوى {{level}} · {{title}}",
+    "xpToLevel": "{{xp}} XP للوصول إلى المستوى {{level}}",
+    "upgrade": "الترقية إلى Pro",
+    "upgradeLabel": "الترقية إلى Life OS Pro",
+    "upgradeBody": "جرّب مجانًا لمدة 7 أيام. تجميد السلسلة، التحليلات، المزامنة",
+    "statistics": "الإحصاءات",
+    "advanced": "متقدم",
+    "tasksDone": "مهام منجزة",
+    "checkins": "الالتزامات",
+    "bestStreak": "أفضل سلسلة",
+    "focused": "وقت التركيز",
+    "goalsAchieved": "أهداف محققة",
+    "notesEntries": "ملاحظات وتدوينات",
+    "advancedGate": "تحليلات وتقارير متقدمة",
+    "achievementsTitle": "الإنجازات · {{count}}/{{total}}",
+    "days": "{{count}} ي",
+    "photoAccess": "اسمح بالوصول إلى الصور لتعيين صورة شخصية.",
+    "photoOffline": "تم الحفظ على هذا الجهاز. ستُعاد محاولة الرفع عند الاتصال."
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "appearance": "المظهر",
+    "themeLabel": "سمة {{name}}",
+    "themeLabelPro": "سمة {{name}}، Pro",
+    "language": "اللغة",
+    "notifications": "الإشعارات والتفاعل",
+    "reminders": "التذكيرات",
+    "remindersBody": "تذكيرات المهام والعادات",
+    "evening": "متابعة المساء",
+    "eveningBody": "تنبيه يومي عند 8:30 مساءً",
+    "weekly": "التقرير الأسبوعي",
+    "weeklyBody": "ملخص مساء الأحد",
+    "haptics": "الاهتزاز اللمسي",
+    "hapticsBody": "ردود فعل لمسية",
+    "enableFirst": "فعّل الإشعارات من إعدادات النظام أولًا.",
+    "focusSection": "التركيز",
+    "focusRow": "التركيز",
+    "shortBreak": "استراحة قصيرة",
+    "longBreak": "استراحة طويلة",
+    "sessionsPerCycle": "الجلسات في كل دورة",
+    "decrease": "تقليل",
+    "increase": "زيادة",
+    "minUnit": "د",
+    "cloud": "المزامنة السحابية",
+    "cloudSynced": "متزامن مع حسابك",
+    "cloudFeature": "المزامنة السحابية",
+    "syncing": "جارٍ المزامنة…",
+    "lastSynced": "آخر مزامنة: {{date}}",
+    "notSynced": "لم تتم المزامنة بعد",
+    "cloudPitch": "انسخ احتياطيًا واستخدم Life OS على كل أجهزتك",
+    "syncNow": "زامن الآن",
+    "subscription": "الاشتراك",
+    "freePlan": "الباقة المجانية",
+    "proThanks": "شكرًا لدعمك Life OS",
+    "trialPitch": "جرّب مجانًا لمدة {{days}} أيام، ثم من {{price}}/شهريًا",
+    "restore": "استعادة المشتريات",
+    "proRestored": "تمت استعادة Pro.",
+    "account": "الحساب",
+    "previewMode": "وضع المعاينة",
+    "previewBody": "تبقى البيانات على هذا الجهاز",
+    "accountRow": "الحساب",
+    "signedIn": "مسجّل الدخول",
+    "exitPreview": "الخروج من المعاينة",
+    "signOut": "تسجيل الخروج",
+    "signOutBody": "ستُمسح بيانات هذا الجهاز. يمكن لمستخدمي Pro استعادتها بتسجيل الدخول مجددًا.",
+    "deleteAccount": "حذف الحساب",
+    "deleteBody": "حذف حسابك وبياناتك السحابية نهائيًا",
+    "deleteConfirm": "سيؤدي هذا إلى حذف حسابك وكل البيانات المتزامنة نهائيًا. لا يمكن التراجع عن ذلك.",
+    "about": "حول التطبيق",
+    "privacy": "سياسة الخصوصية",
+    "terms": "شروط الخدمة",
+    "support": "التواصل مع الدعم",
+    "supportSubject": "دعم Life OS",
+    "version": "Life OS {{version}}",
+    "syncFailed": "فشلت المزامنة"
+  },
+  "pro": {
+    "title": "Life OS Pro",
+    "welcome": "مرحبًا بك في Pro",
+    "unlockAll": "افتح كل شيء",
+    "pitch": "تجميد السلسلة وتحليلات متقدمة ومزامنة سحابية وسمات وأكثر مقابل {{price}}/شهريًا.",
+    "seePro": "اكتشف Pro",
+    "inTitle": "أنت معنا الآن. شكرًا لك.",
+    "activeTitle": "Pro مفعّل",
+    "welcomeBody": "تم فتح كل ميزات Pro. إليك أماكن وجودها.",
+    "trialEnds": "تنتهي التجربة المجانية في {{date}}",
+    "renews": "يتجدد في {{date}}",
+    "ends": "ينتهي في {{date}}",
+    "thanks": "شكرًا لدعمك Life OS.",
+    "perks": {
+      "freeze": "أنقذ سلسلتك بعد يوم فائت.",
+      "analytics": "اتجاهات 30 يومًا والمزاج والتركيز.",
+      "report": "رؤى ومقارنات ومشاركة.",
+      "bonus": "تحدٍّ يومي بضعف نقاط XP.",
+      "achievements": "{{count}} أوسمة إضافية لتكسبها.",
+      "themes": "الشفق والطيف."
+    },
+    "perkTitles": {
+      "freeze": "تجميد السلسلة",
+      "analytics": "تحليلات متقدمة",
+      "report": "التقرير الأسبوعي الكامل",
+      "bonus": "التحدي الإضافي",
+      "achievements": "إنجازات إضافية",
+      "themes": "سمات مخصصة"
+    },
+    "freezeLeft": "المتبقي هذا الشهر {{left}} من {{total}}",
+    "themeActive": "المفعّلة: {{name}}",
+    "yourPlan": "باقتك",
+    "syncActive": "المزامنة السحابية مفعّلة · آخر مزامنة: {{date}}",
+    "syncOn": "المزامنة السحابية مفعّلة",
+    "manage": "إدارة الاشتراك"
+  },
+  "paywallScreen": {
+    "defaultTitle": "Life OS Pro",
+    "defaultBody": "نظام حياتك الشخصي الكامل. بلا حدود.",
+    "choosePlan": "اختر باقتك",
+    "freeVsPro": "المجاني مقابل Pro",
+    "continue": "متابعة",
+    "onPro": "أنت على Pro",
+    "devActivate": "تفعيل Pro (للتطوير فقط)",
+    "restore": "استعادة",
+    "restoring": "جارٍ الاستعادة…",
+    "terms": "الشروط",
+    "privacy": "الخصوصية",
+    "welcomeToast": "مرحبًا بك في Life OS Pro.",
+    "purchaseFailed": "فشلت عملية الشراء.",
+    "nothingToRestore": "لا شيء لاستعادته.",
+    "reasons": {
+      "habits": {
+        "title": "ابنِ بلا حدود",
+        "body": "لقد بلغت الحد المجاني وهو {{count}} عادات. Pro يزيله."
+      },
+      "goals": {
+        "title": "فكّر أبعد",
+        "body": "لقد بلغت الحد المجاني وهو {{count}} أهداف نشطة. Pro يزيله."
+      },
+      "themes": {
+        "title": "اجعله لك",
+        "body": "سمتا الشفق والطيف ضمن Pro."
+      },
+      "analytics": {
+        "title": "اعرف أنماطك",
+        "body": "التحليلات المتقدمة ضمن Pro."
+      },
+      "report": {
+        "title": "أسبوعك، مُفسَّرًا",
+        "body": "التقرير الأسبوعي الكامل ضمن Pro."
+      },
+      "sync": {
+        "title": "حياتك على كل أجهزتك",
+        "body": "المزامنة السحابية والنسخ الاحتياطي ضمن Pro."
+      },
+      "freeze": {
+        "title": "احمِ سلسلتك",
+        "body": "تجميد السلسلة يبقي سلسلتك حيّة عندما تشغلك الحياة."
+      },
+      "challenges": {
+        "title": "اكسب ضعف نقاط XP",
+        "body": "يضيف Pro تحديًا يوميًا إضافيًا بضعف نقاط XP."
+      },
+      "achievements": {
+        "title": "افتح كل الأوسمة",
+        "body": "يضيف Pro عدد {{count}} إنجازات إضافية وأكبر مكافآت XP."
+      }
+    }
+  },
+  "purchases": {
+    "unavailable": "المشتريات غير متاحة في هذا الإصدار.",
+    "planUnavailable": "هذه الباقة غير متاحة حاليًا. حاول لاحقًا.",
+    "notVerified": "تعذّر التحقق من عملية الشراء.",
+    "failed": "فشلت عملية الشراء.",
+    "noActive": "لم يتم العثور على اشتراك نشط."
+  }
+}

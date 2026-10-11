@@ -17,7 +17,8 @@ import { ProgressRing } from '@/components/ui/ProgressRing';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { useFocusData, useGoalsData, useHabitsData, useLevelProgress, useTasksData } from '@/hooks/useData';
-import { greeting } from '@/lib/date';
+import { useI18n } from '@/i18n';
+import { formatDuration, greeting } from '@/lib/date';
 import { levelTitle } from '@/lib/gamification';
 import { toggleHabit } from '@/services/actions';
 import { runSync } from '@/services/sync';
@@ -29,6 +30,7 @@ const stagger = (i: number) => FadeInDown.delay(i * 70).duration(450).springify(
 
 export default function Dashboard() {
   const t = useTheme();
+  const { t: tr } = useI18n();
   const { displayName, avatarUrl } = useProfile();
   const email = useAuth((s) => s.email);
   const name = displayName || email?.split('@')[0] || 'there';
@@ -54,35 +56,35 @@ export default function Dashboard() {
   return (
     <Screen bottomInset={110} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={t.accent} colors={[t.accent]} progressBackgroundColor={t.surfaceSolid} />}>
       <Animated.View entering={stagger(0)} style={styles.header}>
-        <PressableScale onPress={() => router.push('/profile')} feedback="tap" accessibilityLabel="Open profile">
+        <PressableScale onPress={() => router.push('/profile')} feedback="tap" accessibilityLabel={tr('dashboard.openProfile')}>
           <Avatar name={name} uri={avatarUrl} size={48} />
         </PressableScale>
         <View style={{ flex: 1 }}>
           <Text variant="body" color="secondary" accessibilityLabel={`${greeting()}, ${name}`}>
             {greeting()},
           </Text>
-          <Text variant="title" numberOfLines={1}>
+          <Text content variant="title" numberOfLines={1}>
             {name}
           </Text>
         </View>
-        <IconButton icon="settings-outline" label="Settings" onPress={() => router.push('/settings')} />
+        <IconButton icon="settings-outline" label={tr('dashboard.settings')} onPress={() => router.push('/settings')} />
       </Animated.View>
 
       {/* Hero: level, XP, daily completion */}
       <Animated.View entering={stagger(1)}>
-        <Card accent padding={20} onPress={() => router.push('/profile')} accessibilityLabel="Level and XP">
+        <Card accent padding={20} onPress={() => router.push('/profile')} accessibilityLabel={tr('dashboard.levelXp')}>
           <View style={styles.hero}>
             <ProgressRing value={daily} size={104} stroke={9}>
               <CountUp value={Math.round(daily * 100)} suffix="%" style={{ fontSize: 26, fontFamily: 'Inter_800ExtraBold', letterSpacing: -1 }} />
               <Text variant="micro" color="secondary">
-                TODAY
+                {tr('dashboard.today')}
               </Text>
             </ProgressRing>
             <View style={{ flex: 1, gap: 8 }}>
               <View style={styles.levelRow}>
                 <View style={[styles.levelBadge, { backgroundColor: t.accent }]}>
                   <Text variant="caption" color="onAccent" style={{ fontFamily: 'Inter_800ExtraBold' }}>
-                    LV {lvl.level}
+                    {tr('common.level', { level: lvl.level })}
                   </Text>
                 </View>
                 <Text variant="bodyMedium" style={{ fontFamily: 'Inter_600SemiBold' }}>
@@ -91,7 +93,7 @@ export default function Dashboard() {
               </View>
               <ProgressBar value={lvl.ratio} height={8} />
               <Text variant="caption" color="secondary">
-                {lvl.current} / {lvl.needed} XP to level {lvl.level + 1}
+                {tr('dashboard.xpToNext', { current: lvl.current, needed: lvl.needed, next: lvl.level + 1 })}
               </Text>
             </View>
           </View>
@@ -108,11 +110,11 @@ export default function Dashboard() {
       {/* Quick stats */}
       <Animated.View entering={stagger(4)} style={styles.quick}>
         {[
-          { icon: 'checkmark-done', value: `${tasks.done}/${tasks.planned}`, label: 'Tasks', go: '/(tabs)/tasks' },
-          { icon: 'flame', value: `${habits.doneToday}/${habits.total}`, label: 'Habits', go: '/(tabs)/habits' },
-          { icon: 'timer', value: `${focus.todayMinutes}m`, label: 'Focus', go: '/focus' },
+          { icon: 'checkmark-done', value: `${tasks.done}/${tasks.planned}`, label: tr('tabs.tasks'), go: '/(tabs)/tasks' },
+          { icon: 'flame', value: `${habits.doneToday}/${habits.total}`, label: tr('tabs.habits'), go: '/(tabs)/habits' },
+          { icon: 'timer', value: formatDuration(focus.todayMinutes * 60), label: tr('focus.modes.focus'), go: '/focus' },
         ].map((s) => (
-          <PressableScale key={s.label} style={{ flex: 1 }} feedback="tap" onPress={() => router.push(s.go)} accessibilityLabel={`${s.label}: ${s.value}`}>
+          <PressableScale key={s.label} style={{ flex: 1 }} feedback="tap" onPress={() => router.push(s.go)} accessibilityLabel={tr('dashboard.tileLabel', { label: s.label, value: s.value })}>
             <View style={[styles.quickTile, { backgroundColor: t.surface, borderColor: t.border }]}>
               <Icon name={s.icon} size={16} accent />
               <Text variant="heading">{s.value}</Text>
@@ -126,15 +128,15 @@ export default function Dashboard() {
 
       {/* Focus shortcut */}
       <Animated.View entering={stagger(5)} style={{ marginTop: 16 }}>
-        <Card onPress={() => router.push('/focus')} padding={16} accessibilityLabel="Start focus mode">
+        <Card onPress={() => router.push('/focus')} padding={16} accessibilityLabel={tr('dashboard.startFocus')}>
           <View style={styles.focusRow}>
             <View style={[styles.focusIcon, { backgroundColor: t.accent, shadowColor: t.accent }]}>
               <Icon name="timer-outline" size={24} color={t.onAccent} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text variant="heading">Focus mode</Text>
+              <Text variant="heading">{tr('dashboard.focusMode')}</Text>
               <Text variant="caption" color="secondary">
-                {focus.todaySessions > 0 ? `${focus.todaySessions} session${focus.todaySessions > 1 ? 's' : ''} today · ${focus.todayMinutes} min` : 'Start a distraction-free session'}
+                {focus.todaySessions > 0 ? tr('dashboard.focusToday', { count: focus.todaySessions, minutes: focus.todayMinutes }) : tr('dashboard.focusIdle')}
               </Text>
             </View>
             <Icon name="play-circle" size={36} color={t.accent} />
@@ -144,11 +146,11 @@ export default function Dashboard() {
 
       {/* Today's tasks */}
       <Animated.View entering={stagger(6)} style={{ marginTop: 12 }}>
-        <SectionHeader title="Today's tasks" action={tasks.planned ? 'See all' : 'Add'} onAction={() => (tasks.planned ? router.push('/(tabs)/tasks') : router.push('/task/new'))} />
+        <SectionHeader title={tr('dashboard.todaysTasks')} action={tasks.planned ? tr('common.seeAll') : tr('dashboard.add')} onAction={() => (tasks.planned ? router.push('/(tabs)/tasks') : router.push('/task/new'))} />
         <Card padding={tasks.today.length ? 12 : 18}>
           <View style={styles.cardTop}>
             <Text variant="bodyMedium" color="secondary">
-              {tasks.done}/{tasks.planned} completed
+              {tr('dashboard.completedOf', { done: tasks.done, total: tasks.planned })}
             </Text>
             <View style={{ width: 110 }}>
               <ProgressBar value={tasks.planned ? tasks.done / tasks.planned : 0} height={6} />
@@ -159,7 +161,7 @@ export default function Dashboard() {
           ))}
           {tasks.today.length === 0 ? (
             <Text variant="body" color="tertiary">
-              {tasks.planned ? 'All done for today. Nice work.' : 'Nothing planned. Add a task to start your day.'}
+              {tasks.planned ? tr('dashboard.allDone') : tr('dashboard.nothingPlanned')}
             </Text>
           ) : null}
         </Card>
@@ -167,17 +169,17 @@ export default function Dashboard() {
 
       {/* Habits */}
       <Animated.View entering={stagger(7)}>
-        <SectionHeader title="Habit progress" action={habits.total ? 'See all' : 'Add'} onAction={() => (habits.total ? router.push('/(tabs)/habits') : router.push('/habit/new'))} />
+        <SectionHeader title={tr('dashboard.habitProgress')} action={habits.total ? tr('common.seeAll') : tr('dashboard.add')} onAction={() => (habits.total ? router.push('/(tabs)/habits') : router.push('/habit/new'))} />
         <Card padding={habits.items.length ? 6 : 18}>
           {habits.items.slice(0, 3).map(({ habit, doneToday, streak }) => (
-            <PressableScale key={habit.id} onPress={() => toggleHabit(habit.id)} feedback="none" scaleTo={0.99} style={styles.habitRow} accessibilityLabel={`${habit.name}, ${streak} day streak`}>
+            <PressableScale key={habit.id} onPress={() => toggleHabit(habit.id)} feedback="none" scaleTo={0.99} style={styles.habitRow} accessibilityLabel={tr('habits.streakLabel', { name: habit.name, streak: tr('habits.streak', { count: streak }) })}>
               <View style={[styles.habitIcon, { backgroundColor: doneToday ? t.accent : t.accentSoft }]}>
                 <Icon name={habit.icon} size={18} color={doneToday ? t.onAccent : t.accent} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text variant="bodyMedium">{habit.name}</Text>
+                <Text content variant="bodyMedium">{habit.name}</Text>
                 <Text variant="caption" color="secondary">
-                  🔥 {streak} day streak
+                  🔥 {tr('habits.streak', { count: streak })}
                 </Text>
               </View>
               <Icon name={doneToday ? 'checkmark-circle' : 'ellipse-outline'} size={26} color={doneToday ? t.accent : t.textTertiary} />
@@ -185,7 +187,7 @@ export default function Dashboard() {
           ))}
           {habits.items.length === 0 ? (
             <Text variant="body" color="tertiary">
-              Build a streak. Add your first habit.
+              {tr('dashboard.buildStreak')}
             </Text>
           ) : null}
         </Card>
@@ -193,12 +195,12 @@ export default function Dashboard() {
 
       {/* Goals */}
       <Animated.View entering={stagger(8)}>
-        <SectionHeader title="Current goals" action={goals.active.length ? 'See all' : 'Add'} onAction={() => (goals.active.length ? router.push('/(tabs)/goals') : router.push('/goal/new'))} />
+        <SectionHeader title={tr('dashboard.currentGoals')} action={goals.active.length ? tr('common.seeAll') : tr('dashboard.add')} onAction={() => (goals.active.length ? router.push('/(tabs)/goals') : router.push('/goal/new'))} />
         <View style={{ gap: 10 }}>
           {goals.active.slice(0, 2).map(({ goal, progress, done, milestones }) => (
             <Card key={goal.id} onPress={() => router.push(`/goal/${goal.id}`)} padding={16}>
               <View style={styles.goalTop}>
-                <Text variant="bodyMedium" style={{ flex: 1 }} numberOfLines={1}>
+                <Text content variant="bodyMedium" style={{ flex: 1 }} numberOfLines={1}>
                   {goal.title}
                 </Text>
                 <Text variant="bodyMedium" color="accent" style={{ fontFamily: 'Inter_700Bold' }}>
@@ -207,14 +209,14 @@ export default function Dashboard() {
               </View>
               <ProgressBar value={progress} />
               <Text variant="caption" color="secondary" style={{ marginTop: 8 }}>
-                {done} of {milestones.length} milestones
+                {tr('dashboard.milestonesOf', { done, total: milestones.length })}
               </Text>
             </Card>
           ))}
           {goals.active.length === 0 ? (
             <Card>
               <Text variant="body" color="tertiary">
-                Dream big. Set your first goal.
+                {tr('dashboard.dreamBig')}
               </Text>
             </Card>
           ) : null}

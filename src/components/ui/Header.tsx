@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useI18n } from '@/i18n';
 import { radius, useTheme } from '@/theme';
 import { Icon, type IconName } from './Icon';
 import { PressableScale } from './PressableScale';
@@ -25,19 +26,22 @@ interface Props {
   subtitle?: string;
   back?: boolean;
   right?: ReactNode;
+  /** The title is user-written (a goal or habit name). */
+  contentTitle?: boolean;
 }
 
-export function Header({ title, subtitle, back, right }: Props) {
+export function Header({ title, subtitle, back, right, contentTitle }: Props) {
+  const { t } = useI18n();
   return (
     <View style={styles.row}>
-      {back ? <IconButton icon="chevron-back" label="Go back" onPress={() => (router.canGoBack() ? router.back() : router.replace('/(tabs)'))} /> : null}
+      {back ? <IconButton icon="chevron-back" label={t('common.goBack')} onPress={() => (router.canGoBack() ? router.back() : router.replace('/(tabs)'))} /> : null}
       <View style={styles.titles}>
         {subtitle ? (
           <Text variant="caption" color="secondary">
             {subtitle}
           </Text>
         ) : null}
-        <Text variant="title" accessibilityRole="header" numberOfLines={2}>
+        <Text content={contentTitle} variant="title" accessibilityRole="header" numberOfLines={2}>
           {title}
         </Text>
       </View>

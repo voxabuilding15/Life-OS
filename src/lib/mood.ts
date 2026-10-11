@@ -1,7 +1,8 @@
+/** Mood scale 1 (rough) - 5 (great). Labels live in the locale files under `mood.<value>`. */
 export const MOODS = [
-  { value: 1, label: 'Rough', icon: 'sad-outline' },
-  { value: 2, label: 'Low', icon: 'remove-circle-outline' },
-  { value: 3, label: 'Okay', icon: 'happy-outline' },
-  { value: 4, label: 'Good', icon: 'happy' },
-  { value: 5, label: 'Great', icon: 'sunny' },
+  { value: 1, icon: 'sad-outline' },
+  { value: 2, icon: 'remove-circle-outline' },
+  { value: 3, icon: 'happy-outline' },
+  { value: 4, icon: 'happy' },
+  { value: 5, icon: 'sunny' },
 ] as const;
