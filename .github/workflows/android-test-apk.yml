@@ -32,7 +32,14 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      # The action's default package list contains the obsolete "tools" package, which no longer exists.
+      # Install nothing by default and request only the supported packages below.
       - uses: android-actions/setup-android@v3
+        with:
+          packages: ''
+
+      - name: Install Android SDK packages (platform-tools, platform 36, build-tools 36)
+        run: sdkmanager --install "platform-tools" "platforms;android-36" "build-tools;36.0.0"
 
       - run: npm ci
 
