@@ -36,7 +36,7 @@ const PERKS = [
 export default function Pro() {
   const t = useTheme();
   const { welcome } = useLocalSearchParams<{ welcome?: string }>();
-  const { isPro, expiresAt } = useSubscription();
+  const { isPro, expiresAt, isTrial, willRenew } = useSubscription();
   const sync = useSync();
   const themeId = useSettings((s) => s.themeId);
   const [burst, setBurst] = useState(0);
@@ -83,7 +83,7 @@ export default function Pro() {
             {welcome ? 'You’re in. Thank you.' : 'Pro is active'}
           </Text>
           <Text variant="body" color="secondary" align="center" style={{ marginTop: 4, maxWidth: 300 }}>
-            {welcome ? 'Every Pro feature is unlocked. Here is where to find them.' : expiresAt ? `Renews or ends ${new Date(expiresAt).toLocaleDateString()}` : 'Thanks for supporting Life OS.'}
+            {welcome ? 'Every Pro feature is unlocked. Here is where to find them.' : expiresAt ? `${isTrial ? 'Free trial ends' : willRenew ? 'Renews' : 'Ends'} ${new Date(expiresAt).toLocaleDateString()}` : 'Thanks for supporting Life OS.'}
           </Text>
         </Animated.View>
 

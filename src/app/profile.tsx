@@ -79,7 +79,7 @@ export default function Profile() {
             <View style={{ flex: 1 }}>
               <Text variant="heading">Upgrade to Pro</Text>
               <Text variant="caption" color="secondary">
-                Unlimited habits, analytics, cloud sync
+                Try free for 7 days. Streak Freeze, analytics, sync
               </Text>
             </View>
             <Icon name="chevron-forward" size={18} color={t.textSecondary} />

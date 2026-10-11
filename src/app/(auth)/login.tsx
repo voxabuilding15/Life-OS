@@ -5,7 +5,7 @@ import { AuthShell } from '@/components/features/AuthShell';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Text } from '@/components/ui/Text';
-import { isSupabaseConfigured } from '@/lib/config';
+import { allowPreview } from '@/lib/config';
 import { signIn, validateEmail } from '@/services/auth';
 import { useAuth } from '@/store/auth';
 
@@ -42,7 +42,7 @@ export default function Login() {
         </Text>
       ) : null}
       <Button title="Sign in" onPress={submit} loading={loading} />
-      {!isSupabaseConfigured ? <Button title="Continue in preview mode" variant="secondary" icon="eye-outline" onPress={() => useAuth.getState().enterGuest()} /> : null}
+      {allowPreview ? <Button title="Continue in preview mode" variant="secondary" icon="eye-outline" onPress={() => useAuth.getState().enterGuest()} /> : null}
       <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 6, marginTop: 8 }}>
         <Text variant="body" color="secondary">
           New to Life OS?

@@ -6,7 +6,9 @@ interface SubscriptionState {
   isPro: boolean;
   expiresAt: string | null;
   productId: string | null;
-  set: (patch: Partial<Pick<SubscriptionState, 'isPro' | 'expiresAt' | 'productId'>>) => void;
+  isTrial: boolean;
+  willRenew: boolean;
+  set: (patch: Partial<Pick<SubscriptionState, 'isPro' | 'expiresAt' | 'productId' | 'isTrial' | 'willRenew'>>) => void;
   reset: () => void;
 }
 
@@ -16,8 +18,10 @@ export const useSubscription = create<SubscriptionState>()(
       isPro: false,
       expiresAt: null,
       productId: null,
+      isTrial: false,
+      willRenew: false,
       set: (patch) => set(patch),
-      reset: () => set({ isPro: false, expiresAt: null, productId: null }),
+      reset: () => set({ isPro: false, expiresAt: null, productId: null, isTrial: false, willRenew: false }),
     }),
     { name: 'lifeos.subscription', storage: persistStorage, version: 1 },
   ),

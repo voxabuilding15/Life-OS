@@ -1,13 +1,13 @@
 # Google Play launch kit
 
-| Asset | File | Spec |
-| --- | --- | --- |
-| App icon | `play/icon-512.png` | 512x512 PNG |
-| Feature graphic | `play/feature-graphic-1024x500.png` | 1024x500 |
-| Phone screenshots (8) | `play/screenshots/01-08.png` | 1080x1920, 9:16 |
-| Listing copy | `listing.md` | title, short + full description |
-| Privacy policy (draft) | `privacy-policy.md` | host it, then set `EXPO_PUBLIC_PRIVACY_URL` |
-| Data safety answers | `data-safety.md` | Play Console -> App content |
-| Release checklist | `release-checklist.md` | step by step |
+| Asset | File |
+| --- | --- |
+| App icon 512x512 | `play/icon-512.png` |
+| Feature graphic 1024x500 | `play/feature-graphic-1024x500.png` |
+| 8 phone screenshots 1080x1920 | `play/screenshots/01-08.png` |
+| Listing copy (title, short + full description, release notes) | `listing.md` |
+| Privacy policy (draft), account deletion page (draft) | `privacy-policy.md`, `account-deletion.md` |
+| Data safety + content rating answers | `data-safety.md` |
+| Step-by-step release and device test plan | `release-checklist.md` |
 
-Screenshots are real captures of the app (seeded demo data) framed with captions; regenerate after UI changes.
+Regenerate graphics after UI or brand changes: `npm run brand` (icons, logo SVGs) and `node scripts/generate-store-assets.mjs <captures-dir>` (screenshots + feature graphic). Captures are real app screenshots (build the web preview with `EXPO_PUBLIC_ALLOW_PREVIEW=1`).

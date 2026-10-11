@@ -23,7 +23,7 @@ A premium personal operating system for young people: tasks, habits, goals, focu
 | **Streak Freeze** (Pro) | Saves a streak after a missed day; 2 a month; offered automatically when a streak is about to break |
 | **Achievements** | 26 tiered badges in 6 categories with progress bars and XP bonuses |
 | **Weekly report** | This week vs last: Life Score, tasks, check-ins, focus, best day, top habit, tips, share (Pro for full insights); Sunday notification |
-| **Pro** ($4.99/month) | Unlimited habits & goals, Streak Freeze, advanced analytics and full report, bonus challenge, themes, cloud sync, premium widget, 8 extra achievements; paywall with benefit slides and a Free vs Pro table |
+| **Pro** (monthly $4.99, yearly $29.99 with a 7-day free trial) | Unlimited habits & goals, Streak Freeze, advanced analytics and full report, bonus challenge, themes, cloud sync, premium widget, 8 extra achievements; paywall with benefit slides and a Free vs Pro table |
 
 Free plan limits: 3 habits, 3 active goals, 7-day statistics, local-only data. Everything is offline-first.
 
@@ -113,6 +113,16 @@ npx eas build --profile production  --platform all
 - Cloud sync, RevenueCat purchases and FCM need real project credentials and have not been exercised against live services from this repo; the SQL schema and RLS were verified against a local PostgreSQL with stubbed Supabase `auth`/`storage` schemas.
 - Server-side push sending is not included.
 - Custom themes are limited to the three-color palette on purpose (Ocean, Aurora, Ghost).
+
+## Testing
+
+- `npm test`: 71 unit tests. `npm run test:integration`: 16 tests against real PostgreSQL + migrations + RLS (auth, sync, isolation).
+- `npm run verify:release -- --build`: pre-flight for a store build (env, metadata, assets, store text limits, manifest permissions, R8, bundle size).
+- Real-device and store-billing tests are listed in `store/release-checklist.md`.
+
+## Branding
+
+See `brand/README.md`. `npm run brand` regenerates all icons and logo files.
 
 ## Google Play
 

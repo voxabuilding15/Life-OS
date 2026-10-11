@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import { config } from '@/lib/config';
+import { fallbackPlans, periodToDays, type Plan, type PlanId } from '@/lib/plans';
 import { useSubscription } from '@/store/subscription';
 
 /**
@@ -25,6 +26,8 @@ function applyCustomerInfo(info: CustomerInfo) {
     isPro: Boolean(ent),
     expiresAt: ent?.expirationDate ?? null,
     productId: ent?.productIdentifier ?? null,
+    isTrial: ent?.periodType === 'TRIAL' || ent?.periodType === 'INTRO',
+    willRenew: ent?.willRenew ?? false,
   });
 }
 
@@ -59,32 +62,68 @@ export async function logOutPurchaser(): Promise<void> {
   }
 }
 
-export interface ProOffer {
-  priceLabel: string;
+export interface Offers {
+  plans: Plan[];
+  /** True when the plans came from the store (real prices and real trial eligibility). */
   available: boolean;
 }
 
-export async function loadOffer(): Promise<ProOffer> {
-  if (!configured) return { priceLabel: `${config.proPriceLabel}/month`, available: false };
+const packages = new Map<PlanId, Package>();
+
+/** Free-trial length from either store's product shape, or null. */
+export function trialDaysOf(product: unknown): number | null {
+  const p = product as {
+    defaultOption?: { freePhase?: { billingPeriod?: { unit: string; value: number } } | null } | null;
+    introPrice?: { price?: number; periodUnit?: string; periodNumberOfUnits?: number } | null;
+  };
+  const free = p.defaultOption?.freePhase?.billingPeriod;
+  if (free) return periodToDays(free.unit, free.value) || null;
+  const intro = p.introPrice;
+  if (intro && intro.price === 0 && intro.periodUnit && intro.periodNumberOfUnits) return periodToDays(intro.periodUnit, intro.periodNumberOfUnits) || null;
+  return null;
+}
+
+export function planFromPackage(id: PlanId, pkg: Package): Plan {
+  const product = pkg.product;
+  return {
+    id,
+    productId: product.identifier,
+    price: product.price,
+    priceString: product.priceString,
+    currency: product.currencyCode,
+    trialDays: trialDaysOf(product),
+  };
+}
+
+export async function loadOffers(): Promise<Offers> {
+  if (!configured) return { plans: fallbackPlans(), available: false };
   try {
     const offerings = await sdk().getOfferings();
-    const pkg = offerings.current?.monthly ?? offerings.current?.availablePackages[0] ?? null;
-    cachedPackage = pkg;
-    if (pkg) return { priceLabel: `${pkg.product.priceString}/month`, available: true };
+    const current = offerings.current;
+    const monthly = current?.monthly ?? null;
+    const yearly = current?.annual ?? null;
+    if (monthly || yearly) {
+      packages.clear();
+      const plans: Plan[] = [];
+      if (monthly) (packages.set('monthly', monthly), plans.push(planFromPackage('monthly', monthly)));
+      if (yearly) (packages.set('yearly', yearly), plans.push(planFromPackage('yearly', yearly)));
+      return { plans: plans.sort((a, b) => (a.id === 'yearly' ? -1 : 1) - (b.id === 'yearly' ? -1 : 1)), available: true };
+    }
   } catch {
     /* fall through */
   }
-  return { priceLabel: `${config.proPriceLabel}/month`, available: false };
+  return { plans: fallbackPlans(), available: false };
 }
 
 export type PurchaseResult = { ok: true } | { ok: false; cancelled?: boolean; error?: string };
 
-export async function purchasePro(): Promise<PurchaseResult> {
+export async function purchasePro(plan: PlanId): Promise<PurchaseResult> {
   if (!configured) return { ok: false, error: 'Purchases are not available on this build.' };
   try {
-    if (!cachedPackage) await loadOffer();
-    if (!cachedPackage) return { ok: false, error: 'Pro is not available right now. Try again later.' };
-    const { customerInfo } = await sdk().purchasePackage(cachedPackage);
+    if (!packages.has(plan)) await loadOffers();
+    const pkg = packages.get(plan);
+    if (!pkg) return { ok: false, error: 'This plan is not available right now. Try again later.' };
+    const { customerInfo } = await sdk().purchasePackage(pkg);
     applyCustomerInfo(customerInfo);
     return useSubscription.getState().isPro ? { ok: true } : { ok: false, error: 'Purchase could not be verified.' };
   } catch (e) {

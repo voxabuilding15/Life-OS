@@ -191,7 +191,7 @@ export default function Settings() {
 
       <SectionHeader title="Subscription" />
       <Card padding={16}>
-        <Row icon="sparkles" title={isPro ? 'Life OS Pro' : 'Free plan'} subtitle={isPro ? 'Thanks for supporting Life OS' : 'Upgrade for $4.99/month'} right={isPro ? <ProBadge /> : undefined} onPress={() => router.push(isPro ? '/pro' : '/paywall')} />
+        <Row icon="sparkles" title={isPro ? 'Life OS Pro' : 'Free plan'} subtitle={isPro ? 'Thanks for supporting Life OS' : `Try free for ${config.trialDays} days, then from ${config.proPriceLabel}/month`} right={isPro ? <ProBadge /> : undefined} onPress={() => router.push(isPro ? '/pro' : '/paywall')} />
         <Row
           icon="refresh"
           title="Restore purchases"

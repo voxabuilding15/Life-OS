@@ -41,7 +41,8 @@ const CONFLICT: Record<string, string> = {
 
 const BATCH = 200;
 
-let running = false;
+let inFlight: Promise<void> | null = null;
+let rerun = false;
 let timer: ReturnType<typeof setTimeout> | null = null;
 
 const canSyncData = () => {
@@ -121,11 +122,9 @@ export async function syncProfile() {
   }
 }
 
-export async function runSync(): Promise<void> {
-  if (running) return;
+async function syncOnce(): Promise<void> {
   const userId = useAuth.getState().userId;
   if (!userId) return;
-  running = true;
   useSync.getState().patch({ syncing: true, error: null });
   try {
     await syncProfile();
@@ -135,11 +134,30 @@ export async function runSync(): Promise<void> {
       useSync.getState().patch({ lastSyncAt: new Date().toISOString() });
     }
   } catch (e) {
-    useSync.getState().patch({ error: e instanceof Error ? e.message : 'Sync failed' });
+    useSync.getState().patch({ error: e instanceof Error ? e.message : (e as { message?: string })?.message ?? 'Sync failed' });
   } finally {
-    running = false;
     useSync.getState().patch({ syncing: false });
   }
+}
+
+/**
+ * Runs a sync. If one is already in flight, a follow-up run is queued (so edits made mid-sync are never
+ * missed) and the returned promise resolves once everything has settled.
+ */
+export function runSync(): Promise<void> {
+  if (inFlight) {
+    rerun = true;
+    return inFlight;
+  }
+  inFlight = (async () => {
+    do {
+      rerun = false;
+      await syncOnce();
+    } while (rerun);
+  })().finally(() => {
+    inFlight = null;
+  });
+  return inFlight;
 }
 
 export function scheduleSync(delay = 2500) {

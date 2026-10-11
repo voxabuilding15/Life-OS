@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Input } from '@/components/ui/Input';
 import { Text } from '@/components/ui/Text';
-import { isSupabaseConfigured } from '@/lib/config';
+import { allowPreview } from '@/lib/config';
 import { signUp, validateEmail } from '@/services/auth';
 import { useAuth } from '@/store/auth';
 import { useProfile } from '@/store/profile';
@@ -58,7 +58,7 @@ export default function Register() {
         </Text>
       ) : null}
       <Button title="Create account" onPress={submit} loading={loading} />
-      {!isSupabaseConfigured ? (
+      {allowPreview ? (
         <Button
           title="Continue in preview mode"
           variant="secondary"

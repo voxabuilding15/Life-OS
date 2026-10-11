@@ -4,7 +4,7 @@ import Animated, { Easing, FadeOut, interpolate, useAnimatedStyle, useSharedValu
 import { BASE } from '@/theme';
 import { AmbientBackground } from '../ui/AmbientBackground';
 import { Glow } from '../ui/Glow';
-import { Logo } from '../ui/Logo';
+import { Logo, Wordmark } from '../ui/Logo';
 import { Text } from '../ui/Text';
 
 /** Launch animation: the mark materialises inside a pulsing blue glow, then the wordmark rises. */
@@ -33,8 +33,8 @@ export function SplashOverlay() {
         <Animated.View style={logoStyle}>
           <Logo size={120} />
         </Animated.View>
-        <Animated.View style={[{ alignItems: 'center', marginTop: 36 }, wordStyle]}>
-          <Text style={styles.word}>Life OS</Text>
+        <Animated.View style={[{ alignItems: 'center', marginTop: 36, gap: 14 }, wordStyle]}>
+          <Wordmark height={40} />
           <Text variant="caption" color="secondary" style={{ letterSpacing: 2 }}>
             YOUR LIFE. ORGANIZED.
           </Text>

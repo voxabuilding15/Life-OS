@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
 
   let plan: 'pro' | 'free' | null = null;
   let status = type.toLowerCase();
-  if (ACTIVE.has(type)) { plan = 'pro'; status = 'active'; }
+  if (ACTIVE.has(type)) { plan = 'pro'; status = event.period_type === 'TRIAL' ? 'trialing' : 'active'; }
   else if (ENDED.has(type)) { plan = 'free'; status = 'expired'; }
   else if (type === 'CANCELLATION') { plan = 'pro'; status = 'cancelled'; } // access continues until expiry
   else if (type === 'BILLING_ISSUE') { plan = 'pro'; status = 'billing_issue'; }
@@ -35,6 +35,7 @@ Deno.serve(async (req) => {
       plan,
       status,
       product_id: event.product_id ?? null,
+      period_type: event.period_type ?? null, // TRIAL | INTRO | NORMAL
       revenuecat_app_user_id: userId,
       current_period_end: expires,
       updated_at: new Date().toISOString(),
